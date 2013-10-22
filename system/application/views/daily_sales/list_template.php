@@ -1,5 +1,5 @@
-<link rel="stylesheet" type="text/css" href="http://localhost/happyland/css/global.css">
-<link rel="stylesheet" type="text/css" href="http://localhost/happyland/css/daily_sales.css">
+<link rel="stylesheet" type="text/css" href="http://localhost/happyland/assets/css/global.css">
+<link rel="stylesheet" type="text/css" href="http://localhost/happyland/assets/css/daily_sales.css">
 
 listado de ventas diarias
 <div><?php echo date('t', mktime(0, 0, 0, 2, 1, 2010));?></div>

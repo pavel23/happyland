@@ -3,10 +3,10 @@
 <head>
   <meta charset='utf-8'>
   <title>Load &amp; Save (Ajax) - Handsontable</title>
-  <script src="http://localhost/happyland/js/lib/jquery.min.js"></script>
-  <script src="http://localhost/happyland/js/dist/jquery.handsontable.full.js"></script>
-  <script src="http://localhost/happyland/js/happy/daily.sales.js"></script>
-  <link rel="stylesheet" media="screen" href="http://localhost/happyland/css/dist/jquery.handsontable.full.css">
+  <script src="http://localhost/happyland/assets/js/lib/jquery.min.js"></script>
+  <script src="http://localhost/happyland/assets/js/dist/jquery.handsontable.full.js"></script>
+  <script src="http://localhost/happyland/assets/js/happy/daily.sales.js"></script>
+  <link rel="stylesheet" media="screen" href="http://localhost/happyland/assets/css/dist/jquery.handsontable.full.css">
 </head>
 <body>
 

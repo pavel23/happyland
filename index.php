@@ -72,7 +72,7 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = 'application';
+	$application_folder = '';
 
 /*
  * --------------------------------------------------------------------
@@ -188,7 +188,7 @@ if (defined('ENVIRONMENT'))
 			exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".SELF);
 		}
 
-		define('APPPATH', BASEPATH.$application_folder.'/');
+		define('APPPATH', BASEPATH.'application/'.$application_folder.'/');
 	}
 
 /*
