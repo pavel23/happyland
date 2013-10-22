@@ -1,0 +1,24 @@
+/*
+ * CSS Calendar
+ * Javier Roque
+-----------------------------*/
+
+/**		{margin:0;padding:0;}
+body		{font:1em/1.4 Verdana, Arial, Helvetica, sans-serif; 
+			background: url(images/bg.jpg) top center no-repeat #545454;}
+body *		{display:inline;}*/
+* {font: 11px sans-serif;}
+ol.calendar    {width:790px; margin:0 auto; display:block; min-height: 555px;}
+ol.calendar li.day_container {list-style:none;}
+ol.calendar li.day_container:hover {border: solid 2px #0776a0;}
+ol.calendar li.day_container {width:95px; height:95px; float:left; margin:3px; overflow:auto; border: solid 2px #bbb;}
+ol.calendar li.day_container div{padding-left: 5px; padding-right: 5px;}
+ol.calendar li.day_container a{color:#000; text-decoration: none;}
+ol.calendar li.open {background: #FFD773; border: solid 2px #008C00;}
+ol.calendar li.closed {background: #cce8fc;}
+ol.calendar li.disabled {background: #dfdfdf;}
+ol.calendar li div.day_number {border: solid 1px #999; width: 25px; text-align: center; font-size: 18px; font-weight: bold; background: #fff; margin: 3px;}
+ol.calendar li div.day_sale_text {margin-top: 15px;}
+ol.calendar li div.day_sale_amount {}
+ol.calendar li div.day_status {}
+a.prueba{ border: solid 2px red;}

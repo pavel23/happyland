@@ -1,0 +1,72 @@
+@charset "utf-8";
+/* CSS Document */
+#box-paginacion{
+width:960px;
+background-color:#f7f7f7;
+height:23px;
+padding-top:9px
+}
+#box-paginacion a{
+font-size:11px;
+color: #474747;
+text-decoration:none
+}
+#box-paginacion .pages{
+width:700px;
+text-align:left;
+padding-left:30px
+}
+#box-paginacion .show, #box-paginacion .total_result{
+width: 210px;
+text-align:right;
+padding-right:20px;
+float: right
+}
+#box-paginacion .total_result{
+font-size:10px
+}
+#box-paginacion .pages a{
+width:25px;
+height:15px;
+display:block;
+float:left;
+text-align:center
+}
+#box-paginacion .pages a:hover, #box-paginacion .pages a.actual{
+font-weight:700;
+font-size:14px;
+margin-top:-2px
+}
+#box-paginacion .pages a.limit, #box-paginacion .pages a.limit:hover,#box-paginacion .pages a.before:hover, #box-paginacion .pages a.next:hover{
+font-weight:700;
+text-decoration:underline;
+width:45px;
+font-size:11px;
+margin-top:0
+}
+#box-paginacion .pages a.before:hover, #box-paginacion .pages a.next:hover{
+width:25px 
+}
+#box-paginacion .pages a.before, #box-paginacion .pages a.next{
+background: url(../../images/seller/paginate_icon.gif) no-repeat
+}
+#box-paginacion .pages a.next{
+background-position: 7px 3px
+}
+#box-paginacion .pages a.before{
+background-position: 10px -13px
+}
+#box-paginacion .show a{
+text-align:center
+}
+#box-paginacion .show .noborde{
+border:none
+}
+#box-paginacion .show a:hover{
+text-decoration: underline
+}
+#box-paginacion .show a:first-child{
+border:none;
+text-decoration: none;
+width:auto
+}

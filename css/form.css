@@ -1,0 +1,10 @@
+@charset "utf-8";
+.field{width:440px;padding-bottom:5px}
+.field .subtitulo{width:100%;font-size:11px;font-weight:700;padding:5px 0}
+.field label{float:left;color:#919191;font-size:11px;font-weight:700;padding-top:3px;margin-right:5px}
+.input,.input_search{font-family:Arial;float:left;height:18px;border:1px solid #ddd;margin-right:10px;color:#474747;font-size:12px;padding:2px}
+.input_search{background:url(../../images/seller/botones.gif) no-repeat -93px 4px;padding-left:20px}
+.select{height:24px;border:1px solid #ddd;float:left;font-size:12px;margin-right:10px;color:#474747;font-family:Arial;padding:3px}
+.textarea{border:1px solid #ddd;float:left;font-size:12px;color:#474747;resize:none;font-family:Arial;padding:10px}
+.input-help{font-size:11px;color:#919191;line-height:20px;padding:5px 0 0 10px}
+.hint{background:url(../../images/seller/botones.gif) no-repeat -100px -110px;width:10px;height:10px;display:inline-block;margin-left:5px}

@@ -1,0 +1,162 @@
+@charset "utf-8";
+#principal div{float:left;display:inline}
+body{color:#474747;font-family:Arial, Helvetica, sans-serif;font-size:12px}
+a{color:#0081d9;text-decoration:none;cursor:pointer}
+.color-gris{font-style:normal;color:#A1A1A1}
+.color-naranja{color:#f6751f}
+.color-verde{color:#5eaa6b}
+.color-azul{color:#0081d9}
+#principal{z-index:1;height:auto;width:1000px;display:block;float:none;margin:0 auto}
+#principal #header{position:relative;z-index:1;height:170px;width:980px;padding:0 10px}
+#principal #header #hdr-izq{height:92px;width:220px}
+#principal #header #hdr-izq #hdr-logo h1 a{display:block;background:url(../../images/seller/logo-panel.png) 0 11px no-repeat;width:220px;height:92px;text-indent:-9999px}
+#principal #header #hdr-der{height:92px;width:760px}
+#principal #header #hdr-der .hdr_left_links{height:32px;padding-top:60px;width:350px}
+#principal #header #hdr-der .hdr_right_links{height:27px;width:400px;color:#919191;text-align:right;padding-top:5px}
+#principal #header #hdr-der .hdr_right_links a{font-size:11px;color:#474747;height:17px;background: url(../../images/seller/top_icons.png) no-repeat;display:inline-block;border-left:1px solid #dfdfdf;padding-right:10px;padding-top:6px}
+#principal #header #hdr-der .hdr_right_links a.t1{padding-left: 21px;border:none;background-position: 0 4px}
+#principal #header #hdr-der .hdr_right_links a.t2{padding-left:36px;background-position: 10px -112px}
+#principal #header #hdr-der .hdr_right_links a.t3{padding-left:33px;background-position: 9px -33px;padding-right:30px}
+#principal #header #hdr-der .hdr_right_links a.t3:hover,#principal #header #hdr-der .hdr_right_links a.t3.selected{background:url(../../images/seller/top_icons.png) 4px -70px no-repeat;color:#fff;text-decoration:none;margin-top:-2px}
+#principal #header #hdr-der .hdr_right_links a.t4{padding-left:28px;padding-right:0;background-position: 10px -153px}
+#principal #header #hdr-der .hdr_right_links ul{display:inline-block}
+#principal #header #hdr-der .hdr_right_links .n{background:#0081DC;padding:0 5px;color:#fff;font-size:10px;position:absolute;left:709px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+behavior: url(PIE.htc);}
+#principal #header #hdr-der .hdr_right_links ul li div{display: none;position:absolute;top:28px;left:790px;width:130px;border:3px solid #474747;background:#474747;
+-moz-border-radius-topleft: 0px;
+-moz-border-radius-topright: 5px;
+-moz-border-radius-bottomright: 5px;
+-moz-border-radius-bottomleft: 5px;
+-webkit-border-radius: 0px 5px 5px 5px;
+border-radius: 0px 5px 5px 5px;
+behavior: url(PIE.htc);
+z-index:99
+}
+#principal #header #hdr-der .hdr_right_links ul li div ul{border:1px solid #ddd;width:128px;background:#fff;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+behavior: url(PIE.htc);
+position: relative;
+}
+#principal #header #hdr-der .hdr_right_links ul li div ul li{height:22px;width:108px;border-top:1px solid #ddd;margin:0 10px;text-align:left}
+#principal #header #hdr-der .hdr_right_links ul li div ul li a{background:none;border-left:none;font-size:12px;color:#474747;padding:0;padding-top:4px;display:block;text-decoration: none;padding-left:8px}
+#principal #header #hdr-der .hdr_right_links ul li div ul li:first-child{border-top:none}
+#principal #menu{width:980px;margin-top:10px;height:40px}
+#principal #menu #left{background:url(../../images/seller/bg_menu_left.png);width:5px;height:40px}
+#principal #menu #right{background:url(../../images/seller/bg_menu_right.png);width:5px;height:40px}
+#principal #menu #menu_links{background:url(../../images/seller/bg_menu.png) repeat-x;height:40px;width:970px}
+#principal #menu #menu_links ul{width:980px;margin-top:2px}
+#principal #menu #menu_links li{float:left;color:#fff;border-right:1px solid #fff;height:36px;padding:0 4px}
+#principal #menu #menu_links li.lnk1{padding-left:0}
+#principal #menu #menu_links li a{color:#fff;font-weight:700;height:26px;display:block;background:url(../../images/seller/menu_icon.png) no-repeat right 16px;padding:10px 31px 0 14px}
+#principal #menu #menu_links li a:hover,#principal #menu #menu_links li a.actual,#principal #menu #menu_links li a.current{background:#f7f7f7 url(../../images/seller/menu_icon.png) no-repeat right -5px;text-decoration:none;color:#474747;height:28px;padding-top:12px;margin:-2px 0}
+#principal #submenu{background-color:#f7f7f7;height:30px;width:980px}
+#principal #submenu ul{width:980px}
+#principal #submenu ul li{float:left;margin-top:5px;height:20px;border-left:1px solid #919191}
+#principal #submenu ul li:first-child{border-left:none}
+#principal #submenu ul li a{color:#474747;text-decoration:none;display:block;height:17px;padding:3px 20px 0}
+#principal #submenu ul li a:hover,#principal #submenu ul li a.actual{font-weight:700}
+#principal #submenu .ubicacion{height:22px;margin:3px 0 0 20px}
+a:hover,#principal #header #hdr-der .hdr_left_links a{text-decoration:underline}
+#principal #menu #menu_links li.no_border,#principal #menu #menu_links li.lnk8{border-right:0}
+#principal #ruta {padding-left:3px;width:957px;font-size:10px;margin:20px 20px 0}
+#principal #cuerpo {height:auto;width:1000px}
+#principal #footer {height:70px;width:1000px;margin-top:22px}
+#principal #footer #foot-copyright {width:1000px;height:49px;border-top:1px solid #e0e0e0}
+#principal #footer #foot-copyright a {color:#f6751f}
+#principal #footer #foot-copyright span{color:#f6751f;margin:0 5px}
+#principal #footer #foot-copyright #foot-info-copyright{font-size:10px;width:585px;line-height:18px;margin:10px 0 0 15px}
+#principal #footer #foot-copyright #foot-logo{width:385px;text-align:right;margin:10px 15px 0 0}
+#overlay div{float:left;display:inline}
+#overlay{width:540px;display:block}
+#overlay #header-overlay{display:block;width:536px;height:40px;background-color:#f7f7f7;border-bottom:1px solid #ccc;margin:2px 2px 0}
+#overlay #header-overlay .title{width:475px;height:30px;font-size:15px;font-weight:700;color:#f6751f;padding:11px 0 0 17px}
+#overlay #header-overlay .title a{ font-size: 11px;}
+#overlay #header-overlay .boton-close{width:22px;height:22px;background:url(../../images/seller/close-alert.gif) no-repeat;cursor:pointer;border:0;margin:9px 0 0 11px}
+#overlay #body-overlay{display:block;width:540px;margin:10px 0}
+#overlay #alert{line-height:23px;font-size:12px;margin:0 20px}
+#overlay #footer-overlay{display:block;width:540px;height:30px;border-top:1px dashed #CCC;text-align:center;padding:12px 0 15px}
+#message_success,#message_error,#message_info{width:100%;min-height:18px;padding-bottom:4px;font-size:12px;padding-top:6px;color:#474747;position:relative}
+#message_success a,#message_error a,#message_info a{position:absolute;top:8px;right:6px;color:#474747;text-decoration:none;width:11px;height:11px;background:url(../../images/seller/salir_x.png) no-repeat}
+#message_success .txt,#message_error .txt,#message_info .txt{margin-left:35px;line-height:17px;text-align:justify;margin-right:35px}
+#message_success{border:1px solid #76c584;background:#cef6d5 url(../../images/seller/icon-success.png) no-repeat 10px 7px}
+#message_error{border:1px solid #cd5f5f;background:#f9d1d1 url(../../images/seller/icon-error.png) no-repeat 10px 7px}
+#message_info{border:1px solid #82c2ee;background:#cce8fc url(../../images/seller/icon-info.png) no-repeat 10px 7px}
+.btn_buscar,.btn_add_product,.btn_ir,.btn_guardar,.btn_cancelar,.btn_cancelar_alert,.btn_copiar_alert,.btn_cerrar_alert,.btn_guardar_alert,.btn_exportar_alert,.btn_aceptar_alert,.btn_guardar_continuar,.btn_agregar1,.btn_agregar_comb,.btn_publicar,.btn_continuar,.btn_agregar_imgs,.btn_agregar_camp_pers,.btn_subir_imagen,.btn_continuar_active,.collapse_icon,.expand_icon,.btn_finalizar,.btn_agregar_oferta,.btn_enviar,.btn_enviar_alert{width:70px;height:20px;cursor:pointer;border:none;background:url(../../images/seller/botones.gif)}
+.btn_subir_imagen{width:100px;height:20px;background-position:-164px -22px}
+.btn_buscar{background-position:0 0}
+.btn_add_product{width:160px;height:25px;background-position:0 -21px}
+.btn_ir{width:35px;background-position:0 -89px}
+.btn_guardar{background-position:0 -47px}
+.btn_cancelar{background-position:0 -68px}
+.btn_cancelar_alert,.btn_guardar_alert,.btn_agregar1,.btn_copiar_alert,.btn_cerrar_alert,.btn_exportar_alert,.btn_aceptar_alert,.btn_finalizar,.btn_enviar,.btn_enviar_alert{width:90px;height:25px}
+.btn_cancelar_alert{background-position:-100px -130px}
+.btn_guardar_alert{background-position:-194px -130px}
+.btn_agregar1{background-position:-100px -186px}
+.btn_copiar_alert{background-position:0 -130px}
+.btn_cerrar_alert{background-position:0 -159px}
+.btn_exportar_alert{background-position:-100px -159px}
+.btn_aceptar_alert{background-position:0 -186px}
+.btn_guardar_continuar{width:170px;height:25px;background-position:0 -213px}
+.btn_agregar_comb{width:180px;height:25px;background-position:-73px -68px}
+.btn_agregar_imgs{width:150px;height:25px;background-position:-175px -213px}
+.btn_agregar_camp_pers{width:240px;height:25px;background-position:0 -240px}
+.btn_publicar,.btn_continuar,.btn_continuar_active{width:100px;height:25px}
+.btn_publicar{background-position:-256px -68px}
+.btn_continuar{background-position:-194px -159px}
+.btn_continuar_active{background-position:-242px -240px}
+.btn_finalizar{background-position:0 -266px}
+.btn_agregar_oferta{width:140px;height:25px;background-position:-92px -266px}
+.collapse_icon,.expand_icon{width:9px;height:9px;display:inline-block}
+.collapse_icon{background-position:-206px -186px}
+.expand_icon{background-position:-194px -186px}
+.btn_enviar,.btn_enviar_alert{background-position:-267px -21px}
+.desple-ayuda{width:250px;height:auto;position:relative;line-height:16px;left:-10px;z-index:1000;display:none;padding:0 0 4px}
+.desple-ayuda .texto{width:230px;background-color:#474747;font-size:11px;font-weight:400;color:#fff;clear:left;padding:5px 10px;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-webkit-box-shadow:#333 2px 1px 3px;-moz-box-shadow:#333 2px 1px 3px;box-shadow:#7b7a7a 0 1px 3px;behavior: url(PIE.htc);position:relative}
+.desple-ayuda .icon-ayuda{width:11px;height:4px;position:absolute;left:10px;bottom:0;background:url(../../images/arrow-ayuda.gif) no-repeat;z-index:10}
+.ui-dialog{border:none;border-radius:0;font-family:Arial, Helvetica, sans-serif;padding:2px}
+.ui-dialog .ui-widget-content{border:none}
+.ui-dialog .ui-widget-header{border:none;background:#f7f7f7;border-bottom:1px solid #ccc;height:40px;padding:0}
+.ui-dialog .ui-widget-header .ui-icon{background:url(../../images/seller/close-alert.gif) no-repeat;background-position:0 0;width:30px;height:25px;margin-left:-8px;margin-top:-2px;padding:0}
+.ui-dialog .ui-state-hover .ui-icon{background:#f7f7f7 url(../../images/seller/close-alert.gif) no-repeat;border:none}
+.ui-dialog .ui-corner-all{border-radius:0}
+.ui-dialog .ui-dialog-buttonpane{border:none;border-top:1px dashed #ddd;text-align:center;float:none}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset{float:none}
+.ui-dialog .ui-dialog-buttonpane .btn_aceptar,.ui-dialog .ui-dialog-buttonpane .btn_cancelar{color:#fff;border:none;font-family:Arial, Helvetica, sans-serif;font-weight:700;width:90px;height:25px;background:#f7f7f7 url(../../images/seller/botones.gif) no-repeat}
+.ui-dialog .ui-dialog-buttonpane .btn_aceptar{background-position:0 -186px}
+.ui-dialog .ui-dialog-buttonpane .btn_cancelar{background-position:-100px -130px}
+.ui-dialog .ui-dialog-title{float:left;font-size:15px;color:#F6751F;font-weight:700;margin:10px 0 0 15px}
+.ui-dialog-content{color:#474747;font-size:12px;margin:10px 15px}
+.descripcion .titulo1{color:#0081D9 !important;font-size:18px !important;font-weight:700;padding-bottom:5px}
+.descripcion .titulo1 a{font-size:10px;font-weight:400;margin-left:7px}
+.descripcion{width:960px;padding-bottom:8px;border-bottom:1px solid #ddd;margin:30px 20px 0}
+.descripcion .texto ul{width:960px}
+.descripcion .texto ul li{line-height:20px}
+.descripcion .texto ul li a{text-decoration:underline}
+.ui-widget-header{background:url(../../images/seller/imgsCalendar.gif) no-repeat;background-position:0 -26px;background-repeat:repeat-x;border:none}
+.ui-datepicker{display:none;width:194px;font-family:Arial, Helvetica, sans-serif;height:auto;background-color:#fff;padding:2px}
+.ui-corner-all{border-radius:0}
+.ui-datepicker select.ui-datepicker-month,.ui-datepicker select.ui-datepicker-year{width:47px;height:18px}
+.ui-datepicker .ui-datepicker-title select{font-size:11px;color:#474747;font-family:Arial, Helvetica, sans-serif;margin:0 2px}
+.ui-datepicker .ui-datepicker-header{height:22px;padding:3px 0 0}
+.ui-datepicker .ui-datepicker-prev,.ui-datepicker .ui-datepicker-next{background:url(../../images/seller/imgsCalendar.gif) no-repeat -16px -76px !important;height:25px;position:absolute;top:0;width:14px;cursor:pointer}
+.ui-datepicker .ui-datepicker-next{background-position:0 -76px !important;right:6px}
+.ui-datepicker .ui-datepicker-prev{left:6px}
+.ui-datepicker .ui-datepicker-prev span,.ui-datepicker .ui-datepicker-next span{height:25px;margin-left:-7px;margin-top:-13px;width:14px}
+.ui-datepicker .ui-state-hover{border:none;background:none}
+.ui-datepicker .ui-icon{background-image:none !important}
+.ui-datepicker th{height:23px;padding:0}
+.ui-datepicker td{height:20px;text-align:center;padding:2px}
+.ui-datepicker .ui-state-default,.ui-datepicker .ui-widget-content .ui-state-default,.ui-datepicker .ui-widget-header .ui-state-default{background:#f7f7f7;border:none;color:#474747;font-size:10px;font-weight:400;text-align:center}
+.ui-datepicker .ui-state-highlight{background:#f7f7f7;color:#474747}
+.ui-datepicker .ui-state-hover,.ui-datepicker .ui-state-active{background:#F37125;border:none !important;color:#fff}
+div.empty-list{color:#474747;font-size:14px;font-weight:700;height:20px;text-align:center;width:720px;margin:20px 0 20px 120px;padding:10px}
+div.no_script_message {border: 2px dotted #DDDDDD; margin: 10px 20px; padding: 10px; width: 940px; background: #fffacd; color: #d21d0a !important; font-size: 18px !important; font-weight: 700;}
+div.message-tip {font-size: 11px;font-weight: 400;padding: 5px;position: absolute;width: 250px;z-index: 1;}
+div.message-tip .arrow-tip {background: url("../../images/seller/arrow_error.gif") no-repeat scroll left bottom transparent;bottom: 0;height: 7px;left: 5%;margin-left: -4px;position: absolute;width: 11px;}
+div.message-tip .validacion_error {background-color: #FFFFFF;border: 2px solid red;color: #474747;display: none;padding: 5px 8px 4px;text-align: center;width: 230px;}
+div#cuerpo div.wrapper_message {margin: 10px 20px 0;width: 960px;}
