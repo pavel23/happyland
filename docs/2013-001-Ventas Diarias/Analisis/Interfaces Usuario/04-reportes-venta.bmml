@@ -1,0 +1,361 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1669" measuredH="916" mockupW="1652" mockupH="902">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="17" y="24" w="707" h="537" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//www.happyland.com.pe/ventas-diarias.html</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Canvas" x="37" y="156" w="664" h="358" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>15658734</color>
+      </controlProperties>
+    </control>
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::SubTitle" x="37" y="129" w="-1" h="-1" measuredW="260" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <text>M%F3dulo%3A%20Ventas%20Diarias</text>
+      </controlProperties>
+    </control>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::Link" x="480" y="109" w="-1" h="-1" measuredW="122" measuredH="19" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Actualizar%20mis%20datos</text>
+      </controlProperties>
+    </control>
+    <control controlID="31" controlTypeID="com.balsamiq.mockups::Label" x="301" y="108" w="-1" h="-1" measuredW="179" measuredH="21" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Bienvenido%28a%29%3A%20%20Javier%20Roque%20%7C%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="32" controlTypeID="com.balsamiq.mockups::Link" x="617" y="109" w="-1" h="-1" measuredW="84" measuredH="19" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Cerrar%20Sesi%F3n</text>
+      </controlProperties>
+    </control>
+    <control controlID="33" controlTypeID="com.balsamiq.mockups::Label" x="607" y="108" w="-1" h="-1" measuredW="10" measuredH="21" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%7C</text>
+      </controlProperties>
+    </control>
+    <control controlID="478" controlTypeID="com.balsamiq.mockups::Label" x="72" y="171" w="-1" h="-1" measuredW="68" measuredH="24" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>false</bold>
+        <color>545684</color>
+        <size>16</size>
+        <text>Reportes</text>
+      </controlProperties>
+    </control>
+    <control controlID="973" controlTypeID="com.balsamiq.mockups::DataGrid" x="875" y="20" w="268" h="230" measuredW="230" measuredH="231" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>VENTA%20POR%20FAMILIA%2C%20MONTO%28S/.%29%0ABoleta%2C%20S/.%200.00%0AVenta%20Zippers%2C%20S/.%2010%20416.30%0AVenta%20sat%E9lites%2C%20S/.%206%20867.70%0AFactura%2C%20S/.%200.00%0ACumplea%F1os%2C%20S/.%200.00%0ADif.%20Cajeros%2C%20S/.%2023.50%0ATOTAL%2C%20S/.%2017%20307.50%0A%7B50L%2C%2030R%7D</text>
+      </controlProperties>
+    </control>
+    <control controlID="975" controlTypeID="com.balsamiq.mockups::Label" x="97" y="296" w="-1" h="-1" measuredW="124" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Venta%20diaria%20por%20mes</text>
+      </controlProperties>
+    </control>
+    <control controlID="976" controlTypeID="com.balsamiq.mockups::Label" x="97" y="235" w="-1" h="-1" measuredW="99" measuredH="21" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Venta%20por%20familia</text>
+      </controlProperties>
+    </control>
+    <control controlID="977" controlTypeID="com.balsamiq.mockups::Label" x="97" y="265" w="-1" h="-1" measuredW="109" measuredH="21" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Resumen%20mensual</text>
+      </controlProperties>
+    </control>
+    <control controlID="979" controlTypeID="com.balsamiq.mockups::Label" x="72" y="210" w="-1" h="-1" measuredW="113" measuredH="21" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <text>Resumen%20mensual</text>
+      </controlProperties>
+    </control>
+    <control controlID="980" controlTypeID="com.balsamiq.mockups::Link" x="476" y="235" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="984" controlTypeID="com.balsamiq.mockups::Image" x="521" y="226" w="25" h="25" measuredW="91" measuredH="91" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="985" controlTypeID="com.balsamiq.mockups::Link" x="548" y="235" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="986" controlTypeID="com.balsamiq.mockups::Image" x="449" y="228" w="25" h="25" measuredW="79" measuredH="79" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="987" controlTypeID="com.balsamiq.mockups::Link" x="476" y="267" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="988" controlTypeID="com.balsamiq.mockups::Image" x="521" y="258" w="25" h="25" measuredW="91" measuredH="91" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="989" controlTypeID="com.balsamiq.mockups::Link" x="548" y="267" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="990" controlTypeID="com.balsamiq.mockups::Image" x="449" y="260" w="25" h="25" measuredW="79" measuredH="79" zOrder="20" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="991" controlTypeID="com.balsamiq.mockups::Link" x="476" y="298" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="21" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="992" controlTypeID="com.balsamiq.mockups::Image" x="521" y="289" w="25" h="25" measuredW="91" measuredH="91" zOrder="22" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="993" controlTypeID="com.balsamiq.mockups::Link" x="548" y="298" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="23" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="994" controlTypeID="com.balsamiq.mockups::Image" x="449" y="291" w="25" h="25" measuredW="79" measuredH="79" zOrder="24" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="995" controlTypeID="com.balsamiq.mockups::Label" x="97" y="325" w="124" h="-1" measuredW="119" measuredH="21" zOrder="25" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Diferencia%20de%20dinero</text>
+      </controlProperties>
+    </control>
+    <control controlID="996" controlTypeID="com.balsamiq.mockups::Link" x="476" y="329" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="26" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="997" controlTypeID="com.balsamiq.mockups::Image" x="521" y="320" w="25" h="25" measuredW="91" measuredH="91" zOrder="27" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="998" controlTypeID="com.balsamiq.mockups::Link" x="548" y="329" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="28" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="999" controlTypeID="com.balsamiq.mockups::Image" x="449" y="322" w="25" h="25" measuredW="79" measuredH="79" zOrder="29" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1000" controlTypeID="com.balsamiq.mockups::Label" x="97" y="353" w="124" h="-1" measuredW="99" measuredH="21" zOrder="30" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Horas%20por%20cajero</text>
+      </controlProperties>
+    </control>
+    <control controlID="1001" controlTypeID="com.balsamiq.mockups::Link" x="476" y="359" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="31" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="1002" controlTypeID="com.balsamiq.mockups::Image" x="521" y="350" w="25" h="25" measuredW="91" measuredH="91" zOrder="32" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1003" controlTypeID="com.balsamiq.mockups::Link" x="548" y="359" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="33" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="1004" controlTypeID="com.balsamiq.mockups::Image" x="449" y="352" w="25" h="25" measuredW="79" measuredH="79" zOrder="34" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1005" controlTypeID="com.balsamiq.mockups::HRule" x="236" y="240" w="200" h="-1" measuredW="100" measuredH="10" zOrder="35" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1006" controlTypeID="com.balsamiq.mockups::HRule" x="236" y="270" w="200" h="-1" measuredW="100" measuredH="10" zOrder="36" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1007" controlTypeID="com.balsamiq.mockups::HRule" x="236" y="301" w="200" h="-1" measuredW="100" measuredH="10" zOrder="37" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1008" controlTypeID="com.balsamiq.mockups::HRule" x="236" y="330" w="200" h="-1" measuredW="100" measuredH="10" zOrder="38" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1009" controlTypeID="com.balsamiq.mockups::HRule" x="236" y="360" w="200" h="-1" measuredW="100" measuredH="10" zOrder="39" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1010" controlTypeID="com.balsamiq.mockups::LineChart" x="1386" y="595" w="283" h="248" measuredW="187" measuredH="175" zOrder="40" locked="false" isInGroup="-1"/>
+    <control controlID="1011" controlTypeID="com.balsamiq.mockups::PieChart" x="1386" y="14" w="215" h="181" measuredW="180" measuredH="180" zOrder="41" locked="false" isInGroup="-1"/>
+    <control controlID="1012" controlTypeID="com.balsamiq.mockups::Arrow" x="493" y="128" w="382" h="107" measuredW="150" measuredH="100" zOrder="42" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>bottom</direction>
+        <leftArrow>false</leftArrow>
+        <stroke>dotted</stroke>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="1013" controlTypeID="com.balsamiq.mockups::DataGrid" x="875" y="265" w="268" h="169" measuredW="256" measuredH="171" zOrder="43" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>RESUMEN%20MENSUAL%2C%20MONTO%28S/.%29%0AVenta%20del%20d%EDa%2C%20S/.%20234%20855.51%0AVenta%20Zippers%2C%20S/.%2010%20416.30%0AVenta%20Sat%E9lites%2C%20S/.%206%20867.70%0ACumplea%F1os%2C%20S/.%200.00%0AVENTA%20TOTAL%20DEL%20MES%2C%20S/.%20252%20139.51%0A%7B50L%2C%2030R%7D</text>
+      </controlProperties>
+    </control>
+    <control controlID="1014" controlTypeID="com.balsamiq.mockups::Arrow" x="493" y="272" w="382" h="66" measuredW="150" measuredH="100" zOrder="44" locked="false" isInGroup="-1">
+      <controlProperties>
+        <leftArrow>false</leftArrow>
+        <stroke>dotted</stroke>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="1015" controlTypeID="com.balsamiq.mockups::DataGrid" x="875" y="447" w="268" h="469" measuredW="302" measuredH="951" zOrder="45" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>VENTA%20X%20DIA%20SETIEMBRE%202013%2C%20MONTO%20%28S/.%29%0A01/04/2013%2C%20S/.%209%20497.40%0A02/04/2013%2C%20S/.%209%20619.90%0A03/04/2013%2C%20S/.%2015%20876.60%0A04/04/2013%2C%20S/.%2015%20631.10%0A05/04/2013%2C%20S/.%208%20801.39%0A06/04/2013%2C%20S/.%208%20406.80%0A07/04/2013%2C%20S/.%207%20495.70%0A08/04/2013%2C%20S/.%208%20502.60%0A09/04/2013%2C%20S/.%208%20787.40%0A10/04/2013%2C%20S/.%2013%20697.20%0A11/04/2013%2C%20S/.%2012%20847.34%0A12/04/2013%2C%20S/.%203%20818.20%0A13/04/2013%2C%20S/.%202%20842.10%0A14/04/2013%2C%20S/.%205%20789.30%0A15/04/2013%2C%20S/.%209%20241.70%0A16/04/2013%2C%20S/.%206%20223.30%0A17/04/2013%2C%20S/.%2011%20232.60%0A18/04/2013%2C%20S/.%2015%20118.30%0A19/04/2013%2C%20S/.%203%20626.40%0A20/04/2013%2C%20S/.%202%20872.10%0A21/04/2013%2C%20S/.%202%20271.20%0A22/04/2013%2C%20S/.%202%20285.70%0A23/04/2013%2C%20S/.%203%20926.70%0A24/04/2013%2C%20S/.%2010%20883.40%0A25/04/2013%2C%20S/.%2011%20961.48%0A26/04/2013%2C%20S/.%202%20854.40%0A27/04/2013%2C%20S/.%202%20484.60%0A28/04/2013%2C%20S/.%203%20431.10%0A29/04/2013%2C%20S/.%203%20708.70%0A30/04/2013%2C%20S/.%2013%20116.10%0ATOTAL%2C%20S/.%20252%20139.51%0A%7B50C%2C%2030R%7D</text>
+      </controlProperties>
+    </control>
+    <control controlID="1016" controlTypeID="com.balsamiq.mockups::Arrow" x="484" y="311" w="391" h="320" measuredW="150" measuredH="100" zOrder="46" locked="false" isInGroup="-1">
+      <controlProperties>
+        <leftArrow>false</leftArrow>
+        <stroke>dotted</stroke>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="1017" controlTypeID="com.balsamiq.mockups::Arrow" x="1158" y="123" w="220" h="10" measuredW="150" measuredH="100" zOrder="47" locked="false" isInGroup="-1">
+      <controlProperties>
+        <leftArrow>false</leftArrow>
+        <stroke>dotted</stroke>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="1018" controlTypeID="com.balsamiq.mockups::ColumnChart" x="1386" y="255" w="240" h="189" measuredW="187" measuredH="175" zOrder="48" locked="false" isInGroup="-1"/>
+    <control controlID="1019" controlTypeID="com.balsamiq.mockups::Arrow" x="1158" y="344" w="220" h="10" measuredW="150" measuredH="100" zOrder="49" locked="false" isInGroup="-1">
+      <controlProperties>
+        <leftArrow>false</leftArrow>
+        <stroke>dotted</stroke>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="1020" controlTypeID="com.balsamiq.mockups::Arrow" x="1158" y="698" w="218" h="10" measuredW="150" measuredH="100" zOrder="50" locked="false" isInGroup="-1">
+      <controlProperties>
+        <leftArrow>false</leftArrow>
+        <stroke>dotted</stroke>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="1021" controlTypeID="com.balsamiq.mockups::Label" x="72" y="393" w="-1" h="-1" measuredW="121" measuredH="21" zOrder="51" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <text>Resumen%20Gerencial</text>
+      </controlProperties>
+    </control>
+    <control controlID="1022" controlTypeID="com.balsamiq.mockups::Label" x="97" y="419" w="-1" h="-1" measuredW="204" measuredH="21" zOrder="52" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Acumulado%20venta%20diaria%20Happyland</text>
+      </controlProperties>
+    </control>
+    <control controlID="1023" controlTypeID="com.balsamiq.mockups::Link" x="476" y="419" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="53" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="1024" controlTypeID="com.balsamiq.mockups::Image" x="521" y="410" w="25" h="25" measuredW="91" measuredH="91" zOrder="54" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1025" controlTypeID="com.balsamiq.mockups::Link" x="548" y="419" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="55" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="1026" controlTypeID="com.balsamiq.mockups::Image" x="449" y="412" w="25" h="25" measuredW="79" measuredH="79" zOrder="56" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1027" controlTypeID="com.balsamiq.mockups::HRule" x="312" y="424" w="124" h="-1" measuredW="100" measuredH="10" zOrder="57" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1028" controlTypeID="com.balsamiq.mockups::Label" x="97" y="447" w="-1" h="-1" measuredW="191" measuredH="21" zOrder="58" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Acumulado%20venta%20diaria%20x%20Zonas</text>
+      </controlProperties>
+    </control>
+    <control controlID="1029" controlTypeID="com.balsamiq.mockups::Link" x="476" y="447" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="59" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="1030" controlTypeID="com.balsamiq.mockups::Image" x="521" y="438" w="25" h="25" measuredW="91" measuredH="91" zOrder="60" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1031" controlTypeID="com.balsamiq.mockups::Link" x="548" y="447" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="61" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="1032" controlTypeID="com.balsamiq.mockups::Image" x="449" y="440" w="25" h="25" measuredW="79" measuredH="79" zOrder="62" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1033" controlTypeID="com.balsamiq.mockups::HRule" x="312" y="452" w="124" h="-1" measuredW="100" measuredH="10" zOrder="63" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1034" controlTypeID="com.balsamiq.mockups::Label" x="97" y="475" w="-1" h="-1" measuredW="185" measuredH="21" zOrder="64" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Acumulado%20venta%20diaria%20x%20Local</text>
+      </controlProperties>
+    </control>
+    <control controlID="1035" controlTypeID="com.balsamiq.mockups::Link" x="476" y="477" w="-1" h="-1" measuredW="21" measuredH="19" zOrder="65" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ver</text>
+      </controlProperties>
+    </control>
+    <control controlID="1036" controlTypeID="com.balsamiq.mockups::Link" x="548" y="477" w="-1" h="-1" measuredW="118" measuredH="19" zOrder="66" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Descargar%20en%20Excel</text>
+      </controlProperties>
+    </control>
+    <control controlID="1037" controlTypeID="com.balsamiq.mockups::HRule" x="312" y="482" w="124" h="-1" measuredW="100" measuredH="10" zOrder="67" locked="false" isInGroup="-1">
+      <controlProperties>
+        <stroke>dotted</stroke>
+      </controlProperties>
+    </control>
+    <control controlID="1038" controlTypeID="com.balsamiq.mockups::Image" x="521" y="468" w="25" h="25" measuredW="91" measuredH="91" zOrder="68" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/xlsx-descarga.jpg</src>
+      </controlProperties>
+    </control>
+    <control controlID="1039" controlTypeID="com.balsamiq.mockups::Image" x="449" y="470" w="25" h="25" measuredW="79" measuredH="79" zOrder="69" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./assets/view-icono.jpg</src>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

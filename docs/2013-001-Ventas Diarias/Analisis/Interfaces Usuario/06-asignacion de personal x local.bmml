@@ -1,0 +1,136 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="943" measuredH="921" mockupW="926" mockupH="897">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="17" y="24" w="926" h="897" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//www.happyland.com.pe/ventas-diarias.html</text>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Label" x="339" y="859" w="-1" h="-1" measuredW="305" measuredH="21" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%AE%202013%20Happyland.%20Todos%20los%20Derechos%20Reservados</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Canvas" x="37" y="158" w="887" h="685" measuredW="100" measuredH="70" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>15658734</color>
+      </controlProperties>
+    </control>
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::SubTitle" x="37" y="129" w="-1" h="-1" measuredW="260" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <text>M%F3dulo%3A%20Ventas%20Diarias</text>
+      </controlProperties>
+    </control>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::Link" x="699" y="113" w="-1" h="-1" measuredW="122" measuredH="19" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Actualizar%20mis%20datos</text>
+      </controlProperties>
+    </control>
+    <control controlID="31" controlTypeID="com.balsamiq.mockups::Label" x="520" y="112" w="-1" h="-1" measuredW="179" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Bienvenido%28a%29%3A%20%20Javier%20Roque%20%7C%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="32" controlTypeID="com.balsamiq.mockups::Link" x="836" y="113" w="-1" h="-1" measuredW="84" measuredH="19" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Cerrar%20Sesi%F3n</text>
+      </controlProperties>
+    </control>
+    <control controlID="33" controlTypeID="com.balsamiq.mockups::Label" x="826" y="112" w="-1" h="-1" measuredW="10" measuredH="21" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%7C</text>
+      </controlProperties>
+    </control>
+    <control controlID="483" controlTypeID="com.balsamiq.mockups::Button" x="348" y="249" w="-1" h="-1" measuredW="103" measuredH="27" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>2848996</color>
+        <text>Asignar%20Perfil</text>
+      </controlProperties>
+    </control>
+    <control controlID="493" controlTypeID="com.balsamiq.mockups::ComboBox" x="105" y="249" w="211" h="-1" measuredW="140" measuredH="124" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>-%20Seleccionar%20Rol%20-%0ASub%20Gerente%20Zonal%0A%3E%20Administrador%20de%20Local%0A%3E%3E%20Jefe%20de%20Local%0A%3E%3E%20Jefe%20de%20Local%20Volante%0A%3E%3E%3E%20Asistente%20administrativos%0A%3E%3E%3E%3E%20Cajeros/Operadores</text>
+      </controlProperties>
+    </control>
+    <control controlID="494" controlTypeID="com.balsamiq.mockups::Label" x="61" y="249" w="-1" h="-1" measuredW="37" measuredH="21" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <text>Perfil%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="497" controlTypeID="com.balsamiq.mockups::ComboBox" x="105" y="211" w="211" h="-1" measuredW="109" measuredH="24" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Jockey%20Plaza</text>
+      </controlProperties>
+    </control>
+    <control controlID="498" controlTypeID="com.balsamiq.mockups::Label" x="63" y="213" w="-1" h="-1" measuredW="37" measuredH="21" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <text>Local%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="499" controlTypeID="com.balsamiq.mockups::Label" x="60" y="173" w="-1" h="-1" measuredW="256" measuredH="24" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>false</bold>
+        <color>545684</color>
+        <size>16</size>
+        <text>Asignaci%F3n%20de%20Perfiles%20de%20Usuarios</text>
+      </controlProperties>
+    </control>
+    <control controlID="520" controlTypeID="com.balsamiq.mockups::DataGrid" x="61" y="486" w="671" h="292" measuredW="608" measuredH="353" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%5B%5D%2C%20Nombres%20y%20Apellidos%5B-%5D%5Cr%5Cr%2C%20Local%5B-%5D%5Cr%5Cr%2C%20Perfil%5B+%5D%2C%20Acciones%0A%5B%5D%2C%20Wilson%20Risco%2C%20Jockey%20Plaza%2C%20Administrador%20de%20Local%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Pool%20V%E1squez%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Renzo%20Velarde%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Mar%EDa%20del%20Pilar%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Bryan%20Miranda%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Pierre%20L%F3pez%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Welvid%20Rojas%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Claudia%20Navarro%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Sinday%20Calero%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%5B%5D%2C%20Luis%20Perca%2C%20Arequipa%20Mall%20Aventura%2C%20Cajero/Operador%2C%20%5BEliminar%5D%20%20%5BDeshabilitar%5D%0A%7B10C%2C%2060L%2C%2065L%2C%2065L%2C%2050C%7D</text>
+      </controlProperties>
+    </control>
+    <control controlID="521" controlTypeID="com.balsamiq.mockups::Button" x="348" y="210" w="-1" h="-1" measuredW="105" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>2848996</color>
+        <text>Asignar%20Local</text>
+      </controlProperties>
+    </control>
+    <control controlID="522" controlTypeID="com.balsamiq.mockups::LinkBar" x="471" y="793" w="-1" h="-1" measuredW="261" measuredH="19" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%7C%3C%20Primera%2C%201%2C%202%2C%203%2C%204%2C%205%2C%20%DAltima%20%3E%7C</text>
+      </controlProperties>
+    </control>
+    <control controlID="523" controlTypeID="com.balsamiq.mockups::SearchBox" x="92" y="507" w="151" h="-1" measuredW="120" measuredH="25" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Renzo</text>
+      </controlProperties>
+    </control>
+    <control controlID="524" controlTypeID="com.balsamiq.mockups::SearchBox" x="251" y="507" w="158" h="-1" measuredW="120" measuredH="24" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="525" controlTypeID="com.balsamiq.mockups::ComboBox" x="126" y="409" w="152" h="-1" measuredW="142" measuredH="62" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>-%20Elija%20una%20acci%F3n%20-%0AEliminar%20Selecci%F3n%0ADeshabilitar%20Selecci%F3n</text>
+      </controlProperties>
+    </control>
+    <control controlID="526" controlTypeID="com.balsamiq.mockups::Label" x="61" y="411" w="-1" h="-1" measuredW="60" measuredH="21" zOrder="20" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <text>Acciones%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="527" controlTypeID="com.balsamiq.mockups::Alert" x="532" y="305" w="-1" h="-1" measuredW="200" measuredH="133" zOrder="21" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Alerta%0AEsta%20seguro%20de%20eliminar%20las%20filas%20seleccionadas%0ASi%2C%20No</text>
+      </controlProperties>
+    </control>
+    <control controlID="528" controlTypeID="com.balsamiq.mockups::Arrow" x="243" y="373" w="289" h="67" measuredW="150" measuredH="100" zOrder="22" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>bottom</direction>
+        <stroke>dotted</stroke>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="529" controlTypeID="com.balsamiq.mockups::Button" x="612" y="455" w="-1" h="-1" measuredW="120" measuredH="27" zOrder="23" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>2848996</color>
+        <text>Agregar%20Usuario</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

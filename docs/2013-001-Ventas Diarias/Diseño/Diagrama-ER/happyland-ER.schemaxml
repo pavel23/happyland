@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="latin1" collation="latin1_swedish_ci">happyland</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="hpl_daily_sales" view="colnames">
+<left>1056</left>
+<top>383</top>
+<width>183</width>
+<height>390</height>
+<sql_create_table>CREATE TABLE `hpl_daily_sales` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `date_sale` date NOT NULL,
+  `total_opening_cash` float NOT NULL DEFAULT '0',
+  `total_closing_cash` float NOT NULL DEFAULT '0',
+  `total_master_card` float NOT NULL DEFAULT '0',
+  `total_visa_card` float NOT NULL DEFAULT '0',
+  `total_retirement_pen` float NOT NULL DEFAULT '0',
+  `total_retirementl_dol` float NOT NULL DEFAULT '0',
+  `grand_total_calculated` float NOT NULL DEFAULT '0',
+  `grand_total_z_format` float NOT NULL DEFAULT '0',
+  `total_difference_money` float NOT NULL DEFAULT '0',
+  `total_diferrence_values` float NOT NULL DEFAULT '0',
+  `total_num_transactions` int(11) DEFAULT '0',
+  `total_hours_by_cash` int(11) DEFAULT '0',
+  `status` varchar(3) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hpl_daily_sales_detail" view="colnames">
+<left>753</left>
+<top>349</top>
+<width>198</width>
+<height>472</height>
+<sql_create_table>CREATE TABLE `hpl_daily_sales_detail` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `subsidiaries_id` int(10) unsigned zerofill NOT NULL,
+  `daily_sales_id` int(10) unsigned NOT NULL,
+  `operator_id` int(10) unsigned NOT NULL,
+  `type_of_entry` int(11) NOT NULL DEFAULT '1',
+  `opening_cash` float NOT NULL DEFAULT '0',
+  `cash_number` int(11) NOT NULL DEFAULT '1' COMMENT 'caja o punto de servcio del game system',
+  `closing_cash` float NOT NULL DEFAULT '0',
+  `master_card_amount` float NOT NULL DEFAULT '0',
+  `visa_amount` float NOT NULL DEFAULT '0',
+  `retirement_amount_pen` float NOT NULL DEFAULT '0',
+  `retirement_amount_dol` float NOT NULL DEFAULT '0',
+  `total_calculated` float NOT NULL DEFAULT '0',
+  `total_x_format` float NOT NULL DEFAULT '0',
+  `difference_money` float NOT NULL DEFAULT '0',
+  `difference_values` varchar(45) NOT NULL DEFAULT '0',
+  `num_transacctions` int(11) NOT NULL DEFAULT '0',
+  `hour_by_cash` int(11) NOT NULL DEFAULT '0',
+  `status` varchar(3) NOT NULL DEFAULT 'opn',
+  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_hpl_daily_sales_detail_hpl_user_idx` (`operator_id`),
+  KEY `fk_hpl_daily_sales_detail_hpl_daily_sales1_idx` (`daily_sales_id`),
+  KEY `fk_hpl_daily_sales_detail_hpl_subsidiaries1_idx` (`subsidiaries_id`),
+  CONSTRAINT `fk_hpl_daily_sales_detail_hpl_daily_sales1` FOREIGN KEY (`daily_sales_id`) REFERENCES `hpl_daily_sales` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hpl_module" view="colnames">
+<left>618</left>
+<top>27</top>
+<width>140</width>
+<height>265</height>
+<sql_create_table>CREATE TABLE `hpl_module` (
+  `id` int(11) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `name` varchar(45) NOT NULL,
+  `description` varchar(250) NOT NULL,
+  `url` varchar(250) DEFAULT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `status` varchar(3) NOT NULL DEFAULT 'act',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_hpl_module_hpl_module1_idx` (`parent_id`),
+  CONSTRAINT `fk_hpl_module_hpl_module1` FOREIGN KEY (`parent_id`) REFERENCES `hpl_module` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hpl_profile" view="colnames">
+<left>29</left>
+<top>45</top>
+<width>113</width>
+<height>214</height>
+<sql_create_table>CREATE TABLE `hpl_profile` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'identificador de la tabla perfiles de usuario',
+  `name` varchar(50) NOT NULL,
+  `status` varchar(3) NOT NULL DEFAULT 'act',
+  `is_deleted` varchar(255) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hpl_profile_access" view="colnames">
+<left>278</left>
+<top>10</top>
+<width>182</width>
+<height>248</height>
+<sql_create_table>CREATE TABLE `hpl_profile_access` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `module_id` int(11) NOT NULL,
+  `profile_id` int(10) unsigned NOT NULL,
+  `read` int(11) DEFAULT NULL,
+  `write` int(11) DEFAULT NULL,
+  `total_access` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`,`module_id`),
+  KEY `fk_hpl_profile_access_hpl_profile1_idx` (`profile_id`),
+  KEY `fk_hpl_profile_access_hpl_module1_idx` (`module_id`),
+  CONSTRAINT `fk_hpl_profile_access_hpl_module1` FOREIGN KEY (`module_id`) REFERENCES `hpl_module` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hpl_profile_access_hpl_profile1` FOREIGN KEY (`profile_id`) REFERENCES `hpl_profile` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hpl_subsidiaries" view="colnames">
+<left>468</left>
+<top>367</top>
+<width>140</width>
+<height>236</height>
+<sql_create_table>CREATE TABLE `hpl_subsidiaries` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `parent_id` int(10) unsigned zerofill DEFAULT NULL,
+  `status` varchar(3) NOT NULL DEFAULT 'act',
+  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_hpl_subsidiaries_hpl_subsidiaries1_idx` (`parent_id`),
+  CONSTRAINT `fk_hpl_subsidiaries_hpl_daily_sales_detail_1` FOREIGN KEY (`id`) REFERENCES `hpl_daily_sales_detail` (`subsidiaries_id`),
+  CONSTRAINT `fk_hpl_subsidiaries_hpl_subsidiaries1` FOREIGN KEY (`parent_id`) REFERENCES `hpl_subsidiaries` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hpl_user" view="colnames">
+<left>167</left>
+<top>350</top>
+<width>135</width>
+<height>370</height>
+<sql_create_table>CREATE TABLE `hpl_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `subsidiaries_id` int(10) unsigned zerofill NOT NULL,
+  `profile_id` int(10) unsigned NOT NULL,
+  `worker_code` varchar(15) NOT NULL,
+  `first_name` varchar(20) NOT NULL,
+  `last_name` varchar(20) NOT NULL,
+  `email_address` varchar(45) DEFAULT NULL,
+  `user_name` varchar(15) NOT NULL,
+  `password` varchar(15) NOT NULL,
+  `status` varchar(3) NOT NULL DEFAULT 'act',
+  `start_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expiration_date` datetime DEFAULT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_name_UNIQUE` (`user_name`),
+  UNIQUE KEY `worker_code_UNIQUE` (`worker_code`),
+  KEY `fk_hpl_user_hpl_profile1_idx` (`profile_id`),
+  KEY `fk_hpl_user_hpl_subsidiaries1_idx` (`subsidiaries_id`),
+  CONSTRAINT `fk_hpl_user_hpl_profile1` FOREIGN KEY (`profile_id`) REFERENCES `hpl_profile` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_hpl_user_hpl_subsidiaries1` FOREIGN KEY (`subsidiaries_id`) REFERENCES `hpl_subsidiaries` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>

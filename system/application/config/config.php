@@ -26,7 +26,7 @@ $config['base_url']	= 'http://localhost/happyland/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -224,7 +224,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = '10371e10d844f2ee92fabade9d74e1bb4f';
 
 /*
 |--------------------------------------------------------------------------

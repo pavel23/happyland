@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Metisk</title>
+        <title><?php echo $this->layout->title ?></title>
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/lib/bootstrap.min.css">
         <?php if ($this->layout->isLogin): ?>
             <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/login.css"/>
