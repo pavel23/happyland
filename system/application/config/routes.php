@@ -62,6 +62,8 @@ $route['venta-diaria/registrar.html']           = 'daily_sales_controller/mainte
 $route['venta-diaria/(:num)/modificar.html']    = 'daily_sales_controller/maintenanceForm/$1';
 $route['venta-diaria/procesar-datos.html']      = 'daily_sales_controller/processForm';
 
+$route['venta-diaria/lista-operarios.html']      = 'daily_sales_controller/getJSONOperators';
+
 $route['404_override'] = '';
 
 
