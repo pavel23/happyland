@@ -5,6 +5,11 @@ if (!defined('BASEPATH'))
 
 class Profile_controller extends CI_Controller {
 
+    public function __construct() {
+        parent::__construct();
+        $this->layout->isLogin = false;
+    }
+    
     public function index() {
         try {
             $this->load->helper('url');
@@ -14,9 +19,6 @@ class Profile_controller extends CI_Controller {
             
             $this->layout->view('profile/list_template', $data);
             
-//            $this->load->view('common/header');
-//            $this->load->view('profile/list_template', $data);
-//            $this->load->view('common/footer');
         } catch (Exception $e) {
             echo $e;
         }
@@ -27,9 +29,10 @@ class Profile_controller extends CI_Controller {
         echo '<pre>';
         print_r($params);
         echo '</pre>';
-        $this->load->view('common/header');
-        $this->load->view('profile/maintenance_template');
-        $this->load->view('common/footer');
+         $this->layout->view('profile/maintenance_template');
+//        $this->load->view('common/header');
+//        $this->load->view('profile/maintenance_template');
+//        $this->load->view('common/footer');
     }
 
     public function profile_delete($params = array()) {

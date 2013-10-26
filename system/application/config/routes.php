@@ -48,6 +48,16 @@ $route['perfil/(:num)/modificar.html']          = 'profile_controller/profile_ma
 $route['perfil/(:num)/eliminar.html']           = 'profile_controller/profile_delete/$1';
 $route['perfil/exportar-excel.html']            = 'profile_controller/export_excel';
 
+
+
+
+/*
+ * Rutas de acceso al modulo de perfiles
+ */
+$route['login.html']                    = 'user/index';
+
+
+
 /*
  * Rutas de acceso al modulo de usuarios
  */
