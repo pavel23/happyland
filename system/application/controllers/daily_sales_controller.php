@@ -17,22 +17,16 @@ class Daily_sales_controller extends CI_Controller {
     }
 
     public function index() {
-        try {
-
-            $this->load->database();
-            $this->load->model('Profile_dao', 'ProfileDAO');
-            $data['profile_data'] = $this->ProfileDAO->get_all_profiles();
-            $this->load->view('common/header');
-            $this->load->view('daily_sales/list_template', $data);
-            $this->load->view('common/footer');
-        } catch (Exception $e) {
-            echo $e;
-        }
+        $this->load->database();
+        $this->load->model('Profile_dao', 'ProfileDAO');
+        $data['profile_data'] = $this->ProfileDAO->get_all_profiles();
+        $this->layout->assets(base_url() . 'assets/css/daily_sales.css');
+        $this->layout->view('daily_sales/list_template', $data);
     }
 
     public function maintenanceForm() {
-        $this->layout->assets(base_url() . 'assets/css/dist/jquery.handsontable.full.css', 'footer');
-        $this->layout->assets(base_url() . 'assets/js/dist/jquery.handsontable.full.js', 'footer');
+        $this->layout->assets(base_url() . 'assets/css/dist/jquery.handsontable.full.css');
+        $this->layout->assets(base_url() . 'assets/js/dist/jquery.handsontable.full.js');
         $this->layout->assets(base_url() . 'assets/js/happy/daily.sales.js', 'footer');
         $this->layout->view('daily_sales/maintenance_template');
     }
@@ -64,7 +58,7 @@ class Daily_sales_controller extends CI_Controller {
                     continue;
                 }
                 $this->UserDAO->get_user_id_by_name($full_name);
-                $array_operator[]   = $operator['full_name'];
+                $array_operator[] = $operator['full_name'];
             }
             header("Content-type: application/json");
             echo json_encode($array_operator);
