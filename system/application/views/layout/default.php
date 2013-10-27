@@ -11,6 +11,8 @@
             <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/main.css"/>
             <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font/font-awesome.css"/>
         <?php endif; ?>
+
+        <?php $this->layout->css(); ?>
     </head>
     <body>
         <?php if ($this->layout->isLogin): ?>
@@ -41,5 +43,7 @@
 
         <script src="<?php echo base_url(); ?>assets/js/lib/jquery.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/lib/bootstrap.js"></script>
+
+        <?php $this->layout->js(); ?>
     </body>
 </html>

@@ -1,9 +1,7 @@
 var myAutocompleteRenderer = function(instance, td, row, col, prop, value, cellProperties) {
     Handsontable.AutocompleteCell.renderer.apply(this, arguments);
     $(td).css({
-        // fontStyle: 'italic',
-        color: 'black',
-        //fontWeight: 'bold'
+        color: 'black'
     });
     td.title = 'Type to show the list of options';
 };
@@ -41,19 +39,9 @@ var sumCalculateDifferenceCash = function(instance, td, row, col, prop, value, c
     td.innerHTML = sumRowsTotalCash(instance, row) - b;
 }
 
-/*function colorHighlighter(item) {
-  var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
-  var label = item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
-    return '<strong>' + match + '</strong>';
-  });
-  return '<span style="margin-right: 10px; background-color: ' + item + '">&nbsp;&nbsp;&nbsp;</span>' + label;
-}*/
-
 $(function() {
-    var $container = $("#example1");
-    var $parent = $container.parent();
-    var autosaveNotification;
-    var $url_site = $('#url-site').val();
+    var $container = $("#daily_sales"), autosaveNotification = 0, $url_site = $('#url-site').val();
+    
     $container.handsontable({
         startRows: 1,
         startCols: 14,
@@ -61,31 +49,31 @@ $(function() {
         colHeaders: [
             'Nombres y Apellidos',
             'Caja',
-            'Apertura<br />Inicicio (S/.)',
+            'Apertura<br />Inicio (S/.)',
             'Apertura<br />Fin (S/.)',
             'Tarjeta<br />Master Card (S/.)',
             'Tarjeta<br />Visa (S/.)',
             'Retiro (S/.)', 'Retiro ($)',
             'Total<br/>Efectivo (S/.)',
             'Total<br/>Formato X (S/.)',
-            'Diferencia<br />Dinero (S/.)',
-            'Diferencia<br />Valores',
+            'Dif.<br />Dinero (S/.)',
+            'Dif.<br />Valores',
             'Transacciones',
             'Horas/Caja'
         ],
         columns: [
             {
                 type: {
-                        renderer: myAutocompleteRenderer, 
-                        editor: Handsontable.AutocompleteEditor
+                    renderer: myAutocompleteRenderer,
+                    editor: Handsontable.AutocompleteEditor
                 },
                 source: function(params, process) {
-                        $.ajax({
-                            url: $('#url-data-operators').val(),
-                            success: function(response) {
-                                process(response);
-                            }
-                        });
+                    $.ajax({
+                        url: $('#url-data-operators').val(),
+                        success: function(response) {
+                            process(response);
+                        }
+                    });
                 },
                 strict: true,
                 //highlighter: colorHighlighter,
@@ -97,22 +85,15 @@ $(function() {
             {type: 'numeric', allowInvalid: true},
             {type: 'numeric', allowInvalid: true},
             {type: 'numeric', allowInvalid: true},
-            {type: 'numeric', allowInvalid: true, readOnly:true, renderer: sumCalculateTotalCash},
+            {type: 'numeric', allowInvalid: true, readOnly: true, renderer: sumCalculateTotalCash},
             {type: 'numeric', allowInvalid: true},
-            {type: 'numeric', allowInvalid: true, readOnly:true, renderer: sumCalculateDifferenceCash},
+            {type: 'numeric', allowInvalid: true, readOnly: true, renderer: sumCalculateDifferenceCash},
             {type: 'numeric', allowInvalid: true},
             {type: 'numeric', allowInvalid: true},
             {type: 'numeric', allowInvalid: true}
         ],
         minSpareRows: 1,
         contextMenu: true,
-        /*cells: function(r, c, prop) {
-            var cellProperties = {};
-            if (c === 8 || c === 10) {
-                cellProperties.readOnly = true;
-            }
-            return cellProperties;
-        },*/
         afterChange: function(change, source) {
             if (source === 'loadData') {
                 console.log('aca carga la data');
@@ -143,21 +124,18 @@ $(function() {
     });
 
     var handsontable = $container.data('handsontable');
-    $parent.find('button[name=load]').click(function() {
-        $.ajax({
-            url: $url_site,
-            dataType: 'json',
-            type: 'GET',
-            success: function(res) {
-                handsontable.loadData(res.data);
-                console.log('Data loaded');
-            }
-        });
-    });
 
-    $parent.find('button[name=save]').click(function() {
+    $('#save_daily_sales').on('click', function(e) {
+        e.preventDefault();
+
+        var href = $(this).attr('href');
+
+        if (!href) {
+            return false;
+        }
+
         $.ajax({
-            url: $url_site,
+            url: href,
             data: {'data': handsontable.getData()}, //returns all cells' data
             dataType: 'json',
             type: 'POST',
@@ -174,4 +152,5 @@ $(function() {
             }
         });
     });
+
 });
