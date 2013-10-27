@@ -3,14 +3,26 @@
 </div>
 <div class="tab-content">
     <div id="login" class="tab-pane active">
-        <?php echo form_open('/', array('class' => 'form-signin')); ?>
+        <?php echo form_open(base_url() . 'login/authentication', array('class' => 'form-signin')); ?>
         <p class="text-muted text-center">
             Ingrese Usuario y Contraseña
         </p>
-        
-        <?php echo form_input(array('name' => 'formLogin[username]', 'id' => 'formLogin_username', 'type' => 'text', 'placeholder' => 'Usuario', 'autofocus' => 'autofocus', 'class' => 'form-control')) ?>       
-        <?php echo form_input(array('name' => 'formLogin[password]', 'id' => 'formLogin_password', 'type' => 'password', 'placeholder' => 'Contraseña', 'autofocus' => 'autofocus', 'class' => 'form-control')) ?>
+
+        <?php if ($this->session->flashdata('message')) : ?>
+            <div class="alert alert-danger">
+                <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->session->flashdata('message') ?>
+            </div>
+        <?php endif; ?>
+        <div class="form-group">
+            <?php echo form_input(array('name' => 'formLogin[dni]', 'id' => 'formLogin_dni', 'type' => 'text', 'placeholder' => 'DNI', 'autofocus' => 'autofocus', 'class' => 'form-control')) ?>       
+            <?php echo form_error('formLogin[dni]') ?>
+        </div>
+        <div class="form-group">
+            <?php echo form_input(array('name' => 'formLogin[password]', 'id' => 'formLogin_password', 'type' => 'password', 'placeholder' => 'Contraseña', 'autofocus' => 'autofocus', 'class' => 'form-control')) ?>
+            <?php echo form_error('formLogin[password]') ?>
+        </div>
         <?php echo form_submit('login', 'Login', 'class="btn btn-lg btn-primary btn-block"'); ?>
+        <?php echo form_hidden('formLogin[token]', $token) ?>
         <?php echo form_close(); ?>
     </div>
     <div id="forgot" class="tab-pane">

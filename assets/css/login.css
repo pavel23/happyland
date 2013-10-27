@@ -46,3 +46,7 @@ body {
     margin-bottom: -1px;
     border-radius: 0;
 }
+
+.form-signin .has-error{
+  color: #b94a48;
+}
