@@ -49,8 +49,8 @@ class Daily_sales_controller extends CI_Controller {
     public function getJSONOperators() {
         try {
             $this->load->database();
-            $this->load->model('User_dao', 'UserDAO');
-            $data['opeartor_data'] = $this->UserDAO->get_operator_users();
+            $this->load->model('UserDao', 'UserDAO');
+            $data['opeartor_data'] = $this->UserDAO->getOperatorUsers();
             $array_operator = array();
             foreach ($data['opeartor_data'] as $operator) {
                 $full_name = trim($operator['full_name']);
