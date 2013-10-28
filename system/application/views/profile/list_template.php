@@ -1,5 +1,4 @@
-<!--<a href="<?php //echo site_url('profile_controller/export_excel');  ?>">Exportar Excel</a>-->    
-<div class="row">
+ <div class="row">
     <div class="col-lg-12">
         <div class="box">
             <header>
@@ -7,6 +6,7 @@
                 <h5>Listado de Perfiles</h5>
                 <div class="toolbar">
                     <a href="<?php echo site_url('profile_controller/profile_maintenance'); ?>" class="btn btn-primary btn-sm"><i class="icon-plus icon-white"></i></a>
+                    <a href="<?php echo site_url('profile_controller/export_excel');  ?>" class="btn btn-primary btn-sm"><i class="icon-download-alt icon-white"></i></a>
                 </div>
             </header>
             <div class="body">
