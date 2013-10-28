@@ -47,6 +47,7 @@ $(function() {
         startCols: 14,
         rowHeaders: true,
         colHeaders: [
+            'ID',
             'Nombres y Apellidos',
             'Caja',
             'Apertura<br />Inicio (S/.)',
@@ -63,6 +64,11 @@ $(function() {
         ],
         columns: [
             {
+                type: 'text', 
+                allowInvalid: false, 
+                readOnly: true
+            },
+            {
                 type: {
                     renderer: myAutocompleteRenderer,
                     editor: Handsontable.AutocompleteEditor
@@ -70,8 +76,9 @@ $(function() {
                 source: function(params, process) {
                     $.ajax({
                         url: $('#url-data-operators').val(),
+                        contentType: 'application/json; charset=utf-8',
                         success: function(response) {
-                            process(response);
+                            process(response.full_names);
                         }
                     });
                 },
@@ -101,12 +108,15 @@ $(function() {
             }
 
             clearTimeout(autosaveNotification);
-            var row_index = (change[0][0] ? change[0][0] : null);
-            var col_index = (change[0][1] ? change[0][1] : null);
+            var row_index = (change[0][0]>=0 ? change[0][0] : null);
+            var col_index = (change[0][1]>=0 ? change[0][1] : null);
             var old_value = (change[0][2] ? change[0][2] : null);
             var new_value = (change[0][3] ? change[0][3] : null);
 
             if (old_value !== new_value) {
+                if(col_index==1){
+                    $container.handsontable('setDataAtCell', row_index, (col_index-1) , 'COD00'+row_index)   
+                }
                 $.ajax({
                     url: $url_site,
                     dataType: 'json',
@@ -154,3 +164,63 @@ $(function() {
     });
 
 });
+
+/*
+$(function() {
+    
+    
+    var container = {
+        codes: [
+            {code: 100, label: "Continue"},
+            {code: 200, label: "OK"},
+            {code: 400, label: "Bad Request"},
+            {code: 401, label: "Unauthorized"},
+            {code: 403, label: "Forbidden"},
+            {code: 500, label: "Server Error"}],
+        codeLabels: ["Continue", "OK", "Bad Request", "Unauthorized", "Forbidden", "Server Error"]
+    };
+
+    function RequestLog(code, container) {
+        this.container = container;
+        this.Code = code;
+        Object.defineProperty(this, "StatusCode", {
+            //writable: true,
+            configurable: true,
+            set: function(value) {
+                for (var i = 0; i < container.codes.length; i++) {
+                    console.log(i + '->' + container.codes[i].label);
+                    if (container.codes[i].label === value) {
+                        this.Code = container.codes[i].code;
+                        break;
+                    }
+                }
+            },
+            get: function() {
+                for (var i = 0; i < container.codes.length; i++) {
+                    if (container.codes[i].code === this.Code) {
+                        return container.codes[i].label;
+                    }
+                }
+                return "";
+            }
+        });
+        return this;
+    }
+
+    var viewmodel = {
+        data: [new RequestLog(200, container), new RequestLog(400, container)]
+    };
+
+    $("#table-test").handsontable({
+        data: viewmodel.data,
+        startRows: 0,
+        minSpareRows: 1,
+        autoWrapRow: true,
+        colHeaders: ["Code", "Status"],
+        columns: [
+            {data: "Code", width: 200, readOnly: true},
+            {data: "StatusCode", type: "autocomplete", source: container.codeLabels, strict: true, width: 200},
+        ]
+    });
+});
+*/
