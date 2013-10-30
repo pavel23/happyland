@@ -5,7 +5,7 @@
                 <div class="icons"><i class="icon-th"></i></div>
                 <h5>Listado de Usuarios</h5>
                 <div class="toolbar">
-                    <a class="btn btn-primary btn-sm"><i class="icon-plus icon-white"></i></a>
+                    <a href="<?php echo site_url('User/maintenanceUser'); ?>" class="btn btn-primary btn-sm"><i class="icon-plus icon-white"></i></a>
                 </div>
             </header>
             <div class="body">
@@ -27,7 +27,7 @@
                                 <td><?php echo $dbr_user->profile_name; ?></td>
                                 <td><?php echo Status::$statuses[$dbr_user->status] ; ?></td>
                                 <td>                                  
-                                    <a href="#" class="btn btn-primary btn-xs">
+                                    <a href="<?php echo site_url('User/maintenanceUser/'.$dbr_user->id); ?>" class="btn btn-primary btn-xs">
                                         <i class="icon-edit icon-white"></i>
                                         <span><strong>Editar</strong></span>       
                                     </a> 	

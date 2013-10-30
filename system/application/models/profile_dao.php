@@ -13,7 +13,7 @@
  */
 class Profile_dao extends CI_Model {
     //put your code here
-    public function get_all_profiles($params=array())
+    public function getAllProfiles($params=array())
     {
         $query = "SELECT * FROM hpl_profile";
         $this->query = $this->db->query($query);

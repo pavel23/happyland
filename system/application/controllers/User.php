@@ -20,17 +20,21 @@ class User extends CI_Controller {
         $this->layout->title = "Admin Happyland - Usuarios";
     }
 
-    public function index() {        
+    public function index() {
         $data['dbr_users'] = $this->UserDao->getAllUsers();
         $this->layout->view('User/userList', $data);
     }
-    
-    
-    public function maintenanceUser($params = array()){
-        
-                echo '<pre>';
-        print_r($params);
-        echo '</pre>';
+
+    public function maintenanceUser($userid = null) {
+
+        $data['dbr_user'] = array();
+        $data['is_new'] = true;
+        if (isset($userid) && $userid) {
+            $data['dbr_user'] = $this->UserDao->getUserById($userid);
+            $data['is_new'] = false;
+        }
+
+        $this->layout->view('User/maintenanceUser', $data);
     }
 
 }

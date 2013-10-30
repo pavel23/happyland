@@ -32,10 +32,15 @@ class UserDao extends CI_Model {
         return $this->query->result_array();
     }
 
+    public function getUserById($userid) {
+        $this->db->where('id', $userid);
+        $query = $this->db->get('hpl_user');
+        return ($query->num_rows() == 1 ? $query->row() : null);
+    }
+
     public function get_user_id_by_name($full_name = '') {
         $query = "SELECT id FROM hpl_user WHERE full_name='" . $full_name . "'";
         $this->query = $this->db->query($query);
         return $this->query->result_array();
     }
-
 }

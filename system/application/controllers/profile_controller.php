@@ -15,7 +15,7 @@ class Profile_controller extends CI_Controller {
             $this->load->helper('url');
             $this->load->database();
             $this->load->model('Profile_dao', 'ProfileDAO');
-            $data['profile_data'] = $this->ProfileDAO->get_all_profiles();
+            $data['profile_data'] = $this->ProfileDAO->getAllProfiles();
             
             $this->layout->view('profile/list_template', $data);
             
