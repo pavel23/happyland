@@ -50,18 +50,20 @@ class Daily_sales_controller extends CI_Controller {
         try {
             $this->load->database();
             $this->load->model('UserDao', 'UserDAO');
-            $data['opeartor_data'] = $this->UserDAO->getOperatorUsers();
-            $array_operator = array();
-            foreach ($data['opeartor_data'] as $operator) {
+            $array_operators = $this->UserDAO->getOperatorUsers();
+            $array_operator_names = array();
+            $array_operator_names['ids'] = $array_operators;
+            foreach ($array_operators as $operator) {
                 $full_name = trim($operator['full_name']);
                 if (strlen($full_name) == 0) {
                     continue;
                 }
                 $this->UserDAO->get_user_id_by_name($full_name);
-                $array_operator[] = $operator['full_name'];
+                $array_operator_names['full_names'][] = $operator['full_name'];
             }
+            
             header("Content-type: application/json");
-            echo json_encode($array_operator);
+            echo json_encode($array_operator_names);
         } catch (Exception $e) {
             echo $e;
         }
