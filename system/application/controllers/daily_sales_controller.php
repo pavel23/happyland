@@ -36,11 +36,29 @@ class Daily_sales_controller extends CI_Controller {
             /* foreach($this->input->post() as $row_daily_sales) {
               $row_daily_sales[0]
               } */
-
-            echo '<pre>';
+            /*echo '<pre>';
             print_r($this->input->post()); //'data', TRUE));
             print_r($this->input->request_headers());
-            echo '</pre>';
+            echo '</pre>';*/
+            
+            $data = array(
+                            array(
+                               'title' => 'My title' ,
+                               'name' => 'My Name' ,
+                               'date' => 'My date'
+                            ),
+                            array(
+                               'title' => 'Another title' ,
+                               'name' => 'Another Name' ,
+                               'date' => 'Another date'
+                            )
+                         );
+
+
+            $response['status'] = 0;
+            $response['id']     = date('s');
+            header("Content-type: application/json");
+            echo json_encode($response);
         } catch (Exception $e) {
             echo $e;
         }
@@ -51,6 +69,7 @@ class Daily_sales_controller extends CI_Controller {
             $this->load->database();
             $this->load->model('UserDao', 'UserDAO');
             $array_operators = $this->UserDAO->getOperatorUsers();
+
             $array_operator_names = array();
             $array_operator_names['ids'] = $array_operators;
             foreach ($array_operators as $operator) {
@@ -61,7 +80,6 @@ class Daily_sales_controller extends CI_Controller {
                 $this->UserDAO->get_user_id_by_name($full_name);
                 $array_operator_names['full_names'][] = $operator['full_name'];
             }
-            
             header("Content-type: application/json");
             echo json_encode($array_operator_names);
         } catch (Exception $e) {

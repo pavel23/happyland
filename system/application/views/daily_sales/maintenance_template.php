@@ -16,9 +16,8 @@
             <div id="div-5" class="accordion-body collapse in body">
                 <div id="error_message"></div>
                 <div id="daily_sales"></div>
-                
-                
-                <div id="table-test"></div>
+                <br />
+                <div id="daily_sales_others"></div>
             </div>
         </div>
     </div>
