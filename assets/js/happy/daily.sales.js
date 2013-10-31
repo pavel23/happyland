@@ -103,7 +103,7 @@ $(function() {
             {type: 'numeric', allowInvalid: true},
             {type: 'numeric', allowInvalid: true}
         ],
-        afterChange: function(change, source) {
+         afterChange: function(change, source) {
             if (source === 'loadData') {
                 console.log('aca carga la data para edición');
                 return;
@@ -113,7 +113,16 @@ $(function() {
             var col_index = (change[0][1]>=0 ? change[0][1] : null);
             var old_value = (change[0][2] ? change[0][2] : null);
             var new_value = (change[0][3] ? change[0][3] : null);
-
+            
+            if(row_index==1) {
+                $("#example1grid").handsontable("setCellReadOnly", 1, 0);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 1);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 2);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 3);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 4);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 5);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 6);
+            }
             if (old_value !== new_value) {
                 if(col_index===2){
                     $container_daily_sales.handsontable('setDataAtCell', row_index, (col_index-1) , '');
@@ -149,7 +158,6 @@ $(function() {
         if (!$url_save_data) {
             return false;
         }
-
         $.ajax({
             url: $url_save_data,
             data: {'data': handsontable.getData()}, //returns all cells' data
@@ -169,16 +177,39 @@ $(function() {
         });
     });
 
-    
     var typeOfSale = [
-      ['BOLETA'],
-      ['VENTA SATELITES'],
-      ['VENTA ZIPPERS'],
-      ['FACTURA'],
-      ['CUMPLEAÑOS ( Venta en Contratos)'],
-      ['DIFERENCIA DE CAJERO']
+      {'name':'BOLETA'},
+      {'name':'VENTA SATELITES'},
+      {'name':'VENTA ZIPPERS'},
+      {'name':'FACTURA'},
+      {'name':'CUMPLEÑOS ( Venta en Contratos)'},
+      {'name':'DIFERENCIA DE CAJERO'}
     ];
 
+
+$.ajax({
+                        url: $('#url-data-other_daily_sales').val(),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        type: 'GET',
+                        success: function(responseData) {
+                            //handsontable.loadData(responseData.responseText);
+                            console.log(responseData.responseJSON);
+                            return $.parseJSON(responseData.responseJSON);
+                            
+                        }
+                    });
+     $.ajax({
+              url: $('#url-data-other_daily_sales').val(),
+              dataType: 'json',
+              contentType: 'application/json; charset=utf-8',
+              type: 'GET',
+              success: function (res) {
+                handsontable.loadData(res.data);
+                $console.text('Data loaded');
+              }
+            });               
+    
     $container_other_operations.handsontable({
         data: typeOfSale,
         startRows: 1,
@@ -194,13 +225,24 @@ $(function() {
             'Total<br/>Formato Z (S/.)'
         ],
         columns: [
-            {data: ''},
-            {data: 0},
-            {data: 1},
-            {data: 2},
-            {data: 3},
-            {data: 4}
-        ],
+            {data: '', readOnly: true},
+            {data: 'name', readOnly: true},
+            {data: 1, type: 'numeric'},
+            {data: 2, type: 'numeric'},
+            {data: 3, type: 'numeric'},
+            {data: 4, type: 'numeric'}
+        ]
 
     });
+    
+    /*$.ajax({
+        url: $('#url-data-other_daily_sales').val(),
+        dataType: 'json',
+        type: 'GET',
+        success: function (res) {
+          $container_other_operations.handsontable.loadData(res);
+          console.log(res);
+          console.log('Data loaded');
+        }
+      });*/
 });

@@ -27,7 +27,7 @@ class UserDao extends CI_Model {
     }
 
     public function getOperatorUsers() {
-        $query = "SELECT id, full_name FROM hpl_user WHERE profile_id=3 LIMIT 10";
+        $query = "SELECT id, full_name FROM hpl_user WHERE profile_id=3";
         $this->query = $this->db->query($query);
         return $this->query->result_array();
     }

@@ -86,5 +86,28 @@ class Daily_sales_controller extends CI_Controller {
             echo $e;
         }
     }
+    
+    public function getJSONDailySaleOthers() {
+        try {
+            $this->load->database();
+            $this->load->model('DailySaleDao', 'DailySaleDao');
+            $array_daily_sale_others = $this->DailySaleDao->getDailySaleOthers();
+
+            /*$array_operator_names = array();
+            $array_operator_names['ids'] = $array_operators;
+            foreach ($array_operators as $operator) {
+                $full_name = trim($operator['full_name']);
+                if (strlen($full_name) == 0) {
+                    continue;
+                }
+                $this->UserDAO->get_user_id_by_name($full_name);
+                $array_operator_names['full_names'][] = $operator['full_name'];
+            }*/
+            header("Content-type: application/json");
+            echo json_encode($array_daily_sale_others);
+        } catch (Exception $e) {
+            echo $e;
+        }
+    }
 
 }
