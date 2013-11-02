@@ -21,7 +21,7 @@ class UserDao extends CI_Model {
     }
 
     public function getOperatorUsers() {
-        $query = "SELECT full_name FROM hpl_user WHERE profile_id=3 LIMIT 10";
+        $query = "SELECT id, full_name FROM hpl_user WHERE profile_id=3";
         $this->query = $this->db->query($query);
         return $this->query->result_array();
     }
@@ -40,10 +40,10 @@ class UserDao extends CI_Model {
 
     public function saveUser() {
         $user_credentials = $this->input->post('formuser');
-        
-        
+
+
         print_r($user_credentials);
-        
+
         //$this->db->insert('hpl_user', $data);
     }
 

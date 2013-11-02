@@ -8,12 +8,12 @@ var myAutocompleteRenderer = function(instance, td, row, col, prop, value, cellP
 
 var sumRowsTotalCash = function(instance, row) {
     var a, b, c, d, e, f;
-    a = instance.getDataAtCell(row, 2);
-    b = instance.getDataAtCell(row, 3);
-    c = instance.getDataAtCell(row, 4);
-    d = instance.getDataAtCell(row, 5);
-    e = instance.getDataAtCell(row, 6);
-    f = instance.getDataAtCell(row, 7);
+    a = instance.getDataAtCell(row, 4);
+    b = instance.getDataAtCell(row, 5);
+    c = instance.getDataAtCell(row, 6);
+    d = instance.getDataAtCell(row, 7);
+    e = instance.getDataAtCell(row, 8);
+    f = instance.getDataAtCell(row, 9);
     return ((b + c + d + e + f) - a);
 }
 var sumCalculateTotalCash = function(instance, td, row, col, prop, value, cellProperties) {
@@ -30,7 +30,7 @@ var sumCalculateTotalCash = function(instance, td, row, col, prop, value, cellPr
 var sumCalculateDifferenceCash = function(instance, td, row, col, prop, value, cellProperties) {
     Handsontable.TextCell.renderer.apply(this, arguments);
     var b;
-    b = instance.getDataAtCell(row, 9);
+    b = instance.getDataAtCell(row, 11);
     $(td).css({
         background: '#CDFF95',
         color: 'black',
@@ -40,14 +40,22 @@ var sumCalculateDifferenceCash = function(instance, td, row, col, prop, value, c
 }
 
 $(function() {
-    var $container = $("#daily_sales"), autosaveNotification = 0, $url_site = $('#url-site').val();
-    
-    $container.handsontable({
+    var $container_daily_sales = $("#daily_sales"), 
+        $container_other_operations = $('#daily_sales_others'),
+        autosaveNotification = 0, 
+        $url_save_data = $('#save_daily_sales').attr('href'), 
+        $url_data_autocomplete=$('#url-data-operators').val(),
+        $user_map_ids = null;
+
+    $container_daily_sales.handsontable({
         startRows: 1,
         startCols: 14,
+        minSpareRows: 1,
         rowHeaders: true,
+        contextMenu: true,
         colHeaders: [
             'ID',
+            'COD',
             'Nombres y Apellidos',
             'Caja',
             'Apertura<br />Inicio (S/.)',
@@ -63,22 +71,18 @@ $(function() {
             'Horas/Caja'
         ],
         columns: [
+            {type: 'numeric', allowInvalid: false, readOnly: true},
+            {type: 'text', allowInvalid: false, readOnly: true},
             {
-                type: 'text', 
-                allowInvalid: false, 
-                readOnly: true
-            },
-            {
-                type: {
-                    renderer: myAutocompleteRenderer,
-                    editor: Handsontable.AutocompleteEditor
-                },
+                type: {renderer: myAutocompleteRenderer, editor: Handsontable.AutocompleteEditor},
+                options: {items: 10},
                 source: function(params, process) {
                     $.ajax({
-                        url: $('#url-data-operators').val(),
+                        url: $url_data_autocomplete,
                         contentType: 'application/json; charset=utf-8',
-                        success: function(response) {
-                            process(response.full_names);
+                        success: function(autocompleteResponse) {
+                            process(autocompleteResponse.full_names);
+                            $user_map_ids = autocompleteResponse.ids;
                         }
                     });
                 },
@@ -99,32 +103,47 @@ $(function() {
             {type: 'numeric', allowInvalid: true},
             {type: 'numeric', allowInvalid: true}
         ],
-        minSpareRows: 1,
-        contextMenu: true,
-        afterChange: function(change, source) {
+         afterChange: function(change, source) {
             if (source === 'loadData') {
-                console.log('aca carga la data');
-                return; //don't save this change
+                console.log('aca carga la data para edición');
+                return;
             }
-
             clearTimeout(autosaveNotification);
             var row_index = (change[0][0]>=0 ? change[0][0] : null);
             var col_index = (change[0][1]>=0 ? change[0][1] : null);
             var old_value = (change[0][2] ? change[0][2] : null);
             var new_value = (change[0][3] ? change[0][3] : null);
-
+            
+            if(row_index==1) {
+                $("#example1grid").handsontable("setCellReadOnly", 1, 0);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 1);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 2);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 3);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 4);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 5);
+                $("#example1grid").handsontable("setCellReadOnly", 1, 6);
+            }
             if (old_value !== new_value) {
-                if(col_index==1){
-                    $container.handsontable('setDataAtCell', row_index, (col_index-1) , 'COD00'+row_index)   
+                if(col_index===2){
+                    $container_daily_sales.handsontable('setDataAtCell', row_index, (col_index-1) , '');
+                    for (var i = 0; i < $user_map_ids.length; i++) {
+                        if ($user_map_ids[i].full_name === new_value) {
+                            $container_daily_sales.handsontable('setDataAtCell', row_index, (col_index-1) , ''+$user_map_ids[i].id);
+                            break;
+                        }
+                    }
                 }
                 $.ajax({
-                    url: $url_site,
+                    url: $url_save_data,
                     dataType: 'json',
                     type: 'POST',
-                    data: {'row_index': row_index, 'col_index': col_index, 'old_value': old_value, 'new_value': new_value}, //contains changed cells' data
-                    complete: function(reponseData) {
-                        console.log(reponseData);
+                    data: {'row_index': row_index, 'col_index': col_index, 'old_value': old_value, 'new_value': new_value},
+                    complete: function(saveResponse) {
                         autosaveNotification = setTimeout(function() {
+                            $JSONsaveResponse = $.parseJSON(saveResponse.responseText);
+                            if(!$container_daily_sales.handsontable('getDataAtCell', row_index, 0)>0){
+                                $container_daily_sales.handsontable('setDataAtCell', row_index, 0 , $JSONsaveResponse.id);
+                            }
                             console.log('Changes will be autosaved');
                         }, 1000);
                     }
@@ -133,19 +152,14 @@ $(function() {
         }
     });
 
-    var handsontable = $container.data('handsontable');
-
+    var handsontable = $container_daily_sales.data('handsontable');
     $('#save_daily_sales').on('click', function(e) {
         e.preventDefault();
-
-        var href = $(this).attr('href');
-
-        if (!href) {
+        if (!$url_save_data) {
             return false;
         }
-
         $.ajax({
-            url: href,
+            url: $url_save_data,
             data: {'data': handsontable.getData()}, //returns all cells' data
             dataType: 'json',
             type: 'POST',
@@ -163,64 +177,72 @@ $(function() {
         });
     });
 
-});
+    var typeOfSale = [
+      {'name':'BOLETA'},
+      {'name':'VENTA SATELITES'},
+      {'name':'VENTA ZIPPERS'},
+      {'name':'FACTURA'},
+      {'name':'CUMPLEÑOS ( Venta en Contratos)'},
+      {'name':'DIFERENCIA DE CAJERO'}
+    ];
 
-/*
-$(function() {
+
+$.ajax({
+                        url: $('#url-data-other_daily_sales').val(),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        type: 'GET',
+                        success: function(responseData) {
+                            //handsontable.loadData(responseData.responseText);
+                            console.log(responseData.responseJSON);
+                            return $.parseJSON(responseData.responseJSON);
+                            
+                        }
+                    });
+     $.ajax({
+              url: $('#url-data-other_daily_sales').val(),
+              dataType: 'json',
+              contentType: 'application/json; charset=utf-8',
+              type: 'GET',
+              success: function (res) {
+                handsontable.loadData(res.data);
+                $console.text('Data loaded');
+              }
+            });               
     
-    
-    var container = {
-        codes: [
-            {code: 100, label: "Continue"},
-            {code: 200, label: "OK"},
-            {code: 400, label: "Bad Request"},
-            {code: 401, label: "Unauthorized"},
-            {code: 403, label: "Forbidden"},
-            {code: 500, label: "Server Error"}],
-        codeLabels: ["Continue", "OK", "Bad Request", "Unauthorized", "Forbidden", "Server Error"]
-    };
-
-    function RequestLog(code, container) {
-        this.container = container;
-        this.Code = code;
-        Object.defineProperty(this, "StatusCode", {
-            //writable: true,
-            configurable: true,
-            set: function(value) {
-                for (var i = 0; i < container.codes.length; i++) {
-                    console.log(i + '->' + container.codes[i].label);
-                    if (container.codes[i].label === value) {
-                        this.Code = container.codes[i].code;
-                        break;
-                    }
-                }
-            },
-            get: function() {
-                for (var i = 0; i < container.codes.length; i++) {
-                    if (container.codes[i].code === this.Code) {
-                        return container.codes[i].label;
-                    }
-                }
-                return "";
-            }
-        });
-        return this;
-    }
-
-    var viewmodel = {
-        data: [new RequestLog(200, container), new RequestLog(400, container)]
-    };
-
-    $("#table-test").handsontable({
-        data: viewmodel.data,
-        startRows: 0,
-        minSpareRows: 1,
-        autoWrapRow: true,
-        colHeaders: ["Code", "Status"],
+    $container_other_operations.handsontable({
+        data: typeOfSale,
+        startRows: 1,
+        startCols: 6,
+        minSpareRows: 0,
+        rowHeaders: true,
+        contextMenu: true,
+        colHeaders: [
+            'ID',
+            'Tipo de Venta',
+            'Retiro (S/.)', 'Retiro ($)',
+            'Total<br/>Efectivo (S/.)',
+            'Total<br/>Formato Z (S/.)'
+        ],
         columns: [
-            {data: "Code", width: 200, readOnly: true},
-            {data: "StatusCode", type: "autocomplete", source: container.codeLabels, strict: true, width: 200},
+            {data: '', readOnly: true},
+            {data: 'name', readOnly: true},
+            {data: 1, type: 'numeric'},
+            {data: 2, type: 'numeric'},
+            {data: 3, type: 'numeric'},
+            {data: 4, type: 'numeric'}
         ]
+
     });
+    
+    /*$.ajax({
+        url: $('#url-data-other_daily_sales').val(),
+        dataType: 'json',
+        type: 'GET',
+        success: function (res) {
+          $container_other_operations.handsontable.loadData(res);
+          console.log(res);
+          console.log('Data loaded');
+        }
+      });*/
 });
-*/
