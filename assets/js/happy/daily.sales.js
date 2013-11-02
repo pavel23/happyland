@@ -64,7 +64,7 @@ $(function() {
             'Tarjeta<br />Visa (S/.)',
             'Retiro (S/.)', 'Retiro ($)',
             'Total<br/>Efectivo (S/.)',
-            'Total<br/>Formato X (S/.)',
+            'Total<br/>Formato Z (S/.)',
             'Dif.<br />Dinero (S/.)',
             'Dif.<br />Valores',
             'Transacciones',
@@ -178,12 +178,12 @@ $(function() {
     });
 
     var typeOfSale = [
-      {'name':'BOLETA'},
-      {'name':'VENTA SATELITES'},
-      {'name':'VENTA ZIPPERS'},
-      {'name':'FACTURA'},
-      {'name':'CUMPLEÑOS ( Venta en Contratos)'},
-      {'name':'DIFERENCIA DE CAJERO'}
+      {'name':'BOLETA', 'retiro':'100'},
+      {'name':'VENTA SATELITES', 'retiro':'200'},
+      {'name':'VENTA ZIPPERS', 'retiro':'300'},
+      {'name':'FACTURA', 'retiro':'400'},
+      {'name':'CUMPLEÑOS ( Venta en Contratos)', 'retiro':'500'},
+      {'name':'DIFERENCIA DE CAJERO', 'retiro':'600'}
     ];
 
 
@@ -227,7 +227,7 @@ $.ajax({
         columns: [
             {data: '', readOnly: true},
             {data: 'name', readOnly: true},
-            {data: 1, type: 'numeric'},
+            {data: 'retiro', type: 'numeric'},
             {data: 2, type: 'numeric'},
             {data: 3, type: 'numeric'},
             {data: 4, type: 'numeric'}
