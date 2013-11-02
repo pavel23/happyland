@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50611
 File Encoding         : 65001
 
-Date: 2013-11-02 15:35:39
+Date: 2013-11-02 15:42:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -70,7 +70,7 @@ CREATE TABLE `hpl_daily_sales_detail` (
   `num_transacctions` int(11) NOT NULL DEFAULT '0',
   `hour_by_cash` int(11) NOT NULL DEFAULT '0',
   `status` varchar(3) NOT NULL DEFAULT 'opn',
-  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE `hpl_module` (
   `description` varchar(250) NOT NULL,
   `url` varchar(250) DEFAULT NULL,
   `show_menu` int(11) NOT NULL DEFAULT '0',
-  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `status` varchar(3) NOT NULL DEFAULT 'act',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE `hpl_profile` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'identificador de la tabla perfiles de usuario',
   `name` varchar(50) NOT NULL,
   `status` varchar(3) NOT NULL DEFAULT 'act',
-  `is_deleted` varchar(255) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -184,7 +184,7 @@ CREATE TABLE `hpl_subsidiaries` (
   `parent_id` int(10) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `status` varchar(3) NOT NULL DEFAULT 'act',
-  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -243,7 +243,7 @@ CREATE TABLE `hpl_type_of_sales` (
   `name` varchar(45) DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
   `position_order` int(11) NOT NULL DEFAULT '1',
-  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `status` varchar(3) NOT NULL DEFAULT 'act',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
@@ -281,7 +281,7 @@ CREATE TABLE `hpl_user` (
   `second_last_name` varchar(20) NOT NULL,
   `email_address` varchar(45) DEFAULT NULL,
   `user_name` varchar(20) NOT NULL,
-  `password` varchar(15) NOT NULL,
+  `password` varchar(115) NOT NULL,
   `generated_password` varchar(115) DEFAULT NULL,
   `is_first_session` tinyint(1) DEFAULT '0',
   `secret_question` varchar(60) DEFAULT NULL,
@@ -289,7 +289,7 @@ CREATE TABLE `hpl_user` (
   `status` varchar(3) NOT NULL DEFAULT 'act',
   `start_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `expiration_date` datetime DEFAULT NULL,
-  `is_deleted` int(11) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
