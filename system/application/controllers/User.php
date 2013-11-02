@@ -28,7 +28,12 @@ class User extends CI_Controller {
     public function maintenanceUser($userid = null) {
 
         $this->load->model('profile_dao', 'ProfileDao');
-        $this->load->model('SubsidiaryDao');
+        $this->load->model('SubsidiaryDao');        
+        $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
+        $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.js');
+        $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.es.js');
+        $this->layout->assets(base_url() . 'assets/js/user/maintenanceUser.js');
+        
         $data['dbr_user'] = array();
         $data['is_new'] = true;
         if (isset($userid) && $userid) {

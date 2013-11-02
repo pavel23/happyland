@@ -73,7 +73,7 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                         <div class="row col-lg-12">
                             <div class="col-lg-3">
                                 <?php echo form_label('Desde', 'formuser_start_date') ?>
-                                <div class="input-group input-append  date" id="dpMonths" data-date="102/2012" data-date-format="mm/yyyy" data-date-viewmode="years" data-date-minviewmode="months">
+                                <div class="input-group input-append  date" id="dpStartDate" data-date="102/2012" data-date-format="dd/mm/yyyy" data-date-viewmode="years" data-date-minviewmode="months">
                                     <?php echo form_input(array('name' => 'formuser[start_date]', 'id' => 'formuser_start_date', 'type' => 'text', 'placeholder' => 'dd-mm-yyyy', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? $start_date : $dbr_user->start_date)) ?>
                                     <span class="input-group-addon add-on"><i class="icon-calendar"></i></span>                                    
                                 </div>
@@ -81,7 +81,7 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                             </div>
                             <div class="col-lg-3">
                                 <?php echo form_label('Hasta', 'formuser_expiration_date') ?>
-                                <div class="input-group input-append  date" id="dpMonths" data-date="102/2012" data-date-format="mm/yyyy" data-date-viewmode="years" data-date-minviewmode="months">
+                                <div class="input-group input-append  date" id="dpExpirationDate" data-date="102/2012" data-date-format="dd/mm/yyyy" data-date-viewmode="years" data-date-minviewmode="months">
                                     <?php echo form_input(array('name' => 'formuser[expiration_date]', 'id' => 'formuser_expiration_date', 'type' => 'text', 'placeholder' => 'dd-mm-yyyy', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? $finish_date : $dbr_user->expiration_date)) ?>
                                     <span class="input-group-addon add-on"><i class="icon-calendar"></i></span>
                                 </div>
