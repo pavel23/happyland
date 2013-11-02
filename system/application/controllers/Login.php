@@ -42,7 +42,7 @@ class Login extends CI_Controller {
             } else {
 
                 $username = $user_credentials['dni'];
-                $password = md5($user_credentials['password']);
+                $password = sha1($user_credentials['password']);
 
                 $dbr_user = $this->LoginDao->loginUser($username);
 
