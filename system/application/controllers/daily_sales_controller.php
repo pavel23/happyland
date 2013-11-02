@@ -19,7 +19,7 @@ class Daily_sales_controller extends CI_Controller {
     public function index() {
         $this->load->database();
         $this->load->model('Profile_dao', 'ProfileDAO');
-        $data['profile_data'] = $this->ProfileDAO->get_all_profiles();
+        $data['profile_data'] = $this->ProfileDAO->getAllProfiles();
         $this->layout->assets(base_url() . 'assets/css/daily_sales.css');
         $this->layout->view('daily_sales/list_template', $data);
     }

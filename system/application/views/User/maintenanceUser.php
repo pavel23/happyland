@@ -1,4 +1,3 @@
-
 <?php
 $start_date = date("d-m-Y");
 $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
@@ -12,11 +11,12 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                 <h5>usuario</h5>                
             </header>
             <div id="div-5" class="accordion-body collapse in body">                        
-                <?php echo form_open(base_url() . 'login/authentication', array('class' => 'form-horizontal')); ?>
+                <?php echo form_open(site_url('User/SaveUser/'), array('class' => 'form-horizontal')); ?>
                 <div class="form-group">
                     <?php echo form_label('DNI', 'formuser_dni', array('class' => 'control-label col-lg-4')) ?>
                     <div class="col-lg-4">                        
                         <?php echo form_input(array('name' => 'formuser[dni]', 'id' => 'formuser_dni', 'type' => 'text', 'placeholder' => 'DNI', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? '' : $dbr_user->num_doc)) ?>       
+                        <?php echo form_error('formuser[dni]') ?>
                     </div>
                 </div>
                 <div class="form-group">
@@ -47,13 +47,13 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                 <div class="row form-group">
                     <?php echo form_label('Control sobre Los Locales', 'formuser_subsidiaries', array('class' => 'control-label col-lg-4')) ?>
                     <div class="col-lg-4">
-                        <?php echo form_dropdown('formuser[subsidiaries]', array('te' => 'One', 'tess' => 'One'), array(), 'class="form-control autotab"') ?>
+                        <?php echo form_dropdown('formuser[subsidiaries]', $dbr_subsidiaries, array(), 'class="form-control autotab"') ?>
                     </div>
                 </div>
                 <div class="row form-group">
                     <?php echo form_label('Perfil de Acceso', 'formuser_subsidiaries', array('class' => 'control-label col-lg-4')) ?>
                     <div class="col-lg-4">
-                        <?php echo form_dropdown('formuser[perfil]', array('te' => 'One', 'tess' => 'One'), array(), 'class="form-control autotab"') ?>
+                        <?php echo form_dropdown('formuser[perfil]', $dbr_profiles, array(), 'class="form-control autotab"') ?>
                     </div>
                 </div>
 
@@ -63,7 +63,7 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                     <div class="col-lg-8">
                         <div class="checkbox">
                             <label>                                
-                                <?php echo form_radio('formuser[opt_perfil]', 'F', ($is_new ? true: ($dbr_user->expiration_date ? true : false)), 'class="uniform"') ?> Tiene Fecha de expiración
+                                <?php echo form_radio('formuser[opt_perfil]', 'F', ($is_new ? true : ($dbr_user->expiration_date ? true : false)), 'class="uniform"') ?> Tiene Fecha de expiración
                             </label>      
                         </div>
                         <div class="row col-lg-12">
@@ -84,12 +84,15 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                         </div>
                         <div class="checkbox">
                             <label>                                
-                                <?php echo form_radio('formuser[opt_perfil]', 'E', ($is_new ? false :($dbr_user->expiration_date ? false : true)), 'class="uniform"') ?> Nunca Expira
+                                <?php echo form_radio('formuser[opt_perfil]', 'E', ($is_new ? false : ($dbr_user->expiration_date ? false : true)), 'class="uniform"') ?> Nunca Expira
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-actions no-margin-bottom">
+                    <?php if (!$is_new): ?>
+                        <?php echo form_hidden('formuser[user_id]', $dbr_user->id) ?>
+                    <?php endif; ?>
                     <?php echo form_submit('Save', 'Guardar', 'class="btn btn-primary"'); ?>
                 </div>
                 <?php echo form_close(); ?>

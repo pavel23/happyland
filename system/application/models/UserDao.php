@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of profiles_dao
  *
@@ -27,7 +21,7 @@ class UserDao extends CI_Model {
     }
 
     public function getOperatorUsers() {
-        $query = "SELECT id, full_name FROM hpl_user WHERE profile_id=3 LIMIT 10";
+        $query = "SELECT full_name FROM hpl_user WHERE profile_id=3 LIMIT 10";
         $this->query = $this->db->query($query);
         return $this->query->result_array();
     }
@@ -43,4 +37,14 @@ class UserDao extends CI_Model {
         $this->query = $this->db->query($query);
         return $this->query->result_array();
     }
+
+    public function saveUser() {
+        $user_credentials = $this->input->post('formuser');
+        
+        
+        print_r($user_credentials);
+        
+        //$this->db->insert('hpl_user', $data);
+    }
+
 }
