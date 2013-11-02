@@ -9,6 +9,11 @@
                 </div>
             </header>
             <div class="body">
+                <?php if ($this->session->flashdata('message')) : ?>
+                    <div class="alert alert-success">
+                        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->session->flashdata('message') ?>
+                    </div>
+                <?php endif; ?>
                 <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
                     <thead>
                         <tr>
@@ -25,9 +30,9 @@
                                 <td><?php echo $dbr_user->full_name; ?></td>
                                 <td><?php echo $dbr_user->subsidiarie_name; ?></td>
                                 <td><?php echo $dbr_user->profile_name; ?></td>
-                                <td><?php echo Status::$statuses[$dbr_user->status] ; ?></td>
+                                <td><?php echo Status::$statuses[$dbr_user->status]; ?></td>
                                 <td>                                  
-                                    <a href="<?php echo site_url('User/maintenanceUser/'.$dbr_user->id); ?>" class="btn btn-primary btn-xs">
+                                    <a href="<?php echo site_url('User/maintenanceUser/' . $dbr_user->id); ?>" class="btn btn-primary btn-xs">
                                         <i class="icon-edit icon-white"></i>
                                         <span><strong>Editar</strong></span>       
                                     </a> 	

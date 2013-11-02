@@ -38,13 +38,14 @@ class UserDao extends CI_Model {
         return $this->query->result_array();
     }
 
-    public function saveUser() {
-        $user_credentials = $this->input->post('formuser');
+    public function saveUser($data, $user_id = null) {
 
-
-        print_r($user_credentials);
-
-        //$this->db->insert('hpl_user', $data);
+        if ($user_id) {
+            $this->db->where('id', $user_id);
+            $this->db->update('hpl_user', $data);
+        } else {
+            $this->db->insert('hpl_user', $data);
+        }
     }
 
 }
