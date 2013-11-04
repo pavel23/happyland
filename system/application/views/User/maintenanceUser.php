@@ -85,7 +85,7 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                                     <?php echo form_input(array('name' => 'formuser[expiration_date]', 'id' => 'formuser_expiration_date', 'type' => 'text', 'placeholder' => 'dd-mm-yyyy', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? $finish_date : $dbr_user->expiration_date)) ?>
                                     <span class="input-group-addon add-on"><i class="icon-calendar"></i></span>
                                 </div>
-                                <?php echo form_error('formuser[expiration_date]') ?>
+                                <?php echo form_error('formuser[expiration_date][]') ?>
                             </div>
                         </div>
                         <div class="checkbox">

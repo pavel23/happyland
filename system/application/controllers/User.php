@@ -27,7 +27,7 @@ class User extends CI_Controller {
 
     public function maintenanceUser($userid = null) {
 
-        $this->load->model('profile_dao', 'ProfileDao');
+        $this->load->model('ProfileDao');
         $this->load->model('SubsidiaryDao');        
         $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
         $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.js');

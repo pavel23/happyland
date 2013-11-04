@@ -27,7 +27,7 @@ class Profile extends CI_Controller {
         }
     }
 
-    public function profile_maintenance($profileid = null) {
+    public function maintenanceProfile($profileid = null) {
         
         $data['dbr_profile'] = array();
         $data['is_new'] = true;
@@ -35,18 +35,62 @@ class Profile extends CI_Controller {
             $data['dbr_profile'] = $this->ProfileDao->getProfileById($profileid);
             $data['is_new'] = false;
         }
-        $data['a_status'] = $this->StatusDao->getProfileStatus();
-        $this->layout->assets(base_url() . 'assets/css/lib/chosen.min.css');
+        $this->load->model('ModuleDao');
+        $dbl_modules    = $this->ModuleDao->getParentModules();
+        $a_modules      = array();
+        foreach($dbl_modules as $dbr_module) {
+            $a_modules[$dbr_module->id] = $dbr_module->name;
+        }
+        $data['a_modules']   = $a_modules;
+        $data['a_status']   = $this->StatusDao->getProfileStatus();
+
+        if ($this->input->post()) {
+            $this->saveProfile();
+        }
+        
+        $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
+        $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
+        $this->layout->assets(base_url() . 'assets/js/happy/profile.js');
         $this->layout->view('Profile/maintenanceProfile', $data);
-         
+    }
+    
+    private function saveProfile() {
+        $profile_credentials = $this->input->post('formprofile');
+        
+        $this->form_validation->set_rules('formprofile[name]', 'Nombre', 'required|trim|min_length[3]|xss_clean');
+        $this->form_validation->set_rules('formprofile[description]', 'Descripción', 'trim|min_length[3]|xss_clean');
+        $this->form_validation->set_rules('formprofile[access_permition]', 'Accesos', 'required|trim|min_length[3]|xss_clean');
+        $this->form_validation->set_rules('formprofile[status]', 'Estado', 'required|trim|mim_length[3]|max_length[3]|xss_clean');
+
+        $this->form_validation->set_message('required', 'El %s es requerido');
+        $this->form_validation->set_message('min_length', 'El %s debe tener al menos %s carácteres');
+        $this->form_validation->set_message('max_length', 'El %s debe tener al menos %s carácteres');
+
+        $this->form_validation->set_error_delimiters('', '');
+        $profile_id = array_key_exists('profile_id', $profile_credentials) ? $profile_credentials['profile_id'] : null;
+
+        if ($this->form_validation->run()) {
+            $dbr_profile = $this->ProfileDao->getProfileById($profile_id);
+            $profile_credentials = $this->input->post('formprofile');
+            $profile_credentials['name'] = $profile_credentials['name'];
+            $profile_credentials['description'] = $profile_credentials['description'] ? trim($profile_credentials['description']) : null;
+            $profile_credentials['access_permition'] = $profile_credentials['access_permition'];
+            $profile_credentials['status'] = $profile_credentials['status'];
+            unset($profile_credentials['modules']);
+            unset($profile_credentials['profile_id']);
+
+            $this->ProfileDao->saveProfile($profile_credentials, ($dbr_profile ? $dbr_profile->id : null));
+            $this->session->set_flashdata('message', 'Se guardo el perfil satisfactorimente');
+            redirect('Profile/index');
+        }
     }
 
-    public function profile_delete($params = array()) {
+    public function deleteProfile($params = array()) {
         //$this->load->helper('url');
         redirect('', 'refresh');
     }
 
-    public function export_excel() {
+    public function exportExcel() {
         // Load libreria
         $this->load->library('PHPExcel');
         // Propiedades del archivo excel

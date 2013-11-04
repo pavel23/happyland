@@ -56,10 +56,10 @@ $route['usuarios/(:num)/modificar.html']          = 'User/maintenanceUser/$1';
  * Rutas de acceso al modulo de perfiles
  */
 $route['perfil/listar.html']                    = 'Profile/index';
-$route['perfil/agregar.html']                   = 'Profile/profile_maintenance';
-$route['perfil/(:num)/modificar.html']          = 'Profile/profile_maintenance/$1';
-$route['perfil/(:num)/eliminar.html']           = 'Profile/profile_delete/$1';
-$route['perfil/exportar-excel.html']            = 'Profile/export_excel';
+$route['perfil/agregar.html']                   = 'Profile/maintenanceProfile';
+$route['perfil/(:num)/modificar.html']          = 'Profile/maintenanceProfile/$1';
+$route['perfil/(:num)/eliminar.html']           = 'Profile/deleteProfile/$1';
+$route['perfil/exportar-excel.html']            = 'Profile/exportExcel';
 
 /*
  * Rutas de acceso al modulo de ventas diarias

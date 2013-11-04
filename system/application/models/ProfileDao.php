@@ -8,15 +8,25 @@
 class ProfileDao extends CI_Model {
 
     public function getAllProfiles() {
-        $query = "SELECT * FROM hpl_profile WHERE is_deleted=0";
-        $this->query = $this->db->query($query);
-        return $this->query->result();
+        $this->db->where('is_deleted', 0);
+        $query  = $this->db->get('hpl_profile');
+        return ($query->num_rows() >0 ? $query->result() : null);
     }
-    
+
     public function getProfileById($profile_id) {
         $this->db->where('id', $profile_id);
         $query = $this->db->get('hpl_profile');
         return ($query->num_rows() == 1 ? $query->row() : null);
+    }
+    
+    public function saveProfile($data, $profile_id = null) {
+
+        if ($profile_id) {
+            $this->db->where('id', $profile_id);
+            $this->db->update('hpl_profile', $data);
+        } else {
+            $this->db->insert('hpl_profile', $data);
+        }
     }
 
 }
