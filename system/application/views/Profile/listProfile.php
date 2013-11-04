@@ -5,8 +5,8 @@
                 <div class="icons"><i class="icon-th"></i></div>
                 <h5>Listado de Perfiles</h5>
                 <div class="toolbar">
-                    <a href="<?php echo site_url('profile_controller/profile_maintenance'); ?>" class="btn btn-primary btn-sm"><i class="icon-plus icon-white"></i></a>
-                    <a href="<?php echo site_url('profile_controller/export_excel');  ?>" class="btn btn-primary btn-sm"><i class="icon-download-alt icon-white"></i></a>
+                    <a href="<?php echo site_url('Profile/profile_maintenance'); ?>" class="btn btn-primary btn-sm"><i class="icon-plus icon-white"></i></a>
+                    <a href="<?php echo site_url('Profile/export_excel');  ?>" class="btn btn-primary btn-sm"><i class="icon-download-alt icon-white"></i></a>
                 </div>
             </header>
             <div class="body">
@@ -29,12 +29,12 @@
                                 <td><?php echo $profile->description; ?></td>
                                 <td><?php echo Status::$statuses[$profile->status]; ?></td>
                                 <td>                                  
-                                    <a href="<?php echo site_url('profile_controller/profile_maintenance/' . $profile->id); ?>" class="btn btn-primary btn-xs">
+                                    <a href="<?php echo site_url('Profile/profile_maintenance/' . $profile->id); ?>" class="btn btn-primary btn-xs">
                                         <i class="icon-edit icon-white"></i>
                                         <span><strong>Editar</strong></span>       
                                     </a> 	
 
-                                    <a href="<?php echo site_url('profile_controller/profile_delete/' . $profile->id); ?>" class="btn btn-primary btn-xs">
+                                    <a href="<?php echo site_url('Profile/profile_delete/' . $profile->id); ?>" class="btn btn-primary btn-xs">
                                         <i class="icon-trash icon-white"></i>
                                         <span><strong>Eliminar</strong></span>        	
                                     </a>
