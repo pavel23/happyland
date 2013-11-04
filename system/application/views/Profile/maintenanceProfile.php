@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <label class="control-label col-lg-4">Estado</label>
                     <div class="col-lg-4">
-                        <?php echo form_dropdown('formprofile[status]', $a_status, $dbr_profile->status ? $dbr_profile->status : null, 'class="form-control autotab"') ?>
+                        <?php echo form_dropdown('formprofile[status]', $a_status, $dbr_profile ? $dbr_profile->status : null, 'class="form-control autotab"') ?>
                     </div>
                 </div>
 
