@@ -18,4 +18,50 @@ $(function() {
         e.preventDefault();
         console.log($('#formprofile[modules]'));
     });
+
+
+    var Example = (function() {
+        "use strict";
+        var elem,
+                hideHandler,
+                that = {};
+        that.init = function(options) {
+            elem = $(options.selector);
+        };
+        that.show = function(text) {
+            clearTimeout(hideHandler);
+            elem.find("span").html(text);
+            elem.delay(200).fadeIn().delay(4000).fadeOut();
+        };
+        return that;
+    }());
+
+    bootbox.dialog({
+        message: "I am a custom dialog",
+        title: "Custom title",
+        buttons: {
+            success: {
+                label: "Success!",
+                className: "btn-success",
+                callback: function() {
+                    Example.show("great success");
+                }
+            },
+            danger: {
+                label: "Danger!",
+                className: "btn-danger",
+                callback: function() {
+                    Example.show("uh oh, look out!");
+                }
+            },
+            main: {
+                label: "Click ME!",
+                className: "btn-primary",
+                callback: function() {
+                    Example.show("Primary button");
+                }
+            }
+        }
+    });
+
 });

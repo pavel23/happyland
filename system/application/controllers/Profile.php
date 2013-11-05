@@ -51,6 +51,7 @@ class Profile extends CI_Controller {
         $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
         $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
         $this->layout->assets(base_url() . 'assets/js/happy/profile.js');
+        $this->layout->assets(base_url() . 'assets/js/lib/bootbox.min.js');
         $this->layout->view('Profile/maintenanceProfile', $data);
     }
     
