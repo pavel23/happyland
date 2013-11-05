@@ -16,9 +16,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php echo form_label('DescripiÃ³n', 'formprofile_description', array('class' => 'control-label col-lg-4')) ?>
+                    <?php echo form_label('Descripción', 'formprofile_description', array('class' => 'control-label col-lg-4')) ?>
                     <div class="col-lg-4">
-                        <?php echo form_textarea(array('name' => 'formprofile[description]', 'id' => 'formprofile_description', 'rows' => 4, 'placeholder' => 'DescripiÃ³n', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? '' : $dbr_profile->description)) ?>
+                        <?php echo form_textarea(array('name' => 'formprofile[description]', 'id' => 'formprofile_description', 'rows' => 4, 'placeholder' => 'Descripción', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? '' : $dbr_profile->description)) ?>
                         <?php echo form_error('formprofile[description]') ?>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="checkbox">
                             <label>                                
-                                <?php echo form_radio('formprofile[access_permition]', 'readonly', ($is_new ? true : ($dbr_profile->access_permition == 'readonly' ? true : false)), 'class="uniform"') ?> Acceso SÃ³lo Lectura
+                                <?php echo form_radio('formprofile[access_permition]', 'readonly', ($is_new ? true : ($dbr_profile->access_permition == 'readonly' ? true : false)), 'class="uniform"') ?> Acceso Sólo Lectura
                             </label>      
                         </div>
                         <div class="checkbox">
@@ -43,10 +43,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-lg-4">MÃ³dulos</label>
+                    <label class="control-label col-lg-4">Módulos</label>
                     <div class="col-lg-8">
-                        <?php echo form_dropdown('formprofile[modules][]', $a_modules, array(), 'style="width:350px;" class="chosen-select" multiple="multiple" data-placeholder="Ingrese o seleccione el mÃ³dulo"') ?>
-                        <a id="set_permission_by_module">Definir permisos por mÃ³dulos</a>
+                        <?php echo form_dropdown('formprofile[modules][]', $a_parent_modules, array(), 'style="width:350px;" class="chosen-select" multiple="multiple" data-placeholder="Ingrese o seleccione el módulo"') ?>
+                        <a id="set_permission_by_module" href="<?php echo site_url('Profile/getModalPermission');?>">Definir permisos por módulos</a>
                     </div>
                 </div>
 
@@ -69,12 +69,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-http://bootboxjs.com/examples.html
-
-
-<a href="#" data-bb="dialog" class="btn btn-default"><i class="glyphicon glyphicon-play"></i></a>

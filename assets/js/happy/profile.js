@@ -14,54 +14,70 @@ $(function() {
     for (var selector in config) {
         $(selector).chosen(config[selector]);
     }
+    
+    
     $('#set_permission_by_module').on('click', function(e) {
         e.preventDefault();
-        console.log($('#formprofile[modules]'));
-    });
-
-
-    var Example = (function() {
-        "use strict";
-        var elem,
-                hideHandler,
-                that = {};
-        that.init = function(options) {
-            elem = $(options.selector);
-        };
-        that.show = function(text) {
-            clearTimeout(hideHandler);
-            elem.find("span").html(text);
-            elem.delay(200).fadeIn().delay(4000).fadeOut();
-        };
-        return that;
-    }());
-
-    bootbox.dialog({
-        message: "I am a custom dialog",
-        title: "Custom title",
-        buttons: {
-            success: {
-                label: "Success!",
-                className: "btn-success",
-                callback: function() {
-                    Example.show("great success");
-                }
-            },
-            danger: {
-                label: "Danger!",
-                className: "btn-danger",
-                callback: function() {
-                    Example.show("uh oh, look out!");
-                }
-            },
-            main: {
-                label: "Click ME!",
-                className: "btn-primary",
-                callback: function() {
-                    Example.show("Primary button");
-                }
+        var $this = $(this);
+        var $obj_chosen = $('.chosen-select')
+            $obj_chosen.trigger('chosen:updated');
+        $.ajax({
+            url: $this.attr('href'),
+            contentType: 'application/json; charset=utf-8',
+            data: {'permission_values': $obj_chosen.val()},
+            method: 'POST',
+            success: function(modalResponseAjax) {
+                var modalPermission = (function() {
+                var elem,
+                    hideHandler,
+                    that = {};
+                    that.init = function(options) {
+                        elem = $(options.selector);
+                    };
+                    that.show = function(text) {
+                        clearTimeout(hideHandler);
+                        elem.find("span").html(text);
+                        elem.delay(200).fadeIn().delay(4000).fadeOut();
+                    };
+                    return that;
+                });
+                bootbox.dialog({
+                    ajax:true,
+                    message: modalResponseAjax,
+                    title: "Asignar Permisos por Módulo",
+                    buttons: {
+                        success: {
+                            label: "Asignar!",
+                            className: "btn-success",
+                            callback: function() {
+                                modalPermission.show("great success");
+                            }
+                        },
+                        danger: {
+                            label: "Cancelar!",
+                            className: "btn-danger",
+                            callback: function() {
+                                modalPermission.show("uh oh, look out!");
+                            }
+                        },
+                        main: {
+                            label: "Click ME!",
+                            className: "btn-primary",
+                            callback: function() {
+                                Example.show("Primary button");
+                            }
+                        }
+                    }
+                });
             }
-        }
+        })
+                
+        
+
+
     });
+
+
+
 
 });
