@@ -18,8 +18,8 @@ class Daily_sales_controller extends CI_Controller {
 
     public function index() {
         $this->load->database();
-        $this->load->model('Profile_dao', 'ProfileDAO');
-        $data['profile_data'] = $this->ProfileDAO->getAllProfiles();
+        $this->load->model('ProfileDao');
+        $data['profile_data'] = $this->ProfileDao->getAllProfiles();
         $this->layout->assets(base_url() . 'assets/css/daily_sales.css');
         $this->layout->view('daily_sales/list_template', $data);
     }
@@ -67,8 +67,8 @@ class Daily_sales_controller extends CI_Controller {
     public function getJSONOperators() {
         try {
             $this->load->database();
-            $this->load->model('UserDao', 'UserDAO');
-            $array_operators = $this->UserDAO->getOperatorUsers();
+            $this->load->model('UserDao');
+            $array_operators = $this->UserDao->getOperatorUsers();
 
             $array_operator_names = array();
             $array_operator_names['ids'] = $array_operators;
@@ -77,7 +77,7 @@ class Daily_sales_controller extends CI_Controller {
                 if (strlen($full_name) == 0) {
                     continue;
                 }
-                $this->UserDAO->get_user_id_by_name($full_name);
+                $this->UserDao->get_user_id_by_name($full_name);
                 $array_operator_names['full_names'][] = $operator['full_name'];
             }
             header("Content-type: application/json");
@@ -90,7 +90,7 @@ class Daily_sales_controller extends CI_Controller {
     public function getJSONDailySaleOthers() {
         try {
             $this->load->database();
-            $this->load->model('DailySaleDao', 'DailySaleDao');
+            $this->load->model('DailySaleDao');
             $array_daily_sale_others = $this->DailySaleDao->getDailySaleOthers();
 
             /*$array_operator_names = array();

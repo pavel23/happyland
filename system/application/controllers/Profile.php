@@ -84,24 +84,34 @@ class Profile extends CI_Controller {
         }
     }
 
-    private function getRecursivePermission($a_permission=array()) {
+    private static function getChildrenPermRecursive($a_parent_modules=array(), $a_children_modules=array()) {
+        foreach($a_parent_modules as $module_id=>$module) {
+            if(array_key_exists($module_id, $a_children_modules)) {
+                $a_parent_modules[$module_id]['children'] = $a_children_modules[$module_id];
+            }
+        }
+        return $a_parent_modules;
         
     }
     
     public function getModalPermission() {
-        $a_permission_filter    = $this->input->post('permission_filter');      
-        $dbl_modules            = $this->ModuleDao->getAllModules($a_permission_filter);
-        $a_permission_modules   = array();
+        $a_permission_filter    = $this->input->post('permission_filter');
+        $dbl_modules            = $this->ModuleDao->getParentModules($a_permission_filter);
+        $a_parent_modules   = array();
+        $a_children_modules = array();
         foreach($dbl_modules as $dbr_modules){
             if(!$dbr_modules->parent_id) {
-                $a_permission_modules[$dbr_modules->id]['name'] = $dbr_modules->name;
-            } else {
-                $a_permission_modules[$dbr_modules->parent_id]['child'][$dbr_modules->id] = $dbr_modules->name;
+                $a_parent_modules[$dbr_modules->id]['name'] = $dbr_modules->name;
             }
         }
-        $data['a_permission_modules'] = $a_permission_modules;
+        $dbl_children_modules   =   $this->ModuleDao->getChildModules($a_permission_filter);
+        foreach($dbl_children_modules as $dbr_children_modules) {
+            $a_children_modules[$dbr_children_modules->parent_id][] = array('id' => $dbr_children_modules->id, 'name' => $dbr_children_modules->name);
+        }
+
+        $a_parent_modules   = self::getChildrenPermRecursive($a_parent_modules, $a_children_modules);
+        $data['a_permission_modules'] = $a_parent_modules;
         $this->load->view('Profile/modalPermission',$data);
-        
     }
 
     public function deleteProfile($params = array()) {

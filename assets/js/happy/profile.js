@@ -18,17 +18,16 @@ $(function() {
     
     $('#set_permission_by_module').on('click', function(e) {
         e.preventDefault();
-        $('.chosen-select').trigger('chosen:updated');
         var $this = $(this);
-        var $obj_chosen = $('.chosen-select');
-            
-        $.ajax({
-            url: $this.attr('href'),
-            contentType: 'application/json; charset=utf-8',
-            data: {'permission_filter': $obj_chosen.val()},
-            method: 'POST',
-            success: function(modalResponseAjax) {
-                var modalPermission = (function() {
+        $('.chosen-select').trigger('chosen:updated');
+        var JsonObjChosen   = $('.chosen-select').val();
+            JsonObjChosen   = JSON.parse('[' + JsonObjChosen + ']');
+
+        $.post(
+                $this.attr('href'), 
+                {'permission_filter': JsonObjChosen}, 
+                function(dataResponse, textStatus, jqXHR){
+                    var modalPermission = (function() {
                     var elem,
                         hideHandler,
                         that = {};
@@ -41,40 +40,44 @@ $(function() {
                             elem.delay(200).fadeIn().delay(4000).fadeOut();
                         };
                     return that;
-                });
-                bootbox.dialog({
-                    ajax:true,
-                    message: modalResponseAjax,
-                    title: "Asignar Permisos por Módulo",
-                    buttons: {
-                        success: {
-                            label: "Asignar!",
-                            className: "btn-success",
-                            callback: function() {
-                                modalPermission.show("great success");
-                            }
-                        },
-                        danger: {
-                            label: "Cancelar!",
-                            className: "btn-danger",
-                            callback: function() {
-                                modalPermission.show("uh oh, look out!");
-                            }
-                        },
-                        main: {
-                            label: "Click ME!",
-                            className: "btn-primary",
-                            callback: function() {
-                                Example.show("Primary button");
+                    });
+                    bootbox.dialog({
+                        ajax:true,
+                        message: dataResponse,
+                        title: "Asignar Permisos por Módulo",
+                        buttons: {
+                            success: {
+                                label: "Asignar!",
+                                className: "btn-success",
+                                callback: function() {
+                                    modalPermission.show("great success");
+                                }
+                            },
+                            danger: {
+                                label: "Cancelar!",
+                                className: "btn-danger",
+                                callback: function() {
+                                    modalPermission.show("uh oh, look out!");
+                                }
+                            },
+                            main: {
+                                label: "Click ME!",
+                                className: "btn-primary",
+                                callback: function() {
+                                    Example.show("Primary button");
+                                }
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }).done(function() {
+                    console.log("second success");
+                }).fail(function() {
+                    console.log("error");
+                }).always(function() {
+                    console.log("finished");
+               });
+
     });
-
-
 
 
 });
