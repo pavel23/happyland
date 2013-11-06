@@ -18,27 +18,28 @@ $(function() {
     
     $('#set_permission_by_module').on('click', function(e) {
         e.preventDefault();
+        $('.chosen-select').trigger('chosen:updated');
         var $this = $(this);
-        var $obj_chosen = $('.chosen-select')
-            $obj_chosen.trigger('chosen:updated');
+        var $obj_chosen = $('.chosen-select');
+            
         $.ajax({
             url: $this.attr('href'),
             contentType: 'application/json; charset=utf-8',
-            data: {'permission_values': $obj_chosen.val()},
+            data: {'permission_filter': $obj_chosen.val()},
             method: 'POST',
             success: function(modalResponseAjax) {
                 var modalPermission = (function() {
-                var elem,
-                    hideHandler,
-                    that = {};
-                    that.init = function(options) {
-                        elem = $(options.selector);
-                    };
-                    that.show = function(text) {
-                        clearTimeout(hideHandler);
-                        elem.find("span").html(text);
-                        elem.delay(200).fadeIn().delay(4000).fadeOut();
-                    };
+                    var elem,
+                        hideHandler,
+                        that = {};
+                        that.init = function(options) {
+                            elem = $(options.selector);
+                        };
+                        that.show = function(text) {
+                            clearTimeout(hideHandler);
+                            elem.find("span").html(text);
+                            elem.delay(200).fadeIn().delay(4000).fadeOut();
+                        };
                     return that;
                 });
                 bootbox.dialog({
@@ -70,11 +71,7 @@ $(function() {
                     }
                 });
             }
-        })
-                
-        
-
-
+        });
     });
 
 

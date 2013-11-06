@@ -84,15 +84,19 @@ class Profile extends CI_Controller {
         }
     }
 
+    private function getRecursivePermission($a_permission=array()) {
+        
+    }
+    
     public function getModalPermission() {
-        $a_permission_filter    = $this->input->post('permission_filter');
+        $a_permission_filter    = $this->input->post('permission_filter');      
         $dbl_modules            = $this->ModuleDao->getAllModules($a_permission_filter);
         $a_permission_modules   = array();
         foreach($dbl_modules as $dbr_modules){
             if(!$dbr_modules->parent_id) {
                 $a_permission_modules[$dbr_modules->id]['name'] = $dbr_modules->name;
             } else {
-                $a_permission_modules[$dbr_modules->parent_id]['children'][$dbr_modules->id]['name']    = $dbr_modules->name;
+                $a_permission_modules[$dbr_modules->parent_id]['child'][$dbr_modules->id] = $dbr_modules->name;
             }
         }
         $data['a_permission_modules'] = $a_permission_modules;

@@ -19,7 +19,8 @@ class ModuleDao extends CI_Model {
     public function getAllModules($a_module_ids=array()) {
         $a_module_ids  = (is_array($a_module_ids) && count($a_module_ids)>0 ? $a_module_ids : null);
         if($a_module_ids) {
-            $this->db->where_in('id', $a_module_ids);
+            echo implode("'",$a_module_ids);
+            $this->db->where_in('id', implode("'",$a_module_ids));
         }
         $this->db->where('is_deleted', 0);
         $this->db->where('status', Status::STATUS_ACTIVO);
