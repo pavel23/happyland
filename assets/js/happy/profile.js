@@ -14,8 +14,70 @@ $(function() {
     for (var selector in config) {
         $(selector).chosen(config[selector]);
     }
+    
+    
     $('#set_permission_by_module').on('click', function(e) {
         e.preventDefault();
-        console.log($('#formprofile[modules]'));
+        var $this = $(this);
+        $('.chosen-select').trigger('chosen:updated');
+        var JsonObjChosen   = $('.chosen-select').val();
+            JsonObjChosen   = JSON.parse('[' + JsonObjChosen + ']');
+
+        $.post(
+                $this.attr('href'), 
+                {'permission_filter': JsonObjChosen}, 
+                function(dataResponse, textStatus, jqXHR){
+                    var modalPermission = (function() {
+                    var elem,
+                        hideHandler,
+                        that = {};
+                        that.init = function(options) {
+                            elem = $(options.selector);
+                        };
+                        that.show = function(text) {
+                            clearTimeout(hideHandler);
+                            elem.find("span").html(text);
+                            elem.delay(200).fadeIn().delay(4000).fadeOut();
+                        };
+                    return that;
+                    });
+                    bootbox.dialog({
+                        ajax:true,
+                        message: dataResponse,
+                        title: "Asignar Permisos por Módulo",
+                        buttons: {
+                            success: {
+                                label: "Asignar!",
+                                className: "btn-success",
+                                callback: function() {
+                                    modalPermission.show("great success");
+                                }
+                            },
+                            danger: {
+                                label: "Cancelar!",
+                                className: "btn-danger",
+                                callback: function() {
+                                    modalPermission.show("uh oh, look out!");
+                                }
+                            },
+                            main: {
+                                label: "Click ME!",
+                                className: "btn-primary",
+                                callback: function() {
+                                    Example.show("Primary button");
+                                }
+                            }
+                        }
+                    });
+                }).done(function() {
+                    console.log("second success");
+                }).fail(function() {
+                    console.log("error");
+                }).always(function() {
+                    console.log("finished");
+               });
+
     });
+
+
 });

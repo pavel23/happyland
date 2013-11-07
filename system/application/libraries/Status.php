@@ -36,6 +36,12 @@ class Status {
         }
         return self::$statuses[$key];
     }
+    
+    public static function getProfileStatus(){
+        $a_status[self::STATUS_ACTIVO]    = self::getStatusLabel(self::STATUS_ACTIVO);
+        $a_status[self::STATUS_INACTIVO]  = self::getStatusLabel(self::STATUS_INACTIVO);
+        return $a_status;
+    }
 
 }
 

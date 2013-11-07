@@ -9,7 +9,7 @@ class Profile extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('ProfileDao');
-        $this->load->model('StatusDao');
+        $this->load->model('ModuleDao');
         $this->load->library(array('form_validation', 'session'));
         $this->load->helper(array('form', 'url'));
         $this->layout->isLogin = false;
@@ -28,21 +28,19 @@ class Profile extends CI_Controller {
     }
 
     public function maintenanceProfile($profileid = null) {
-        
         $data['dbr_profile'] = array();
         $data['is_new'] = true;
         if (isset($profileid) && $profileid) {
             $data['dbr_profile'] = $this->ProfileDao->getProfileById($profileid);
             $data['is_new'] = false;
         }
-        $this->load->model('ModuleDao');
         $dbl_modules    = $this->ModuleDao->getParentModules();
-        $a_modules      = array();
+        $a_parent_modules      = array();
         foreach($dbl_modules as $dbr_module) {
-            $a_modules[$dbr_module->id] = $dbr_module->name;
+            $a_parent_modules[$dbr_module->id] = $dbr_module->name;
         }
-        $data['a_modules']   = $a_modules;
-        $data['a_status']   = $this->StatusDao->getProfileStatus();
+        $data['a_parent_modules']   = $a_parent_modules;
+        $data['a_status']           = Status::getProfileStatus();
 
         if ($this->input->post()) {
             $this->saveProfile();
@@ -51,6 +49,7 @@ class Profile extends CI_Controller {
         $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
         $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
         $this->layout->assets(base_url() . 'assets/js/happy/profile.js');
+        $this->layout->assets(base_url() . 'assets/js/lib/bootbox.min.js');
         $this->layout->view('Profile/maintenanceProfile', $data);
     }
     
@@ -83,6 +82,36 @@ class Profile extends CI_Controller {
             $this->session->set_flashdata('message', 'Se guardo el perfil satisfactorimente');
             redirect('Profile/index');
         }
+    }
+
+    private static function getChildrenPermRecursive($a_parent_modules=array(), $a_children_modules=array()) {
+        foreach($a_parent_modules as $module_id=>$module) {
+            if(array_key_exists($module_id, $a_children_modules)) {
+                $a_parent_modules[$module_id]['children'] = $a_children_modules[$module_id];
+            }
+        }
+        return $a_parent_modules;
+        
+    }
+    
+    public function getModalPermission() {
+        $a_permission_filter    = $this->input->post('permission_filter');
+        $dbl_modules            = $this->ModuleDao->getParentModules($a_permission_filter);
+        $a_parent_modules   = array();
+        $a_children_modules = array();
+        foreach($dbl_modules as $dbr_modules){
+            if(!$dbr_modules->parent_id) {
+                $a_parent_modules[$dbr_modules->id]['name'] = $dbr_modules->name;
+            }
+        }
+        $dbl_children_modules   =   $this->ModuleDao->getChildModules($a_permission_filter);
+        foreach($dbl_children_modules as $dbr_children_modules) {
+            $a_children_modules[$dbr_children_modules->parent_id][] = array('id' => $dbr_children_modules->id, 'name' => $dbr_children_modules->name);
+        }
+
+        $a_parent_modules   = self::getChildrenPermRecursive($a_parent_modules, $a_children_modules);
+        $data['a_permission_modules'] = $a_parent_modules;
+        $this->load->view('Profile/modalPermission',$data);
     }
 
     public function deleteProfile($params = array()) {

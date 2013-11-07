@@ -16,9 +16,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <?php echo form_label('Descripión', 'formprofile_description', array('class' => 'control-label col-lg-4')) ?>
+                    <?php echo form_label('Descripción', 'formprofile_description', array('class' => 'control-label col-lg-4')) ?>
                     <div class="col-lg-4">
-                        <?php echo form_textarea(array('name' => 'formprofile[description]', 'id' => 'formprofile_description', 'rows' => 4, 'placeholder' => 'Descripión', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? '' : $dbr_profile->description)) ?>
+                        <?php echo form_textarea(array('name' => 'formprofile[description]', 'id' => 'formprofile_description', 'rows' => 4, 'placeholder' => 'Descripción', 'autofocus' => 'autofocus', 'class' => 'form-control'), ($is_new ? '' : $dbr_profile->description)) ?>
                         <?php echo form_error('formprofile[description]') ?>
                     </div>
                 </div>
@@ -45,8 +45,8 @@
                 <div class="form-group">
                     <label class="control-label col-lg-4">Módulos</label>
                     <div class="col-lg-8">
-                        <?php echo form_dropdown('formprofile[modules][]', $a_modules, array(), 'style="width:350px;" class="chosen-select" multiple="multiple" data-placeholder="Ingrese o seleccione el módulo"') ?>
-                        <a id="set_permission_by_module">Definir permisos por módulos</a>
+                        <?php echo form_dropdown('formprofile[modules][]', $a_parent_modules, array(), 'style="width:350px;" class="chosen-select" multiple="multiple" data-placeholder="Ingrese o seleccione el módulo"') ?>
+                        <a id="set_permission_by_module" href="<?php echo site_url('Profile/getModalPermission');?>">Definir permisos por módulos</a>
                     </div>
                 </div>
 

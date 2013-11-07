@@ -61,6 +61,8 @@ $route['perfil/(:num)/modificar.html']          = 'Profile/maintenanceProfile/$1
 $route['perfil/(:num)/eliminar.html']           = 'Profile/deleteProfile/$1';
 $route['perfil/exportar-excel.html']            = 'Profile/exportExcel';
 
+$route['perfil/permisos-por-modulo.html']       = 'Profile/getModalPermission';
+
 /*
  * Rutas de acceso al modulo de ventas diarias
  */
