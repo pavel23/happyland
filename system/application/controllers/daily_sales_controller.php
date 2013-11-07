@@ -12,14 +12,17 @@ class Daily_sales_controller extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->load->database();
         $this->layout->isLogin = false;
+        $this->load->library(array('session'));
+        $this->load->model('ProfileDao');
+        $this->load->model('DailySaleDao');
         $this->load->helper('url');
     }
 
     public function index() {
         $this->load->database();
-        $this->load->model('Profile_dao', 'ProfileDAO');
-        $data['profile_data'] = $this->ProfileDAO->getAllProfiles();
+        $data['profile_data'] = $this->ProfileDao->getAllProfiles();
         $this->layout->assets(base_url() . 'assets/css/daily_sales.css');
         $this->layout->view('daily_sales/list_template', $data);
     }
@@ -33,30 +36,48 @@ class Daily_sales_controller extends CI_Controller {
 
     public function processForm() {
         try {
-            /* foreach($this->input->post() as $row_daily_sales) {
-              $row_daily_sales[0]
-              } */
-            /*echo '<pre>';
-            print_r($this->input->post()); //'data', TRUE));
-            print_r($this->input->request_headers());
-            echo '</pre>';*/
-            
-            $data = array(
-                            array(
-                               'title' => 'My title' ,
-                               'name' => 'My Name' ,
-                               'date' => 'My date'
-                            ),
-                            array(
-                               'title' => 'Another title' ,
-                               'name' => 'Another Name' ,
-                               'date' => 'Another date'
-                            )
-                         );
+            $daily_sale_credentials = $this->input->post();
+            $data_daily_sale = array();
+            $data_daily_sale_detail = array();
+
+            $daily_sale_id = ($daily_sale_credentials['daily_sale_id'] > 0 ? $daily_sale_credentials['daily_sale_id'] : null);
+            $daily_sale_detail_id = ($daily_sale_credentials['daily_sale_detail_id'] > 0 ? $daily_sale_credentials['daily_sale_detail_id'] : null);
+
+
+            $data_daily_sale['subsidiaries_id'] = 10;
+            if (!$daily_sale_id) {
+                $data_daily_sale['date_sale'] = date('Y/m/d');
+            }
+
+            $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($data_daily_sale, $daily_sale_id);
+
+            if ($response['daily_sale_id']) {
+                $data_update_daily_sale = ['type_of_sales_id', 'operator_id', 'cash_number', 'opening_cash', 'closing_cash', 'master_card_amount', 'visa_amount', 'retirement_amount_pen', 'retirement_amount_dol', 'total_calculated', 'total_x_format', 'difference_money', 'difference_values', 'num_transacctions', 'hour_by_cash'];
+
+                foreach ($daily_sale_credentials['data'] as $key => $value) {
+                    $data_daily_sale_detail[$data_update_daily_sale[$key]] = ($data_update_daily_sale[$key] == 'type_of_sales_id' ? 1 : $value);
+                }
+
+                $data_daily_sale_detail['daily_sales_id'] = $response['daily_sale_id'];
+
+
+                $response['daily_sale_detail_id'] = $this->DailySaleDao->saveDailySaleDetail($data_daily_sale_detail, $daily_sale_detail_id);
+            }
+
+
+//            if ($daily_sale_credentials['daily_sale_detail_id']){
+//                
+//            }
+
+
+
+
+
+
 
 
             $response['status'] = 0;
-            $response['id']     = date('s');
+            $response['id'] = date('s');
             header("Content-type: application/json");
             echo json_encode($response);
         } catch (Exception $e) {
@@ -86,23 +107,23 @@ class Daily_sales_controller extends CI_Controller {
             echo $e;
         }
     }
-    
+
     public function getJSONDailySaleOthers() {
         try {
             $this->load->database();
             $this->load->model('DailySaleDao', 'DailySaleDao');
             $array_daily_sale_others = $this->DailySaleDao->getDailySaleOthers();
 
-            /*$array_operator_names = array();
-            $array_operator_names['ids'] = $array_operators;
-            foreach ($array_operators as $operator) {
-                $full_name = trim($operator['full_name']);
-                if (strlen($full_name) == 0) {
-                    continue;
-                }
-                $this->UserDAO->get_user_id_by_name($full_name);
-                $array_operator_names['full_names'][] = $operator['full_name'];
-            }*/
+            /* $array_operator_names = array();
+              $array_operator_names['ids'] = $array_operators;
+              foreach ($array_operators as $operator) {
+              $full_name = trim($operator['full_name']);
+              if (strlen($full_name) == 0) {
+              continue;
+              }
+              $this->UserDAO->get_user_id_by_name($full_name);
+              $array_operator_names['full_names'][] = $operator['full_name'];
+              } */
             header("Content-type: application/json");
             echo json_encode($array_daily_sale_others);
         } catch (Exception $e) {

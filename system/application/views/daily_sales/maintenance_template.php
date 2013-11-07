@@ -15,6 +15,7 @@
                 </div>                
             </header>
             <div id="div-5" class="accordion-body collapse in body">
+                <input type="hidden" name="dayli_sale_id" id="dayli_sale_id" value="">
                 <div id="error_message"></div>
                 <div id="daily_sales"></div>
                 <br />
