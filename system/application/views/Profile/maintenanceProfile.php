@@ -6,7 +6,8 @@
                 <h5>Perfil</h5>                
             </header>
             <div id="div-5" class="accordion-body collapse in body">                        
-                <?php echo form_open(site_url('Profile/maintenanceProfile/' . (!$is_new ? $dbr_profile->id : '')), array('class' => 'form-horizontal')); ?>
+                <?php $profileid = (!$is_new ? $dbr_profile->id : '');?>
+                <?php echo form_open(site_url('Profile/maintenanceProfile/' . $profileid), array('class' => 'form-horizontal')); ?>
 
                 <div class="form-group">
                     <?php echo form_label('Nombre', 'formprofile_name', array('class' => 'control-label col-lg-4')) ?>
@@ -46,7 +47,7 @@
                     <label class="control-label col-lg-4">Módulos</label>
                     <div class="col-lg-8">
                         <?php echo form_dropdown('formprofile[modules][]', $a_parent_modules, array(), 'style="width:350px;" class="chosen-select" multiple="multiple" data-placeholder="Ingrese o seleccione el módulo"') ?>
-                        <a id="set_permission_by_module" href="<?php echo site_url('Profile/getModalPermission');?>">Definir permisos por módulos</a>
+                        <a id="set_permission_by_module" href="<?php echo site_url('Profile/getModalPermission/'.$profileid);?>">Definir permisos por módulos</a>
                     </div>
                 </div>
 

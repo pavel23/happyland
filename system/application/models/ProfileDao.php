@@ -19,6 +19,13 @@ class ProfileDao extends CI_Model {
         return ($query->num_rows() == 1 ? $query->row() : null);
     }
     
+    public function existProfileId($profile_id) {
+        $this->db->select('id');
+        $this->db->where('id', $profile_id);
+        $query = $this->db->get('hpl_profile');
+        return ($query->num_rows() == 1 ? $query->row() : null);
+    }
+    
     public function saveProfile($data, $profile_id = null) {
 
         if ($profile_id) {

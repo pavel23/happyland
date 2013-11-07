@@ -50,7 +50,14 @@ $(function() {
                                 label: "Asignar!",
                                 className: "btn-success",
                                 callback: function() {
-                                    modalPermission.show("great success");
+                                    $.post(
+                                            $('#formpermission').attr('action'), 
+                                            $('#formpermission').serialize(), 
+                                            function(dataResponse, textStatus, jqXHR){
+                                                //console.log($('.form-horizontal').serialize());
+                                                console.log(dataResponse);
+                                            });
+                                    
                                 }
                             },
                             danger: {
@@ -59,14 +66,14 @@ $(function() {
                                 callback: function() {
                                     modalPermission.show("uh oh, look out!");
                                 }
-                            },
+                            }/*,
                             main: {
                                 label: "Click ME!",
                                 className: "btn-primary",
                                 callback: function() {
-                                    Example.show("Primary button");
+                                    modalPermission.show("Primary button");
                                 }
-                            }
+                            }*/
                         }
                     });
                 }).done(function() {

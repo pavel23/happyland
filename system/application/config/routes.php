@@ -48,31 +48,32 @@ $route['login.html']                    = 'Login/index';
 /*
  * Rutas de acceso al modulo de perfiles
  */
-$route['usuarios/listar.html']                    = 'User/index';
-$route['usuarios/agregar.html']                   = 'User/maintenanceUser';
-$route['usuarios/(:num)/modificar.html']          = 'User/maintenanceUser/$1';
+$route['usuarios/listar.html']                      = 'User/index';
+$route['usuarios/agregar.html']                     = 'User/maintenanceUser';
+$route['usuarios/(:num)/modificar.html']            = 'User/maintenanceUser/$1';
 
 /*
  * Rutas de acceso al modulo de perfiles
  */
-$route['perfil/listar.html']                    = 'Profile/index';
-$route['perfil/agregar.html']                   = 'Profile/maintenanceProfile';
-$route['perfil/(:num)/modificar.html']          = 'Profile/maintenanceProfile/$1';
-$route['perfil/(:num)/eliminar.html']           = 'Profile/deleteProfile/$1';
-$route['perfil/exportar-excel.html']            = 'Profile/exportExcel';
+$route['perfil/listar.html']                        = 'Profile/index';
+$route['perfil/agregar.html']                       = 'Profile/maintenanceProfile';
+$route['perfil/(:num)/modificar.html']              = 'Profile/maintenanceProfile/$1';
+$route['perfil/(:num)/eliminar.html']               = 'Profile/deleteProfile/$1';
+$route['perfil/exportar-excel.html']                = 'Profile/exportExcel';
 
-$route['perfil/permisos-por-modulo.html']       = 'Profile/getModalPermission';
+$route['perfil/(:num)/permisos-por-modulo.html']    = 'Profile/getModalPermission/$1';
+$route['perfil/guardar-permisos-por-modulo.html']   = 'Profile/saveModalPermission';
 
 /*
  * Rutas de acceso al modulo de ventas diarias
  */
-$route['venta-diaria/listar.html']              = 'daily_sales_controller/index';
-$route['venta-diaria/registrar.html']           = 'daily_sales_controller/maintenanceForm';
-$route['venta-diaria/(:num)/modificar.html']    = 'daily_sales_controller/maintenanceForm/$1';
-$route['venta-diaria/procesar-datos.html']      = 'daily_sales_controller/processForm';
+$route['venta-diaria/listar.html']                  = 'daily_sales_controller/index';
+$route['venta-diaria/registrar.html']               = 'daily_sales_controller/maintenanceForm';
+$route['venta-diaria/(:num)/modificar.html']        = 'daily_sales_controller/maintenanceForm/$1';
+$route['venta-diaria/procesar-datos.html']          = 'daily_sales_controller/processForm';
 
-$route['venta-diaria/lista-operarios.html']      = 'daily_sales_controller/getJSONOperators';
-$route['venta-diaria/otras-ventas-diarias.html'] = 'daily_sales_controller/getJSONDailySaleOthers';
+$route['venta-diaria/lista-operarios.html']         = 'daily_sales_controller/getJSONOperators';
+$route['venta-diaria/otras-ventas-diarias.html']    = 'daily_sales_controller/getJSONDailySaleOthers';
 
 $route['404_override'] = '';
 
