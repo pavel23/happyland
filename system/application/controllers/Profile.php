@@ -34,12 +34,14 @@ class Profile extends CI_Controller {
             $data['dbr_profile'] = $this->ProfileDao->getProfileById($profile_id);
             $data['is_new'] = false;
         }
-        $dbl_modules    = $this->ModuleDao->getParentModules();
+        $dbl_modules    = $this->ModuleDao->getParentModulesWithData(array(), $profile_id);
         $a_parent_modules      = array();
         foreach($dbl_modules as $dbr_module) {
-            $a_parent_modules[$dbr_module->id] = $dbr_module->name;
+            $a_parent_modules[$dbr_module->id]  = $dbr_module->name;
+            $a_parent_modules_selected[]        = $dbr_module->module_id;
         }
-        $data['a_parent_modules']   = $a_parent_modules;
+        $data['a_parent_modules']               = $a_parent_modules;
+        $data['a_parent_modules_selected']      = $a_parent_modules_selected;
         $data['a_status']           = Status::getProfileStatus();
 
         if ($this->input->post()) {
@@ -91,7 +93,6 @@ class Profile extends CI_Controller {
             }
         }
         return $a_parent_modules;
-        
     }
     
     public function getModalPermission($profile_id) {
@@ -99,21 +100,31 @@ class Profile extends CI_Controller {
         if (isset($profile_id) && $profile_id) {
             $data['is_new'] = false;
         }
-
         $a_permission_filter    = $this->input->post('permission_filter');
-        $dbl_modules            = $this->ModuleDao->getParentModules($a_permission_filter);
+        $dbl_modules            = $this->ModuleDao->getParentModulesWithData($a_permission_filter, $profile_id);
         $a_parent_modules       = array();
         $a_children_modules     = array();
         foreach($dbl_modules as $dbr_modules){
             if(!$dbr_modules->parent_id) {
-                $a_parent_modules[$dbr_modules->id]['name'] = $dbr_modules->name;
+                $a_parent_modules[$dbr_modules->id]['name']         = $dbr_modules->name;
+                $a_parent_modules[$dbr_modules->id]['description']  = $dbr_modules->description;
+                $a_parent_modules[$dbr_modules->id]['read']         = $dbr_modules->read;
+                $a_parent_modules[$dbr_modules->id]['write']        = $dbr_modules->write;
+                $a_parent_modules[$dbr_modules->id]['download']     = $dbr_modules->download;
             }
         }
-        $dbl_children_modules   =   $this->ModuleDao->getChildModules($a_permission_filter);
+        $dbl_children_modules   =   $this->ModuleDao->getChildModulesWithData($a_permission_filter, $profile_id);
+        $index_submodule=0;
         foreach($dbl_children_modules as $dbr_children_modules) {
-            $a_children_modules[$dbr_children_modules->parent_id][] = array('id' => $dbr_children_modules->id, 'name' => $dbr_children_modules->name);
+            $a_children_modules[$dbr_children_modules->parent_id][$index_submodule]['id']           = $dbr_children_modules->id;
+            $a_children_modules[$dbr_children_modules->parent_id][$index_submodule]['name']         = $dbr_children_modules->name;
+            $a_children_modules[$dbr_children_modules->parent_id][$index_submodule]['description']  = $dbr_children_modules->description;
+            $a_children_modules[$dbr_children_modules->parent_id][$index_submodule]['read']         = $dbr_children_modules->read;
+            $a_children_modules[$dbr_children_modules->parent_id][$index_submodule]['write']        = $dbr_children_modules->write;
+            $a_children_modules[$dbr_children_modules->parent_id][$index_submodule]['download']     = $dbr_children_modules->download;
+            $a_children_modules[$dbr_children_modules->parent_id][$index_submodule]['id']           = $dbr_children_modules->id;
+            $index_submodule++;
         }
-
         $a_parent_modules   = self::getChildrenPermRecursive($a_parent_modules, $a_children_modules);
         $data['a_permission_modules']   = $a_parent_modules;
         $data['profile_id']              = $profile_id;
@@ -121,63 +132,67 @@ class Profile extends CI_Controller {
     }
     
     public function saveModalPermission() {
-        $this->load->model('ModuleProfileAccessDao');
-        $a_module_id                = $this->input->post('a_module_id') ? $this->input->post('a_module_id') : array();
-        $download_access            = $this->input->post('download') ? $this->input->post('download') : array();
-        $read_access                = $this->input->post('read') ? $this->input->post('read') : array();
-        $write_access               = $this->input->post('write') ? $this->input->post('write') : array();
-        
-        $download_access_children   = $this->input->post('download_children') ? $this->input->post('download_children') : array();
-        $read_access_children       = $this->input->post('read_children') ? $this->input->post('read_children') : array();
-        $write_access_children      = $this->input->post('write_children') ? $this->input->post('write_children'): array();
+        $response_method = array();
+        try {    
+            $profile_credentials        = array();
+            $read_access_value = $write_access_value = $download_access_value = 0;
+            $profile_id                 = $this->input->post('profile_id');
+            $a_module_id                = $this->input->post('a_module_id') ? $this->input->post('a_module_id') : array();
+            $read_access                = $this->input->post('read') ? $this->input->post('read') : array();
+            $write_access               = $this->input->post('write') ? $this->input->post('write') : array();
+            $download_access            = $this->input->post('download') ? $this->input->post('download') : array();
 
-        $profile_id                 = $this->input->post('profile_id');
-        $dbr_profile                = $this->ProfileDao->existProfileId($profile_id);
-        $a_module_id                = $this->ModuleDao->returnExistsModuleIds($a_module_id);
+            $a_sub_module_id            = $this->input->post('a_sub_module_id') ? $this->input->post('a_sub_module_id') : array();
+            $read_access_children       = $this->input->post('read_children') ? $this->input->post('read_children') : array();
+            $write_access_children      = $this->input->post('write_children') ? $this->input->post('write_children'): array();
+            $download_access_children   = $this->input->post('download_children') ? $this->input->post('download_children') : array();
 
-        if(count($a_module_id)==0) {
-            return false;
-        }
-        foreach($a_module_id as $a_module) {
-            $module_id                  = $a_module['id'];
-            $read_access_value          = array_key_exists($module_id, $read_access) ? $read_access[$module_id] : 0;
-            $write_access_value         = array_key_exists($module_id, $write_access) ? $write_access[$module_id] : 0;
-            $download_access_value      = array_key_exists($module_id, $download_access) ? $download_access[$module_id] : 0;
+            $this->load->model('ModuleProfileAccessDao');
+            $a_module_id    = $this->ModuleDao->returnExistsModuleIds($a_module_id);
+            $dbr_profile    = $this->ProfileDao->existProfileId($profile_id);
+            $profile_id     = $dbr_profile->id;
 
-            $read_access_children_value      = array_key_exists($module_id, $read_access_children) ? $read_access_children[$module_id] : array();
-            $write_access_children_value     = array_key_exists($module_id, $write_access_children) ? $write_access_children[$module_id] : array();
-            $download_access_children_value  = array_key_exists($module_id, $download_access_children) ? $download_access_children[$module_id] : array();
+            if(count($a_module_id)==0) {
+                return false;
+            }
+            foreach($a_module_id as $a_module) {
+                $module_id              = $a_module['id'];
+                $read_access_value      = array_key_exists($module_id, $read_access) ? $read_access[$module_id] : 0;
+                $write_access_value     = array_key_exists($module_id, $write_access) ? $write_access[$module_id] : 0;
+                $download_access_value  = array_key_exists($module_id, $download_access) ? $download_access[$module_id] : 0;
 
-            $profile_credentials['module_id']       = $module_id;
-            $profile_credentials['profile_id']      = $dbr_profile->id;
-            $profile_credentials['read']            = $read_access_value;
-            $profile_credentials['write']           = $write_access_value;
-            $profile_credentials['download']        = $download_access_value;
-            $this->ModuleProfileAccessDao->saveModuleProfileAccess($profile_credentials, $module_id, $dbr_profile->id);
-            unset($profile_credentials);
-                
-            if(count($write_access_children_value)>0){
-                foreach($write_access_children_value as $write_access_children_val) {
-                    $profile_credentials['module_id']       = $module_id;
-                    $profile_credentials['profile_id']      = $dbr_profile->id;
-                    $profile_credentials['read']            = $write_access_children_val;
-                    $profile_credentials['write']           = $write_access_value;
-                    $profile_credentials['download']        = $download_access_value;
-                    $this->ModuleProfileAccessDao->saveModuleProfileAccess($profile_credentials, $module_id, $dbr_profile->id);
+                $profile_credentials['module_id']   = $module_id;
+                $profile_credentials['profile_id']  = $profile_id;
+                $profile_credentials['read']        = $read_access_value;
+                $profile_credentials['write']       = $write_access_value;
+                $profile_credentials['download']    = $download_access_value;
+                $this->ModuleProfileAccessDao->saveModuleProfileAccess($profile_credentials, $module_id, $profile_id);
+                unset($profile_credentials);
+
+                if(count($a_sub_module_id)==0){
+                    continue;
+                }
+                foreach($a_sub_module_id[$module_id] as $sub_module_id) {
+                    $read_access_value     = (array_key_exists($module_id, $read_access_children) && array_key_exists($sub_module_id, $read_access_children[$module_id]) ? $read_access_children[$module_id][$sub_module_id] : 0);
+                    $write_access_value    = (array_key_exists($module_id, $write_access_children) && array_key_exists($sub_module_id, $write_access_children[$module_id]) ? $write_access_children[$module_id][$sub_module_id] : 0);
+                    $download_access_value = (array_key_exists($module_id, $download_access_children) && array_key_exists($sub_module_id, $download_access_children[$module_id]) ? $download_access_children[$module_id][$sub_module_id] : 0);
+
+                    $profile_credentials['module_id']   = $sub_module_id;
+                    $profile_credentials['profile_id']  = $profile_id;
+                    $profile_credentials['read']        = $read_access_value;
+                    $profile_credentials['write']       = $write_access_value;
+                    $profile_credentials['download']    = $download_access_value;
+                    $this->ModuleProfileAccessDao->saveModuleProfileAccess($profile_credentials, $sub_module_id, $profile_id);
                     unset($profile_credentials);
+                    unset($a_sub_module_id[$sub_module_id]);
                 }
             }
-            if(count($read_access_children_value)>0){
-                foreach($read_access_children_value as $read_access_children_val) {
-                    echo $read_access_children_val;
-                }
-            }
-            if(count($download_access_children_value)>0){
-                foreach($download_access_children_value as $download_access_children_val) {
-                    echo $download_access_children_val;
-                }
-            }
+            
+        } catch (Exception $e) {
+            $response_method['success'] = 0;
+            $response_method['message'] = $e->getMessage();
         }
+        
         /*
         $this->session->set_flashdata('message', 'Se guardo el perfil satisfactorimente');
         redirect('Profile/index');
