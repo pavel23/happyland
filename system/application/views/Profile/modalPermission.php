@@ -1,18 +1,16 @@
 <div id="optionalTable" class="body collapse in">
     <?php echo form_open(site_url('Profile/saveModalPermission'), array('id' => 'formpermission', 'name' => 'formpermission', 'class' => 'form-horizontal')); ?>
-    <?php echo form_open(site_url('Profile/saveModalPermission'), array('id' => 'formpermission', 'name' => 'formpermission', 'class' => 'form-horizontal')); ?>
     <?php echo form_hidden('profile_id', $profile_id);?>
     <table  class="table table-bordered responsive-table">
         <thead>
             <tr>
                 <th colspan="2" rowspan="2">Módulo</th>
-                <th colspan="4"><div align="center">Acceso</div></th>
+                <th colspan="3"><div align="center">Acceso</div></th>
             </tr>
             <tr>
                 <th><div align="center">Lectura</div></th>
                 <th><div align="center">Escritura</div></th>
                 <th><div align="center">Descarga</div></th>
-                <th><div align="center">Total</div></th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +20,6 @@
                 <td><div align="center"><?php echo form_checkbox('read[' . $module_id . ']', '1', TRUE); ?></div></td>
                 <td><div align="center"><?php echo form_checkbox('write[' . $module_id . ']', '1', FALSE); ?></div></td>
                 <td><div align="center"><?php echo form_checkbox('download[' . $module_id . ']', '1', FALSE); ?></div></td>
-                <td><div align="center"><?php echo form_checkbox('total[' . $module_id . ']', '1', FALSE); ?></div></td>
             </tr>
             <?php $count_sub_mod=1;?>
             <?php foreach ($a_modules['children'] as $children_module_id => $a_children_modules) { ?>
@@ -32,7 +29,6 @@
                 <td><div align="center"><?php echo form_checkbox('read_children['.$module_id.'][' . $a_children_modules['id'] . ']', '1', TRUE); ?></div></td>
                 <td><div align="center"><?php echo form_checkbox('write_children['.$module_id.'][' . $a_children_modules['id'] . ']', '1', FALSE); ?></div></td>
                 <td><div align="center"><?php echo form_checkbox('download_children['.$module_id.'][' . $a_children_modules['id'] . ']', '1', FALSE); ?></div></td>
-                <td><div align="center"><?php echo form_checkbox('total_children['.$module_id.'][' . $a_children_modules['id'] . ']', '1', FALSE); ?></div></td>
             </tr>
             <?php $count_sub_mod++; ?>
             <?php } ?>

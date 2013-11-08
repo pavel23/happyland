@@ -124,12 +124,10 @@ class Profile extends CI_Controller {
         $this->load->model('ModuleProfileAccessDao');
         $a_module_id                = $this->input->post('a_module_id') ? $this->input->post('a_module_id') : array();
         $download_access            = $this->input->post('download') ? $this->input->post('download') : array();
-        $total_access               = $this->input->post('total') ? $this->input->post('total') : array();
         $read_access                = $this->input->post('read') ? $this->input->post('read') : array();
         $write_access               = $this->input->post('write') ? $this->input->post('write') : array();
         
         $download_access_children   = $this->input->post('download_children') ? $this->input->post('download_children') : array();
-        $total_access_children      = $this->input->post('total_children') ? $this->input->post('total_children') : array();
         $read_access_children       = $this->input->post('read_children') ? $this->input->post('read_children') : array();
         $write_access_children      = $this->input->post('write_children') ? $this->input->post('write_children'): array();
 
@@ -145,25 +143,28 @@ class Profile extends CI_Controller {
             $read_access_value          = array_key_exists($module_id, $read_access) ? $read_access[$module_id] : 0;
             $write_access_value         = array_key_exists($module_id, $write_access) ? $write_access[$module_id] : 0;
             $download_access_value      = array_key_exists($module_id, $download_access) ? $download_access[$module_id] : 0;
-            $total_access_value         = array_key_exists($module_id, $total_access) ? $total_access[$module_id] : 0;
 
-            $read_access_children_value      = array_key_exists($module_id, $read_access_children) ? $read_access_children[$module_id] : 0;
-            $write_access_children_value     = array_key_exists($module_id, $write_access_children) ? $write_access_children[$module_id] : 0;
-            $download_access_children_value  = array_key_exists($module_id, $download_access_children) ? $download_access_children[$module_id] : 0;
-            $total_access_children_value     = array_key_exists($module_id, $total_access_children) ? $total_access_children[$module_id] : 0;
+            $read_access_children_value      = array_key_exists($module_id, $read_access_children) ? $read_access_children[$module_id] : array();
+            $write_access_children_value     = array_key_exists($module_id, $write_access_children) ? $write_access_children[$module_id] : array();
+            $download_access_children_value  = array_key_exists($module_id, $download_access_children) ? $download_access_children[$module_id] : array();
 
             $profile_credentials['module_id']       = $module_id;
             $profile_credentials['profile_id']      = $dbr_profile->id;
             $profile_credentials['read']            = $read_access_value;
             $profile_credentials['write']           = $write_access_value;
             $profile_credentials['download']        = $download_access_value;
-            $profile_credentials['total_access']    = $total_access_value;
             $this->ModuleProfileAccessDao->saveModuleProfileAccess($profile_credentials, $module_id, $dbr_profile->id);
             unset($profile_credentials);
-            
+                
             if(count($write_access_children_value)>0){
                 foreach($write_access_children_value as $write_access_children_val) {
-                    echo $write_access_children_val;
+                    $profile_credentials['module_id']       = $module_id;
+                    $profile_credentials['profile_id']      = $dbr_profile->id;
+                    $profile_credentials['read']            = $write_access_children_val;
+                    $profile_credentials['write']           = $write_access_value;
+                    $profile_credentials['download']        = $download_access_value;
+                    $this->ModuleProfileAccessDao->saveModuleProfileAccess($profile_credentials, $module_id, $dbr_profile->id);
+                    unset($profile_credentials);
                 }
             }
             if(count($read_access_children_value)>0){
@@ -176,14 +177,6 @@ class Profile extends CI_Controller {
                     echo $download_access_children_val;
                 }
             }
-            if(count($download_access_children_value)>0){
-                foreach($download_access_children_value as $download_access_children_val) {
-                    echo $download_access_children_val;
-                }
-            }
-            /*
-            
-            */
         }
         /*
         $this->session->set_flashdata('message', 'Se guardo el perfil satisfactorimente');
