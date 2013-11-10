@@ -25,7 +25,7 @@ class DailySaleDao extends CI_Model {
 
         $query = $this->db->query($sql, array($star, $end));
 
-        return ($query->num_rows() > 0 ? $query->result() : null);
+        return ($query->num_rows() > 0 ? $query->result() : array());
     }
 
     public function getDailySaleDetailBySaleId($daily_sale_id) {
