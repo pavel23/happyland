@@ -64,7 +64,8 @@ $(function() {
                                 label: "Cancelar!",
                                 className: "btn-danger",
                                 callback: function() {
-                                    modalPermission.show("uh oh, look out!");
+                                    console.log(modalPermission);
+                                    //modalPermission.show("uh oh, look out!");
                                 }
                             }/*,
                             main: {

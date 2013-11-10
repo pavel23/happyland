@@ -6,6 +6,8 @@
                 <h5>Listado de Ventas Diarias</h5>                
             </header>
             <div id="div-5" class="accordion-body collapse in body">
+                <div id="calendar"></div>
+                
                 <div><?php echo date('t', mktime(0, 0, 0, 2, 1, 2010)); ?></div>
 
                 <div><?php echo date('F'); ?></div>
@@ -23,6 +25,8 @@
                         }
                         ?>
                         <li class="day_container <?php echo $status; ?>">
+                            
+                            <?php //echo site_url('User/maintenanceUser/' . $dbr_user->id); ?>
                             <a href="<?php echo site_url('daily_sales_controller/maintenanceForm'); ?>">
                                 <div class="day_number"><?php echo $i + 1; ?></div>
                                 <div class="day_sale_text">Venta del día</div>

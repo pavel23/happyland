@@ -13,7 +13,9 @@ class Status {
     const STATUS_INCOMPLETO = 'inc';
     const STATUS_PENDIENTE = 'pen';
     const STATUS_ATENDIDO = 'ate';
-    const STATUS_RECHAZADO = 'rec';
+    const STATUS_ABIERTO = 'opn';
+    const STATUS_CERRADO = 'cls';
+    const STATUS_DESACTIVADO = 'dst';
 
     public static $statuses = array(
         self::STATUS_ACTIVO => 'Activo',
@@ -27,7 +29,9 @@ class Status {
         self::STATUS_INCOMPLETO => 'Incompleto',
         self::STATUS_PENDIENTE => 'Pendiente',
         self::STATUS_ATENDIDO => 'Atendido',
-        self::STATUS_RECHAZADO => 'Rechazado',
+        self::STATUS_ABIERTO => 'Abierto',
+        self::STATUS_CERRADO => 'Cerrado',
+        self::STATUS_DESACTIVADO => 'Desactivado',
     );
 
     public static function getStatusLabel($key) {
