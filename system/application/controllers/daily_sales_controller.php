@@ -32,16 +32,16 @@ class Daily_sales_controller extends CI_Controller {
     public function getDailySaleCalendar() {
         $daily_sale_credentials = $this->input->get();
         $dblDailyDao = $this->DailySaleDao->getDailySaleCalendar($daily_sale_credentials['start'], $daily_sale_credentials['end']);
-        $jsonArray = array();
+        $jsonArray[] = array('title' => "Agregar Venta \n Estado: Abierto", 'start' => date('Y-m-d'), 'className' => 'label label-important', 'url' => site_url('daily_sales_controller/maintenanceForm/'));
         foreach ($dblDailyDao as $dbrDailyDao) {
-            $buildjson = array(
+            $jsonArray[] = array(
                 'title' => "Venta del Día \n S/ " . $dbrDailyDao->grand_total_calculated . "\n Estado: " . Status::$statuses[$dbrDailyDao->status],
                 'start' => "$dbrDailyDao->date_sale",
-                'className' => 'label ' . ($dbrDailyDao->status == Status::STATUS_ABIERTO ? 'label-warning' : 'label-success'),
-                'url' => site_url('daily_sales_controller/maintenanceForm/' . $dbrDailyDao->id),
-                'allday' => false);
+                'className' => 'label ' . ($dbrDailyDao->status == Status::STATUS_ABIERTO ? 'label-info' : 'label-success'),
+                'url' => site_url('daily_sales_controller/maintenanceForm/' . $dbrDailyDao->id)
+            );
 
-            array_push($jsonArray, $buildjson);
+            //array_push($jsonArray, $buildjson);
         }
 
         echo json_encode($jsonArray);
