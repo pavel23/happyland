@@ -74,6 +74,7 @@ $route['venta-diaria/procesar-datos.html']          = 'daily_sales_controller/pr
 
 $route['venta-diaria/lista-operarios.html']         = 'daily_sales_controller/getJSONOperators';
 $route['venta-diaria/otras-ventas-diarias.html']    = 'daily_sales_controller/getJSONDailySaleOthers';
+$route['venta-diaria/venta-diaria-por_fecha.html']    = 'daily_sales_controller/getDailySaleCalendar';
 
 $route['404_override'] = '';
 

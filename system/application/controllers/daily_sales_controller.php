@@ -21,13 +21,30 @@ class Daily_sales_controller extends CI_Controller {
     }
 
     public function index() {
-        $data['profile_data'] = $this->ProfileDao->getAllProfiles();
         $this->layout->assets(base_url() . 'assets/css/daily_sales.css');
         $this->layout->assets(base_url() . 'assets/css/lib/fullcalendar.css');
         $this->layout->assets('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js');
-        $this->layout->assets(base_url() . 'assets/js/lib/fullcalendar.min.js');        
+        $this->layout->assets(base_url() . 'assets/js/lib/fullcalendar.min.js');
         $this->layout->assets(base_url() . 'assets/js/daily_sale/list_daily_sales.js');
-        $this->layout->view('daily_sales/list_template', $data);
+        $this->layout->view('daily_sales/list_template');
+    }
+
+    public function getDailySaleCalendar() {
+        $daily_sale_credentials = $this->input->get();
+        $dblDailyDao = $this->DailySaleDao->getDailySaleCalendar($daily_sale_credentials['start'], $daily_sale_credentials['end']);
+        $jsonArray = array();
+        foreach ($dblDailyDao as $dbrDailyDao) {
+            $buildjson = array(
+                'title' => "Venta del Día \n S/ " . $dbrDailyDao->grand_total_calculated . "\n Estado: " . Status::$statuses[$dbrDailyDao->status],
+                'start' => "$dbrDailyDao->date_sale",
+                'className' => 'label ' . ($dbrDailyDao->status == Status::STATUS_ABIERTO ? 'label-warning' : 'label-success'),
+                'url' => site_url('daily_sales_controller/maintenanceForm/' . $dbrDailyDao->id),
+                'allday' => false);
+
+            array_push($jsonArray, $buildjson);
+        }
+
+        echo json_encode($jsonArray);
     }
 
     public function maintenanceForm($daily_sale_id = null) {
@@ -74,9 +91,9 @@ class Daily_sales_controller extends CI_Controller {
                     'hour_by_cash' => '');
             }
         }
-        
-        if($dbl_daily_sales){
-           $data['dailySaleId'] = $dbl_daily_sales->id; 
+
+        if ($dbl_daily_sales) {
+            $data['dailySaleId'] = $dbl_daily_sales->id;
         }
         $data['dailySale'] = $data_daily_sale;
         $this->layout->view('daily_sales/maintenance_template', $data);
@@ -87,7 +104,7 @@ class Daily_sales_controller extends CI_Controller {
             $daily_sale_credentials = $this->input->post();
             $data_daily_sale = array();
             $response = array();
-            
+
             $daily_sale_id = ($daily_sale_credentials['daily_sale_id'] > 0 ? $daily_sale_credentials['daily_sale_id'] : null);
             $daily_sale_detail_id = ($daily_sale_credentials['daily_sale_detail_id'] > 0 ? $daily_sale_credentials['daily_sale_detail_id'] : null);
             $operator_id = isset($daily_sale_credentials['operator_id']) ? $daily_sale_credentials['operator_id'] : 0;
@@ -95,12 +112,12 @@ class Daily_sales_controller extends CI_Controller {
 
             $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id);
 
-            $data_daily_sale['status'] = $status; 
+            $data_daily_sale['status'] = $status;
             if (count($dbr_daily_sale) == 0) {
                 $data_daily_sale['subsidiaries_id'] = 10; // aqui va ir la subsidaria depednde del perfil del usuario
-                $data_daily_sale['date_sale'] = date('Y/m/d');           
+                $data_daily_sale['date_sale'] = date('Y/m/d');
                 $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($data_daily_sale);
-            }else{
+            } else {
                 $response['daily_sale_id'] = $dbr_daily_sale->id;
             }
 

@@ -161,7 +161,7 @@ function dashboard() {
                 allDay: false
             },
             {
-                title: 'Birthday Party',
+                title: 'Birthday Partyffffffffffff testststs ',
                 start: new Date(y, m, d + 1, 19, 0),
                 end: new Date(y, m, d + 1, 22, 30),
                 allDay: false
