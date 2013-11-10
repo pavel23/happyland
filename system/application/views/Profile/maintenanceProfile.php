@@ -28,26 +28,26 @@
                     <div class="col-lg-8">
                         <div class="checkbox">
                             <label>                                
-                                <?php echo form_radio('formprofile[access_permition]', 'total', ($is_new ? true : ($dbr_profile->access_permition == 'total' ? true : false)), 'class="uniform"') ?> Acceso Total
+                                <?php echo form_radio('formprofile[access_permition]', 'total', ($is_new ? true : ($dbr_profile->access_permition == 'total' ? true : false)), 'id="checkbox_total" class="uniform"') ?> Acceso Total
                             </label>      
                         </div>
                         <div class="checkbox">
                             <label>                                
-                                <?php echo form_radio('formprofile[access_permition]', 'readonly', ($is_new ? true : ($dbr_profile->access_permition == 'readonly' ? true : false)), 'class="uniform"') ?> Acceso Sólo Lectura
+                                <?php echo form_radio('formprofile[access_permition]', 'readonly', ($is_new ? true : ($dbr_profile->access_permition == 'readonly' ? true : false)), 'id="checkbox_readonly" class="uniform"') ?> Acceso Sólo Lectura
                             </label>      
                         </div>
                         <div class="checkbox">
                             <label>                                
-                                <?php echo form_radio('formprofile[access_permition]', 'custom', ($is_new ? true : ($dbr_profile->access_permition == 'custom' ? true : false)), 'class="uniform"') ?> Acceso Personalizado
+                                <?php echo form_radio('formprofile[access_permition]', 'custom', ($is_new ? true : ($dbr_profile->access_permition == 'custom' ? true : false)), 'id="checkbox_custom" class="uniform"') ?> Acceso Personalizado
                             </label>      
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="module_profile_access_container">
                     <label class="control-label col-lg-4">Módulos</label>
                     <div class="col-lg-8">
-                        <?php echo form_dropdown('formprofile[modules][]', $a_parent_modules, array(), 'style="width:350px;" class="chosen-select" multiple="multiple" data-placeholder="Ingrese o seleccione el módulo"') ?>
-                        <a id="set_permission_by_module" href="<?php echo site_url('Profile/getModalPermission/'.$profileid);?>">Definir permisos por módulos</a>
+                        <?php echo form_dropdown('formprofile[modules][]', $a_parent_modules, $a_parent_modules_selected, 'style="width:350px;" class="chosen-select" multiple="multiple" data-placeholder="Ingrese o seleccione el módulo"') ?>
+                        <a id="set_permission_by_module" href="<?php echo site_url('Profile/getModalPermission/'.$profileid);?>" class="btn btn-success btn-sm btn-grad">Definir Permisos por Módulo</a>
                     </div>
                 </div>
 

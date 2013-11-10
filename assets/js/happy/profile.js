@@ -4,6 +4,21 @@
  * and open the template in the editor.
  */
 $(function() {
+
+    /*if($("input:radio[name='formprofile[access_permition]']:checked").val()!='custom') {
+        $('#module_profile_access_container').hide()
+    }*/
+
+    var $obj_checked_permission = $("input:radio[name='formprofile[access_permition]']");
+        $obj_checked_permission.on('click', function(){
+            var checked = $(this).attr('checked', true);
+            if(checked && $(this).val()=='custom'){ 
+              $('#module_profile_access_container').show();
+            } else { 
+              $('#module_profile_access_container').hide();
+            }
+        });
+    
     var config = {
         '.chosen-select': {},
         '.chosen-select-deselect': {allow_single_deselect: true},
@@ -64,7 +79,9 @@ $(function() {
                                 label: "Cancelar!",
                                 className: "btn-danger",
                                 callback: function() {
+
                                     console.log(modalPermission);
+
                                     //modalPermission.show("uh oh, look out!");
                                 }
                             }/*,
