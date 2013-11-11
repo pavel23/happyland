@@ -15,11 +15,8 @@
                     </div>
                 </div>                
             </header>
-            
-            
-            
-            
-            <div id="wrapper_daily_sale" class="accordion-body collapse in body" data-dailysale='<?php echo json_encode($dailySale); ?>' >
+                                              
+            <div id="wrapper_daily_sale" class="accordion-body collapse in body" data-is_readonly="<?php  echo $is_readonly ?>" data-dailysale='<?php echo json_encode($dailySale); ?>' >
                 <input type="hidden" name="dayli_sale_id" id="dayli_sale_id" value="<?php echo (isset($dailySaleId) ? $dailySaleId : '' ); ?>">
                 <div id="error_message"></div>
                 <div id="daily_sales"></div>

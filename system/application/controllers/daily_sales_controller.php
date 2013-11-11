@@ -40,8 +40,6 @@ class Daily_sales_controller extends CI_Controller {
                 'className' => 'label ' . ($dbrDailyDao->status == Status::STATUS_ABIERTO ? 'label-info' : 'label-success'),
                 'url' => site_url('daily_sales_controller/maintenanceForm/' . $dbrDailyDao->id)
             );
-
-            //array_push($jsonArray, $buildjson);
         }
 
         echo json_encode($jsonArray);
@@ -92,10 +90,32 @@ class Daily_sales_controller extends CI_Controller {
             }
         }
 
+        $data['is_readonly'] = 0;
         if ($dbl_daily_sales) {
+
             $data['dailySaleId'] = $dbl_daily_sales->id;
+            $data['is_readonly'] = (int) ($dbl_daily_sales->status == Status::STATUS_ABIERTO ? 0 : 1);
         }
+
+        $data_daily_sale[] = array(
+            'status' => '',
+            'name' => 'Totales del Día',
+            'is_other_sales' => 2,
+            'total_opening_cash' => 0,
+            'total_closing_cash' => 0,
+            'total_master_card' => 0,
+            'total_visa_card' => 0,
+            'total_retirement_pen' => 0,
+            'total_retirementl_dol' => 0,
+            'grand_total_calculated' => 0,
+            'grand_total_z_format' => 0,
+            'total_difference_money' => 0,
+            'total_diferrence_values' => 0,
+            'total_num_transactions' => 0,
+            'total_hours_by_cash' => 0);
+        
         $data['dailySale'] = $data_daily_sale;
+
         $this->layout->view('daily_sales/maintenance_template', $data);
     }
 
@@ -122,7 +142,11 @@ class Daily_sales_controller extends CI_Controller {
             }
 
             if (count($dbr_daily_sale) > 0 && $status == Status::STATUS_CERRADO) {
-                $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($data_daily_sale, $dbr_daily_sale->id);
+                $daily_sale_credentials['data']['status'] = $status;
+                unset($daily_sale_credentials['data']['is_other_sales']);
+                unset($daily_sale_credentials['data']['name']);
+                
+                $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($daily_sale_credentials['data'], $dbr_daily_sale->id);
             }
 
             if ($response['daily_sale_id'] && $status == Status::STATUS_ABIERTO) {
@@ -165,6 +189,8 @@ class Daily_sales_controller extends CI_Controller {
             echo $e;
         }
     }
+    
+    //public function close
 
     public function getJSONDailySaleOthers() {
         try {
