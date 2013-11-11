@@ -10,6 +10,7 @@ class Profile extends CI_Controller {
         $this->load->database();
         $this->load->model('ProfileDao');
         $this->load->model('ModuleDao');
+        $this->load->model('ModuleProfileAccessDao');
         $this->load->library(array('form_validation', 'session'));
         $this->load->helper(array('form', 'url'));
         $this->layout->isLogin = false;
@@ -71,16 +72,27 @@ class Profile extends CI_Controller {
         $profile_id = array_key_exists('profile_id', $profile_credentials) ? $profile_credentials['profile_id'] : null;
 
         if ($this->form_validation->run()) {
-            $dbr_profile = $this->ProfileDao->existProfileId($profile_id);
-            $profile_credentials = $this->input->post('formprofile');
-            $profile_credentials['name'] = $profile_credentials['name'];
-            $profile_credentials['description'] = $profile_credentials['description'] ? trim($profile_credentials['description']) : null;
-            $profile_credentials['access_permition'] = $profile_credentials['access_permition'];
-            $profile_credentials['status'] = $profile_credentials['status'];
+            $dbr_profile        = $this->ProfileDao->existProfileId($profile_id);
+            $profile_id         = $dbr_profile ? $dbr_profile->id : null;
+            $module_array_ids   = $profile_credentials['modules'];
+            $access_permition   = $profile_credentials['access_permition'];
             unset($profile_credentials['modules']);
             unset($profile_credentials['profile_id']);
-
-            $this->ProfileDao->saveProfile($profile_credentials, ($dbr_profile ? $dbr_profile->id : null));
+            $this->ProfileDao->saveProfile($profile_credentials, $profile_id);
+            
+            if($profile_id>0 && count($module_array_ids)>0) {
+                foreach($module_array_ids as $module_id) {
+                    $module_profile_access['module_id']     = $module_id;
+                    $module_profile_access['profile_id']    = $profile_id;
+                    $this->ModuleProfileAccessDao->saveModuleProfileAccess($module_profile_access, $module_id, $profile_id);
+                    unset($module_profile_access);
+                }
+                if($access_permition === 'custom'){
+                    $this->ModuleProfileAccessDao->deleteAccessModuleByProfile($profile_id, $module_array_ids);
+                } else {
+                    $this->ModuleProfileAccessDao->deleteAllAccessByProfile($profile_id);
+                }    
+            }
             $this->session->set_flashdata('message', 'Se guardo el perfil satisfactorimente');
             redirect('Profile/index');
         }
@@ -147,10 +159,9 @@ class Profile extends CI_Controller {
             $write_access_children      = $this->input->post('write_children') ? $this->input->post('write_children'): array();
             $download_access_children   = $this->input->post('download_children') ? $this->input->post('download_children') : array();
 
-            $this->load->model('ModuleProfileAccessDao');
-            $a_module_id    = $this->ModuleDao->returnExistsModuleIds($a_module_id);
-            $dbr_profile    = $this->ProfileDao->existProfileId($profile_id);
-            $profile_id     = $dbr_profile->id;
+            $a_module_id        = $this->ModuleDao->returnExistsModuleIds($a_module_id);
+            $dbr_profile        = $this->ProfileDao->existProfileId($profile_id);
+            $profile_id         = $dbr_profile->id;
 
             if(count($a_module_id)==0) {
                 return false;
@@ -187,7 +198,6 @@ class Profile extends CI_Controller {
                     unset($a_sub_module_id[$sub_module_id]);
                 }
             }
-            
         } catch (Exception $e) {
             $response_method['success'] = 0;
             $response_method['message'] = $e->getMessage();
