@@ -140,6 +140,8 @@ class Profile extends CI_Controller {
         $a_parent_modules   = self::getChildrenPermRecursive($a_parent_modules, $a_children_modules);
         $data['a_permission_modules']   = $a_parent_modules;
         $data['profile_id']              = $profile_id;
+        
+        //$this->layout->assets(base_url() . 'assets/js/happy/profile.modal.js');
         $this->load->view('Profile/modalPermission',$data);
     }
     
