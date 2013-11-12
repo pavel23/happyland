@@ -11,6 +11,7 @@ class Login extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('LoginDao');
+        $this->load->model('ModuleProfileAccessDao');
         $this->load->library(array('form_validation', 'session'));
         $this->load->helper(array('form', 'url'));
         $this->layout->isLogin = true;
@@ -70,15 +71,16 @@ class Login extends CI_Controller {
     }
 
     private function set_session() {
-
+        $a_module_permission    = $this->ModuleProfileAccessDao->getModulesByProfile($this->login->profile_id);
         $this->session->set_userdata('loggedin', array(
             'id' => $this->login->id,
             'subsidiaries' => $this->login->subsidiaries_id,
             'profile_id' => $this->login->profile_id,
             'num_doc' => $this->login->num_doc,
             'name' => $this->login->full_name,
-            'isLoggedIn' => true
-                )
+            'isLoggedIn' => true,
+            'module_permission' => $a_module_permission
+            )
         );
     }
 

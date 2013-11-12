@@ -1,9 +1,7 @@
 <!-- header.head -->
 <header class="head">
     <!-- ."main-bar -->
-    <div class="main-bar">
-        <h3><i class="icon-home"></i> Metfffis</h3>
-    </div>
+    <img src="<?php echo base_url();?>/assets/images/logo.png" width="300">
     <!-- /.main-bar -->
 </header>
 <!-- end header.head -->

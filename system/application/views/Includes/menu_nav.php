@@ -1,18 +1,6 @@
 <nav class="navbar navbar-inverse navbar-static-top">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <header class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="index.html" class="navbar-brand">Happyland</a>
-    </header>
-
-
     <div class="topnav">
-
         <div class="btn-toolbar">
             <div class="btn-group">
                 <a href="<?php echo site_url('Login/logout') ?>" data-toggle="tooltip" data-original-title="Logout" data-placement="bottom" class="btn btn-metis-1 btn-sm">
@@ -20,34 +8,36 @@
                 </a>
             </div>
         </div>
+   </div>
 
-
-    </div>
-
-
-
-
-
-
+    <?php 
+        $a_session              = $this->session->userdata('loggedin');
+        $a_module_permission    = $a_session['module_permission'];
+    ?>
+    
+    <?php if(count($a_module_permission)>0){?>
     <!-- /.topnav -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <!-- .nav -->
         <ul class="nav navbar-nav">
             <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="table.html">Tables</a></li>
-            <li><a href="file.html">File Manager</a></li>
-            <li class='dropdown '>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Form Elements <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="form-general.html">General</a></li>
-                    <li><a href="form-validation.html">Validation</a></li>
-                    <li><a href="form-wysiwyg.html">WYSIWYG</a></li>
-                    <li><a href="form-wizard.html">Wizard &amp; File Upload</a></li>
-                </ul>
-            </li>
+            <?php foreach($a_module_permission as $module_id=>$a_module){?>
+                <?php //echo $module_id;?>
+                <li class='dropdown '>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <?php echo $a_module['name'];?><b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                    <?php if(array_key_exists('child', $a_module)){?>
+                        <?php foreach($a_module['child'] as $a_child){?>
+                            <li><a href="<?php echo site_url($a_child['url']);?>"><?php echo $a_child['name'];?></a></li>
+                        <?php }?>
+                    <?php }?>
+                    </ul>
+                </li>            
+            <?php }?>
         </ul>
         <!-- /.nav -->
     </div>
+    <?php }?>
 </nav>

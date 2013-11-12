@@ -1,3 +1,3 @@
 <div id="footer">
-    <p>2013 &copy; Happyland Admin</p>
+    <p><?php echo date('Y');?> &copy; Happyland Admin</p>
 </div>

@@ -66,4 +66,41 @@ class ModuleProfileAccessDao extends CI_Model {
         $this->db->where('profile_id', $profile_id);
         $this->db->delete('hpl_module_profile_access');
     }
+    
+    public function getModulesByProfile($profile_id=null) {
+        if (intval($profile_id)==0) {
+            return FALSE;
+        }
+        $this->db->select('mpa.module_id, mdl.name, mdl.description, mdl.parent_id, mdl.url, mpa.profile_id, mpa.read, mpa.write, mpa.download');
+        $this->db->from('hpl_module_profile_access mpa');
+        $this->db->join('hpl_module mdl', 'mpa.module_id=mdl.id', 'inner');
+        $this->db->where('mpa.profile_id', $profile_id);
+        $this->db->where('mdl.show_menu', 1);
+        $this->db->order_by('mdl.position_order', 1);
+        $query  = $this->db->get();
+        $dbl_modules_by_profile = ($query->num_rows() > 0 ? $query->result() : FALSE);
+        $a_module_access    = array();
+        if(!$dbl_modules_by_profile) {
+            return $a_module_access;
+        }
+
+        foreach($dbl_modules_by_profile as $dbr_module) {
+            if(!$dbr_module->parent_id) {
+                $a_module_access[$dbr_module->module_id]['name']                    = $dbr_module->name;
+                $a_module_access[$dbr_module->module_id]['description']             = $dbr_module->description;
+                $a_module_access[$dbr_module->module_id]['url']                     = $dbr_module->url;
+                $a_module_access[$dbr_module->module_id]['read']                    = $dbr_module->read;
+                $a_module_access[$dbr_module->module_id]['write']                   = $dbr_module->write;
+                $a_module_access[$dbr_module->module_id]['download']                = $dbr_module->download;
+            } else {
+                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['name']           = $dbr_module->name;
+                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['description']    = $dbr_module->description;
+                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['url']            = $dbr_module->url;
+                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['read']           = $dbr_module->read;
+                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['write']          = $dbr_module->write;
+                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['download']       = $dbr_module->download;
+            }
+        }
+        return $a_module_access;
+    }
 }
