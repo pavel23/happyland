@@ -8,10 +8,10 @@ if (!defined('BASEPATH'))
  *
  * @author jroque
  */
-class Daily_sales_controller extends CI_Controller {
+class Daily_sales_controller extends My_Controller {
 
     function __construct() {
-        parent::__construct();
+        parent::__construct();        
         $this->load->database();
         $this->layout->isLogin = false;
         $this->load->library(array('session'));
@@ -113,7 +113,7 @@ class Daily_sales_controller extends CI_Controller {
             'total_diferrence_values' => 0,
             'total_num_transactions' => 0,
             'total_hours_by_cash' => 0);
-        
+
         $data['dailySale'] = $data_daily_sale;
 
         $this->layout->view('daily_sales/maintenance_template', $data);
@@ -145,7 +145,7 @@ class Daily_sales_controller extends CI_Controller {
                 $daily_sale_credentials['data']['status'] = $status;
                 unset($daily_sale_credentials['data']['is_other_sales']);
                 unset($daily_sale_credentials['data']['name']);
-                
+
                 $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($daily_sale_credentials['data'], $dbr_daily_sale->id);
             }
 
@@ -189,7 +189,7 @@ class Daily_sales_controller extends CI_Controller {
             echo $e;
         }
     }
-    
+
     //public function close
 
     public function getJSONDailySaleOthers() {

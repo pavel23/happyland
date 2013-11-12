@@ -100,17 +100,19 @@ var DailySales = function() {
                     $(document).data('daily_sale_id', JSONsaveResponse.daily_sale_id);
                 }
 
-                var sum_one = getTotals(col_index, $('#daily_sales')) || 0;
-                var sum_two = getTotals(col_index, $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array[col_index], sum_one + sum_two);
+                if (col_index !== 'name' || col_index !== 'cash_number') {
+                    var sum_one = getTotals(col_index, $('#daily_sales')) || 0;
+                    var sum_two = getTotals(col_index, $('#daily_sales_others')) || 0;
+                    instance_total.handsontable('setDataAtCell', 0, column_array[col_index], sum_one + sum_two);
 
-                var sum_total_one = getTotals('total_calculated', $('#daily_sales')) || 0;
-                var sum_total_difference_one = getTotals('total_calculated', $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array['total_calculated'], sum_total_one + sum_total_difference_one);
+                    var sum_total_one = getTotals('total_calculated', $('#daily_sales')) || 0;
+                    var sum_total_difference_one = getTotals('total_calculated', $('#daily_sales_others')) || 0;
+                    instance_total.handsontable('setDataAtCell', 0, column_array['total_calculated'], sum_total_one + sum_total_difference_one);
 
-                var sum_total_two = getTotals('difference_money', $('#daily_sales')) || 0;
-                var sum_total_difference_two = getTotals('difference_money', $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array['difference_money'], sum_total_two + sum_total_difference_two);
+                    var sum_total_two = getTotals('difference_money', $('#daily_sales')) || 0;
+                    var sum_total_difference_two = getTotals('difference_money', $('#daily_sales_others')) || 0;
+                    instance_total.handsontable('setDataAtCell', 0, column_array['difference_money'], sum_total_two + sum_total_difference_two);
+                }
 
             });
         }
@@ -307,19 +309,25 @@ $(function() {
 
     $('#save_daily_sales').on('click', function(e) {
         e.preventDefault();
+
+
+//        console.log($(document).data('daily_sale_id'));
+//        
+//        return;
+
         var daily_sale_id = $(document).data('daily_sale_id'), data_params = {};
 
-        if (!daily_sale_id) {
-            return false;
-        }
-
+//        if (daily_sale_id) {
+//            return false;
+//        }
+        console.log('tests');
         data_params.daily_sale_id = daily_sale_id;
         data_params.is_close = 1;
         data_params.data = $container_daily_sales_totals.handsontable('getData')[0];
-
+        console.log(data_params);
         $.ajax({
-            url: $url_save_data,
-            data: data_params, 
+            url: url_save_data,
+            data: data_params,
             dataType: 'json',
             type: 'POST',
             success: function(res) {

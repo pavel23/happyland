@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Profile extends CI_Controller {
+class Profile extends My_Controller {
 
     public function __construct() {
         parent::__construct();

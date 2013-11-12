@@ -8,7 +8,7 @@ if (!defined('BASEPATH'))
  *
  * @author Pavel
  */
-class User extends CI_Controller {
+class User extends My_Controller {
 
     public function __construct() {
         parent::__construct();

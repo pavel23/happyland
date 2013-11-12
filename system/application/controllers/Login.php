@@ -5,6 +5,8 @@ if (!defined('BASEPATH'))
 
 class Login extends CI_Controller {
 
+    private $login;
+
     public function __construct() {
         parent::__construct();
         $this->load->database();
@@ -52,17 +54,32 @@ class Login extends CI_Controller {
                 }
 
                 if ($password == $dbr_user->password) {
-                    redirect('profile_controller/index');
+
+                    $this->login = $dbr_user;
+                    $this->set_session();
+                    redirect('Profile/index');
                 } else {
                     $this->session->set_flashdata('message', 'Contraseña Invalido');
                     redirect('Login/index');
                 }
-
             }
         } else {
             $this->session->set_flashdata('message', 'Token Invalido');
             redirect('Login/index');
         }
+    }
+
+    private function set_session() {
+
+        $this->session->set_userdata('loggedin', array(
+            'id' => $this->login->id,
+            'subsidiaries' => $this->login->subsidiaries_id,
+            'profile_id' => $this->login->profile_id,
+            'num_doc' => $this->login->num_doc,
+            'name' => $this->login->full_name,
+            'isLoggedIn' => true
+                )
+        );
     }
 
     private function token() {
@@ -71,4 +88,9 @@ class Login extends CI_Controller {
         return $token;
     }
 
+    public function logout() {
+        $this->session->unset_userdata('loggedin');
+        $this->session->sess_destroy();
+        redirect('Login/index', 'refresh');
+    }
 }
