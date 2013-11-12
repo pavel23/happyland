@@ -12,18 +12,26 @@
  * @author jroque
  */
 class DailySaleDao extends CI_Model {
+    
+    private $loggedin = array();
+    public function __construct() {
+        $this->loggedin  = $this->session->userdata('loggedin');
+    }
 
-    //put your code here
     public function getDailySaleById($daily_sale_id) {
 
         return $this->db->select('*')->from('hpl_daily_sales')
                         ->where('id', $daily_sale_id)->get()->row();
     }
 
-    public function getDailySaleCalendar($star, $end) {
-        $sql = 'SELECT id,grand_total_calculated,status ,date_sale FROM hpl_daily_sales WHERE date_sale >= FROM_UNIXTIME(?, "%Y-%m-%d") AND date_sale <= FROM_UNIXTIME(?, "%Y-%m-%d")';
+    public function getDailySaleCalendar($star, $end) {       
+        
+        $sql = 'SELECT id, grand_total_calculated, status, date_sale 
+                FROM hpl_daily_sales 
+                WHERE date_sale >= FROM_UNIXTIME(?, "%Y-%m-%d") AND date_sale <= FROM_UNIXTIME(?, "%Y-%m-%d")
+                AND subsidiaries_id = ?';
 
-        $query = $this->db->query($sql, array($star, $end));
+        $query = $this->db->query($sql, array($star, $end, $this->loggedin['subsidiaries']));
 
         return ($query->num_rows() > 0 ? $query->result() : array());
     }

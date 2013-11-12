@@ -1,6 +1,6 @@
 
-<input type="hidden" name="url-data-operators" id="url-data-operators" value="<?php echo site_url('daily_sales_controller/getJSONOperators'); ?>" />
-<input type="hidden" name="url-data-other_daily_sales" id="url-data-other_daily_sales" value="<?php echo site_url('daily_sales_controller/getJSONDailySaleOthers'); ?>" />
+<input type="hidden" name="url-data-operators" id="url-data-operators" value="<?php echo site_url('DailySales//getJSONOperators'); ?>" />
+<input type="hidden" name="url-data-other_daily_sales" id="url-data-other_daily_sales" value="<?php echo site_url('DailySales//getJSONDailySaleOthers'); ?>" />
 <div class="row">
     <div class="col-lg-12">
         <div class="box dark">
@@ -9,7 +9,7 @@
                 <h5>Ventas Diarias</h5>
                 <div class="toolbar">
                     <div class="btn-group">		  
-                        <a id="save_daily_sales" href="<?php echo site_url('daily_sales_controller/processForm'); ?>" class="btn btn-primary btn-sm">
+                        <a id="save_daily_sales" href="<?php echo site_url('DailySales//processForm'); ?>" class="btn btn-primary btn-sm">
                             <i class="icon-save"></i>
                         </a>
                     </div>

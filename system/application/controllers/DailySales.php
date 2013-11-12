@@ -8,10 +8,10 @@ if (!defined('BASEPATH'))
  *
  * @author jroque
  */
-class Daily_sales_controller extends My_Controller {
+class DailySales extends My_Controller {
 
     function __construct() {
-        parent::__construct();        
+        parent::__construct();
         $this->load->database();
         $this->layout->isLogin = false;
         $this->load->library(array('session'));
@@ -32,16 +32,26 @@ class Daily_sales_controller extends My_Controller {
     public function getDailySaleCalendar() {
         $daily_sale_credentials = $this->input->get();
         $dblDailyDao = $this->DailySaleDao->getDailySaleCalendar($daily_sale_credentials['start'], $daily_sale_credentials['end']);
-        $jsonArray[] = array('title' => "Agregar Venta \n Estado: Abierto", 'start' => date('Y-m-d'), 'className' => 'label label-important', 'url' => site_url('daily_sales_controller/maintenanceForm/'));
+        $timestamp = strtotime(Date('Y-m-d'));
+
+        $jsonArray[] = array('title' => "Agregar Venta \n Estado: Abierto", 'start' => Date('Y-m-d', $timestamp), 'className' => 'label label-important', 'url' => site_url('DailySales/maintenanceForm/'));
+        
         foreach ($dblDailyDao as $dbrDailyDao) {
+
             $jsonArray[] = array(
                 'title' => "Venta del Día \n S/ " . $dbrDailyDao->grand_total_calculated . "\n Estado: " . Status::$statuses[$dbrDailyDao->status],
-                'start' => "$dbrDailyDao->date_sale",
+                'start' => $dbrDailyDao->date_sale,
                 'className' => 'label ' . ($dbrDailyDao->status == Status::STATUS_ABIERTO ? 'label-info' : 'label-success'),
-                'url' => site_url('daily_sales_controller/maintenanceForm/' . $dbrDailyDao->id)
+                'url' => site_url('DailySales/maintenanceForm/' . $dbrDailyDao->id)
             );
+
+            if ($timestamp == strtotime($dbrDailyDao->date_sale)) {
+                unset($jsonArray[0]);
+            }
         }
 
+        $jsonArray = array_values($jsonArray);
+        
         echo json_encode($jsonArray);
     }
 

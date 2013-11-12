@@ -67,14 +67,14 @@ $route['perfil/guardar-permisos-por-modulo.html']   = 'Profile/saveModalPermissi
 /*
  * Rutas de acceso al modulo de ventas diarias
  */
-$route['venta-diaria/listar.html']                  = 'daily_sales_controller/index';
-$route['venta-diaria/registrar.html']               = 'daily_sales_controller/maintenanceForm';
-$route['venta-diaria/(:num)/modificar.html']        = 'daily_sales_controller/maintenanceForm/$1';
-$route['venta-diaria/procesar-datos.html']          = 'daily_sales_controller/processForm';
+$route['venta-diaria/listar.html']                  = 'DailySales/index';
+$route['venta-diaria/registrar.html']               = 'DailySales/maintenanceForm';
+$route['venta-diaria/(:num)/modificar.html']        = 'DailySales/maintenanceForm/$1';
+$route['venta-diaria/procesar-datos.html']          = 'DailySales/processForm';
 
-$route['venta-diaria/lista-operarios.html']         = 'daily_sales_controller/getJSONOperators';
-$route['venta-diaria/otras-ventas-diarias.html']    = 'daily_sales_controller/getJSONDailySaleOthers';
-$route['venta-diaria/venta-diaria-por_fecha.html']    = 'daily_sales_controller/getDailySaleCalendar';
+$route['venta-diaria/lista-operarios.html']         = 'DailySales/getJSONOperators';
+$route['venta-diaria/otras-ventas-diarias.html']    = 'DailySales/getJSONDailySaleOthers';
+$route['venta-diaria/venta-diaria-por_fecha.html']    = 'DailySales/getDailySaleCalendar';
 
 $route['404_override'] = '';
 
