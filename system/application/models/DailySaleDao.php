@@ -20,7 +20,8 @@ class DailySaleDao extends CI_Model {
 
     public function getDailySaleById($daily_sale_id) {
 
-        return $this->db->select('*')->from('hpl_daily_sales')
+        return $this->db->select('id, status, date_sale,total_opening_cash, total_closing_cash, total_master_card, total_visa_card, total_retirement_pen, total_retirementl_dol, grand_total_calculated, grand_total_z_format, total_difference_money, total_diferrence_values, total_num_transactions, total_hours_by_cash')
+                        ->from('hpl_daily_sales')
                         ->where('id', $daily_sale_id)->get()->row();
     }
 

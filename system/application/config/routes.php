@@ -71,6 +71,7 @@ $route['venta-diaria/listar.html']                  = 'DailySales/index';
 $route['venta-diaria/registrar.html']               = 'DailySales/maintenanceForm';
 $route['venta-diaria/(:num)/modificar.html']        = 'DailySales/maintenanceForm/$1';
 $route['venta-diaria/procesar-datos.html']          = 'DailySales/processForm';
+$route['venta-diaria/(:num)/cerrar-venta-diaria.html']  = 'DailySales/closeDailySale/$1';
 
 $route['venta-diaria/lista-operarios.html']         = 'DailySales/getJSONOperators';
 $route['venta-diaria/otras-ventas-diarias.html']    = 'DailySales/getJSONDailySaleOthers';

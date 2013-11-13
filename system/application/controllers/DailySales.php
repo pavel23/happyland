@@ -13,6 +13,7 @@ class DailySales extends My_Controller {
     function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->loggedin = $this->session->userdata('loggedin');
         $this->layout->isLogin = false;
         $this->load->library(array('session'));
         $this->load->model('ProfileDao');
@@ -35,7 +36,7 @@ class DailySales extends My_Controller {
         $timestamp = strtotime(Date('Y-m-d'));
 
         $jsonArray[] = array('title' => "Agregar Venta \n Estado: Abierto", 'start' => Date('Y-m-d', $timestamp), 'className' => 'label label-important', 'url' => site_url('DailySales/maintenanceForm/'));
-        
+
         foreach ($dblDailyDao as $dbrDailyDao) {
 
             $jsonArray[] = array(
@@ -51,7 +52,7 @@ class DailySales extends My_Controller {
         }
 
         $jsonArray = array_values($jsonArray);
-        
+
         echo json_encode($jsonArray);
     }
 
@@ -62,20 +63,25 @@ class DailySales extends My_Controller {
         $this->layout->assets(base_url() . 'assets/js/happy/daily.sales.js');
         $daily_sale_id = ($daily_sale_id ? (int) $daily_sale_id : 0);
 
+        $is_new = true;
         $dbl_daily_sales_detail = null;
         $dbl_daily_sales = null;
         if ($daily_sale_id > 0) {
             $dbl_daily_sales = $this->DailySaleDao->getDailySaleById($daily_sale_id);
+            $is_new = ($dbl_daily_sales ? false : true);
+        }
+
+        if (!$is_new && $dbl_daily_sales) {
             $dbl_daily_sales_detail = $this->DailySaleDao->getDailySaleDetailBySaleId($daily_sale_id);
         }
 
-        if (!$dbl_daily_sales_detail) {
+        if ($is_new) {
             $dbl_daily_sales_detail = $this->DailySaleDao->getDailyOtherSale();
         }
 
         $data_daily_sale = array();
 
-        if ($daily_sale_id > 0) {
+        if (!$is_new && $dbl_daily_sales_detail) {
             $data_daily_sale = $dbl_daily_sales_detail;
         } else {
             foreach ($dbl_daily_sales_detail as $dbr_daily_sale) {
@@ -101,32 +107,60 @@ class DailySales extends My_Controller {
         }
 
         $data['is_readonly'] = 0;
+        $data['status'] = Status::STATUS_CERRADO;
         if ($dbl_daily_sales) {
 
             $data['dailySaleId'] = $dbl_daily_sales->id;
             $data['is_readonly'] = (int) ($dbl_daily_sales->status == Status::STATUS_ABIERTO ? 0 : 1);
+            $data['status'] = $dbl_daily_sales->status;
         }
 
         $data_daily_sale[] = array(
             'status' => '',
             'name' => 'Totales del Día',
             'is_other_sales' => 2,
-            'total_opening_cash' => 0,
-            'total_closing_cash' => 0,
-            'total_master_card' => 0,
-            'total_visa_card' => 0,
-            'total_retirement_pen' => 0,
-            'total_retirementl_dol' => 0,
-            'grand_total_calculated' => 0,
-            'grand_total_z_format' => 0,
-            'total_difference_money' => 0,
-            'total_diferrence_values' => 0,
-            'total_num_transactions' => 0,
-            'total_hours_by_cash' => 0);
+            'total_opening_cash' => (isset($dbl_daily_sales->total_opening_cash) ? $dbl_daily_sales->total_opening_cash : 0),
+            'total_closing_cash' => (isset($dbl_daily_sales->total_closing_cash) ? $dbl_daily_sales->total_closing_cash : 0),
+            'total_master_card' => (isset($dbl_daily_sales->total_master_card) ? $dbl_daily_sales->total_master_card : 0),
+            'total_visa_card' => (isset($dbl_daily_sales->total_visa_card) ? $dbl_daily_sales->total_visa_card : 0),
+            'total_retirement_pen' => (isset($dbl_daily_sales->total_retirement_pen) ? $dbl_daily_sales->total_retirement_pen : 0),
+            'total_retirementl_dol' => (isset($dbl_daily_sales->total_retirementl_dol) ? $dbl_daily_sales->total_retirementl_dol : 0),
+            'grand_total_calculated' => (isset($dbl_daily_sales->grand_total_calculated) ? $dbl_daily_sales->grand_total_calculated : 0),
+            'grand_total_z_format' => (isset($dbl_daily_sales->grand_total_z_format) ? $dbl_daily_sales->grand_total_z_format : 0),
+            'total_difference_money' => (isset($dbl_daily_sales->total_difference_money) ? $dbl_daily_sales->total_difference_money : 0),
+            'total_diferrence_values' => (isset($dbl_daily_sales->total_diferrence_values) ? $dbl_daily_sales->total_diferrence_values : 0),
+            'total_num_transactions' => (isset($dbl_daily_sales->total_num_transactions) ? $dbl_daily_sales->total_num_transactions : 0),
+            'total_hours_by_cash' => (isset($dbl_daily_sales->total_hours_by_cash) ? $dbl_daily_sales->total_hours_by_cash : 0)
+        );
 
         $data['dailySale'] = $data_daily_sale;
 
         $this->layout->view('daily_sales/maintenance_template', $data);
+    }
+    
+    public function closeDailySale($daily_sale_id){
+        $timestamp = strtotime(Date('Y-m-d'));
+        if(!$daily_sale_id){
+            $this->session->set_flashdata('message_danger', 'No tiene registrada ninguna venta');
+            redirect('DailySales/index');
+        }
+        
+        $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id);
+        
+        if(!$dbr_daily_sale){
+            $this->session->set_flashdata('message_danger', 'No tiene registrada ninguna venta');
+            redirect('DailySales/index');
+        }
+                
+        if($dbr_daily_sale->status == Status::STATUS_CERRADO){
+            $this->session->set_flashdata('message_danger', 'Esta venta ya se encuentra registrado en estado ' . Status::getStatusLabel(Status::STATUS_CERRADO));
+            redirect('DailySales/index');
+        }        
+        
+        $this->DailySaleDao->saveDailySale(array('status' => Status::STATUS_CERRADO), $dbr_daily_sale->id);
+        $this->session->set_flashdata('message_success', 'Venta Registrada Satisfactoriamente');
+        redirect('DailySales/index');
+        
     }
 
     public function processForm() {
@@ -144,11 +178,13 @@ class DailySales extends My_Controller {
 
             $data_daily_sale['status'] = $status;
             if (count($dbr_daily_sale) == 0) {
-                $data_daily_sale['subsidiaries_id'] = 10; // aqui va ir la subsidaria depednde del perfil del usuario
+                $data_daily_sale['subsidiaries_id'] = $this->loggedin['subsidiaries']; // aqui va ir la subsidaria depednde del perfil del usuario
                 $data_daily_sale['date_sale'] = date('Y/m/d');
                 $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($data_daily_sale);
             } else {
-                $response['daily_sale_id'] = $dbr_daily_sale->id;
+
+                $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($daily_sale_credentials['data_headers'], $dbr_daily_sale->id);
+                //$response['daily_sale_id'] = $dbr_daily_sale->id;
             }
 
             if (count($dbr_daily_sale) > 0 && $status == Status::STATUS_CERRADO) {
