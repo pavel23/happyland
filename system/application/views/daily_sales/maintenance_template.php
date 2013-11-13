@@ -1,6 +1,6 @@
 
-<input type="hidden" name="url-data-operators" id="url-data-operators" value="<?php echo site_url('DailySales//getJSONOperators'); ?>" />
-<input type="hidden" name="url-data-other_daily_sales" id="url-data-other_daily_sales" value="<?php echo site_url('DailySales//getJSONDailySaleOthers'); ?>" />
+<input type="hidden" name="url-data-operators" id="url-data-operators" value="<?php echo site_url('DailySales/getJSONOperators'); ?>" />
+<input type="hidden" name="url-data-operators" id="url-save-daily-sales" value="<?php echo site_url('DailySales/processForm'); ?>" />
 <div class="row">
     <div class="col-lg-12">
         <div class="box dark">

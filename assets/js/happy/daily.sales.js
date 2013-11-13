@@ -2,7 +2,7 @@ var DailySales = function() {
     var _daily_sale_id = 0;
     var _instance = null, _user_map_ids = null,
             column_array = {'name': 0, 'cash_number': 1, 'opening_cash': 2, 'closing_cash': 3, 'master_card_amount': 4, 'visa_amount': 5, 'retirement_amount_pen': 6, 'retirement_amount_dol': 7, 'total_calculated': 8, 'total_x_format': 9, 'difference_money': 10, 'difference_values': 11, 'num_transacctions': 12, 'hour_by_cash': 13},
-            a_header_totals = {2 : 'total_opening_cash', 3 : 'total_closing_cash' , 4 :'total_master_card', 5 : 'total_visa_card' ,6: 'total_retirement_pen', 7 : 'total_retirementl_dol' , 8 : 'grand_total_calculated', 9 : 'grand_total_z_format', 10 : 'total_difference_money', 11 : 'total_diferrence_values', 12 : 'total_num_transactions', 13 : 'total_hours_by_cash' };
+    a_header_totals = {2: 'total_opening_cash', 3: 'total_closing_cash', 4: 'total_master_card', 5: 'total_visa_card', 6: 'total_retirement_pen', 7: 'total_retirementl_dol', 8: 'grand_total_calculated', 9: 'grand_total_z_format', 10: 'total_difference_money', 11: 'total_diferrence_values', 12: 'total_num_transactions', 13: 'total_hours_by_cash'};
 
     function setUserMapIds(p_user_map_ids) {
         _user_map_ids = p_user_map_ids;
@@ -64,9 +64,6 @@ var DailySales = function() {
         if (data_params_detail.type_of_sales_id) {
             $(document).data('type_of_sales_id', data_params_detail.type_of_sales_id);
         }
-        
-        
-        console.log(old_value, new_value);
 
         if (parseFloat(old_value) !== parseFloat(new_value)) {
 
@@ -98,38 +95,36 @@ var DailySales = function() {
 
                 var sum_total_two = getTotals('difference_money', $('#daily_sales')) || 0;
                 var sum_total_difference_two = getTotals('difference_money', $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array['difference_money'], sum_total_two + sum_total_difference_two);                
-                
+                instance_total.handsontable('setDataAtCell', 0, column_array['difference_money'], sum_total_two + sum_total_difference_two);
+
                 data_params.data_headers = {};
-                data_params.data_headers[a_header_totals[column_array[col_index]]] =  sum_one + sum_two;
-                data_params.data_headers[a_header_totals[8]] =  sum_total_one + sum_total_difference_one;
-                data_params.data_headers[a_header_totals[10]] =  sum_total_two + sum_total_difference_two;
-                             
+                data_params.data_headers[a_header_totals[column_array[col_index]]] = sum_one + sum_two;
+                data_params.data_headers[a_header_totals[8]] = sum_total_one + sum_total_difference_one;
+                data_params.data_headers[a_header_totals[10]] = sum_total_two + sum_total_difference_two;
+
             }
-            
-            console.log(data_params);
-
-
 
             $.ajaxQueue({
-             url: url_save_data,
-             dataType: 'json',
-             type: 'POST',
-             data: data_params
-             }).done(function(response) {
-             
-             JSONsaveResponse = response;
-             if (JSONsaveResponse.daily_sale_detail_id > 0 && daily_sale_detail_id === 0) {
-             $trow.data('daily_sale_detail_id', JSONsaveResponse.daily_sale_detail_id);
-             }
-             
-             if (JSONsaveResponse.daily_sale_id > 0 && daily_sale_id === 0) {
-             $(document).data('daily_sale_id', JSONsaveResponse.daily_sale_id);
-             }
-             
-             
-             
-             });
+                url: url_save_data,
+                dataType: 'json',
+                type: 'POST',
+                data: data_params
+            }).done(function(response) {
+
+                JSONsaveResponse = response;
+                if (JSONsaveResponse.daily_sale_detail_id > 0 && daily_sale_detail_id === 0) {
+                    $trow.data('daily_sale_detail_id', JSONsaveResponse.daily_sale_detail_id);
+                }
+
+                if (JSONsaveResponse.daily_sale_id > 0 && daily_sale_id === 0) {
+                    $(document).data('daily_sale_id', JSONsaveResponse.daily_sale_id);
+                }
+                
+                if(JSONsaveResponse.url_close_daily_sale && $('#save_daily_sales').attr('href')){
+                    $('#save_daily_sales').attr('href',JSONsaveResponse.url_close_daily_sale );
+                }
+
+            });
         }
     }
 
@@ -183,19 +178,6 @@ var sumCalculateDifferenceCash = function(instance, td, row, col, prop, value, c
         textAlign: 'right'
     });
     td.innerHTML = parseFloat(sumRowsTotalCash(instance, row)) - parseFloat(b);
-}
-
-var email_validator_fn = function(value, callback) {
-    setTimeout(function() {
-        if (/^\d*$/.test(value)) {
-            console.log(value);
-            callback(true);
-        }
-        else {
-            console.log('error');
-            callback(false);
-        }
-    }, 1000);
 };
 
 $(function() {
@@ -206,8 +188,8 @@ $(function() {
     var $container_daily_sales = $("#daily_sales"),
             $container_other_operations = $('#daily_sales_others'),
             $container_daily_sales_totals = $('#daily_sales_totals'),
-            url_save_data = $('#save_daily_sales').attr('href'),
-            $url_data_autocomplete = $('#url-data-operators').val(),
+            url_save_data = $('#url-save-daily-sales').val(),
+            url_data_autocomplete = $('#url-data-operators').val(),
             user_map_ids = null, daily_sale_id = $('#dayli_sale_id').val() || 0,
             $wrapper = $('#wrapper_daily_sale');
 
@@ -260,10 +242,6 @@ $(function() {
         ]
     });
 
-
-
-
-
     $container_daily_sales.handsontable({
         data: data_type_of_sale_one,
         startRows: 1,
@@ -295,7 +273,7 @@ $(function() {
                 options: {items: 10},
                 source: function(params, process) {
                     $.ajax({
-                        url: $url_data_autocomplete,
+                        url: url_data_autocomplete,
                         contentType: 'application/json; charset=utf-8',
                         success: function(autocompleteResponse) {
                             process(autocompleteResponse.full_names);
@@ -315,53 +293,15 @@ $(function() {
             {data: 'retirement_amount_dol', type: 'numeric', allowInvalid: false, format: '0,0.00'},
             {data: 'total_calculated', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateTotalCash, format: '0,0.00'},
             {data: 'total_x_format', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'difference_money', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateDifferenceCash, format: '0,0.00', validator: email_validator_fn},
+            {data: 'difference_money', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateDifferenceCash, format: '0,0.00'},
             {data: 'difference_values', type: 'numeric', allowInvalid: false, format: '0,0.00'},
             {data: 'num_transacctions', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'hour_by_cash', type: 'numeric', allowInvalid: false, format: '0,0.00', validator: email_validator_fn}
+            {data: 'hour_by_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'}
         ],
         afterChange: function(change, source) {
             dailySaleOne.saveDailySales(url_save_data, change, source, $container_daily_sales_totals);
         }
     });
-
-
-  /*  $('#save_daily_sales').on('click', function(e) {
-        e.preventDefault();
-
-
-//        console.log($(document).data('daily_sale_id'));
-//        
-//        return;
-
-        var daily_sale_id = $(document).data('daily_sale_id'), data_params = {};
-
-//        if (daily_sale_id) {
-//            return false;
-//        }
-        console.log('tests');
-        data_params.daily_sale_id = daily_sale_id;
-        data_params.is_close = 1;
-        data_params.data = $container_daily_sales_totals.handsontable('getData')[0];
-        console.log(data_params);
-        $.ajax({
-            url: url_save_data,
-            data: data_params,
-            dataType: 'json',
-            type: 'POST',
-            success: function(res) {
-                if (res.result === 'ok') {
-                    console.log('Data saved');
-                }
-                else {
-                    console.log('Save error');
-                }
-            },
-            error: function(e) {
-                console.log('Save error. Ocurrio un error al enviar los datos ' + e.description);
-            }
-        });
-    });*/
 
     $container_other_operations.handsontable({
         data: data_type_of_sale_two,
@@ -389,17 +329,8 @@ $(function() {
         ],
         afterChange: function(change, source) {
             dailySaleTwo.saveDailySales(url_save_data, change, source, $container_daily_sales_totals);
-
-
-
         }
 
     });
-
-    //console.log(data_type_of_sale_totals)
-
-
-
-
 
 });
