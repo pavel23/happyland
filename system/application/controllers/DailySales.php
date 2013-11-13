@@ -79,7 +79,7 @@ class DailySales extends My_Controller {
             $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale();
 
             if ($dbr_daily_sale_current) {
-                $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día');
+                $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día1');
                 redirect('DailySales/index');
             }
             unset($dbr_daily_sale_current);
@@ -115,9 +115,8 @@ class DailySales extends My_Controller {
         }
 
         $data['is_readonly'] = 0;
-        $data['status'] = Status::STATUS_CERRADO;
+        $data['status'] = Status::STATUS_ABIERTO;
         if ($dbr_daily_sale) {
-
             $data['dailySaleId'] = $dbr_daily_sale->id;
             $data['is_readonly'] = (int) ($dbr_daily_sale->status == Status::STATUS_ABIERTO ? 0 : 1);
             $data['status'] = $dbr_daily_sale->status;
@@ -165,7 +164,7 @@ class DailySales extends My_Controller {
         $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale();
 
         if ($dbr_daily_sale_current && $dbr_daily_sale_current->id == $dbr_daily_sale->id && $dbr_daily_sale->status == Status::STATUS_CERRADO) {
-            $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día');
+            $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día2');
             redirect('DailySales/index');
         }
         unset($dbr_daily_sale_current);

@@ -120,7 +120,7 @@ var DailySales = function() {
                     $(document).data('daily_sale_id', JSONsaveResponse.daily_sale_id);
                 }
                 
-                if(JSONsaveResponse.url_close_daily_sale && $('#save_daily_sales').attr('href')){
+                if(JSONsaveResponse.url_close_daily_sale && !$('#save_daily_sales').attr('href')){
                     $('#save_daily_sales').attr('href',JSONsaveResponse.url_close_daily_sale );
                 }
 

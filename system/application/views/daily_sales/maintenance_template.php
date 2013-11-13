@@ -8,9 +8,10 @@
                 <div class="icons"><i class="icon-th"></i></div>
                 <h5>Ventas Diarias</h5>
                 <div class="toolbar">
+                    
                     <?php if ($status != Status::STATUS_CERRADO): ?>
                         <div class="btn-group">		  
-                            <a id="save_daily_sales" href="<?php echo site_url('DailySales/closeDailySale/' . $dailySaleId); ?>" class="btn btn-primary btn-sm">
+                            <a id="save_daily_sales" href="<?php echo (isset($dailySaleId) ? site_url('DailySales/closeDailySale/' . $dailySaleId) : ''); ?>" class="btn btn-primary btn-sm">
                                 <i class="icon-save"></i>
                             </a>
                         </div>
