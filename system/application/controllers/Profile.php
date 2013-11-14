@@ -265,6 +265,38 @@ class Profile extends My_Controller {
     }
     
     public function getDataTable() {
-        $this->layout->view('Profile/testTable');  
+        $dbl_profile = $this->ProfileDao->getAllProfiles();
+        $a_profile_list = array();
+        foreach ($dbl_profile as $dbr_profile) {
+            $a_profile_list["aaData"][]  = array(
+                                                    $dbr_profile->id, 
+                                                    $dbr_profile->name, 
+                                                    $dbr_profile->description, 
+                                                    Status::getHTMLStatus($dbr_profile->status),
+                                                    anchor(site_url('Profile/maintenanceProfile/' . $dbr_profile->id), '<i class="icon-edit icon-white"></i><span><strong>Editar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
+                                                    . ' ' .
+                                                    anchor(site_url('Profile/deleteProfile/' . $dbr_profile->id), '<i class="icon-trash icon-white"></i><span><strong>Eliminar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
+                                                );
+        }
+        header("Content-type: application/json");
+        echo json_encode($a_profile_list);
+    }
+    
+    public function testChart() {
+        
+
+        
+        $this->layout->assets(base_url() . 'assets/js/dist/jquery.jqplot.min.js');
+
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/shCore.min.js');
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/shBrushJScript.min.js');
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/shBrushXml.min.js');
+
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.highlighter.min.js');
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.cursor.min.js');
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.dateAxisRenderer.min.js');
+        $this->layout->assets(base_url() . 'assets/css/dist/jquery.jqplot.min.css');
+        //$this->layout->assets(base_url() . 'assets/js/happy/chart.js');
+        $this->layout->view('Profile/testChart');
     }
 }

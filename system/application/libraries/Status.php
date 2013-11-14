@@ -46,6 +46,20 @@ class Status {
         $a_status[self::STATUS_INACTIVO]  = self::getStatusLabel(self::STATUS_INACTIVO);
         return $a_status;
     }
+    
+    public static function getHTMLStatus($status_key=null){
+        
+        switch ($status_key) {
+            case 'act': $class_label = 'label-success'; break;
+            case 'ina': $class_label = 'label-danger'; break;
+            case 'opn': $class_label = 'label-info'; break;
+            case 'cls': $class_label = 'label-warning'; break;
+            default: $class_label = 'label-default'; break;
+            
+        }
+        $html_status = '<span class="label ' . $class_label . '">' . self::$statuses[$status_key] . '</span>';
+        return $html_status;
+    }
 
 }
 
