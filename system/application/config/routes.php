@@ -60,6 +60,7 @@ $route['perfil/agregar.html']                       = 'Profile/maintenanceProfil
 $route['perfil/(:num)/modificar.html']              = 'Profile/maintenanceProfile/$1';
 $route['perfil/(:num)/eliminar.html']               = 'Profile/deleteProfile/$1';
 $route['perfil/exportar-excel.html']                = 'Profile/exportExcel';
+$route['perfil/cargar-datos-tabla.html']            = 'Profile/getDataTable';
 
 $route['perfil/(:num)/permisos-por-modulo.html']    = 'Profile/getModalPermission/$1';
 $route['perfil/guardar-permisos-por-modulo.html']   = 'Profile/saveModalPermission';

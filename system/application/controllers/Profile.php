@@ -255,5 +255,16 @@ class Profile extends My_Controller {
         $writer->save('php://output');
         exit;
     }
-
+    
+    public function testTable() {
+        $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
+        $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
+        $this->layout->assets(base_url() . 'assets/css/lib/bootstrap.css');
+        //$this->layout->assets(base_url() . 'assets/css/data-table.css');
+        $this->layout->view('Profile/testTable');
+    }
+    
+    public function getDataTable() {
+        $this->load->view('Profile/testTable');
+    }
 }
