@@ -122,8 +122,6 @@ class DailySales extends My_Controller {
             $data['status'] = $dbr_daily_sale->status;
         }
 
-
-
         $data_daily_sale[] = array(
             'status' => '',
             'name' => 'Totales del Día',

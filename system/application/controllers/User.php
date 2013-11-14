@@ -14,26 +14,30 @@ class User extends My_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('UserDao');
-        $this->load->library(array('form_validation', 'session'));
+        $this->load->library(array('form_validation', 'session', 'pagination'));
         $this->load->helper(array('form', 'url'));
         $this->layout->isLogin = false;
         $this->layout->title = "Admin Happyland - Usuarios";
     }
 
     public function index() {
-        $data['dbr_users'] = $this->UserDao->getAllUsers();
+        $this->pagination->base_url = base_url() . 'User/index?';
+        $this->pagination->total_rows = $this->db->get('hpl_user')->num_rows();
+        $data['pagination'] = $this->pagination->create_links();
+        $page = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
+        $data['dbr_users'] = $this->UserDao->getAllUsers($this->pagination->per_page, $page);
         $this->layout->view('User/userList', $data);
     }
 
     public function maintenanceUser($userid = null) {
 
         $this->load->model('ProfileDao');
-        $this->load->model('SubsidiaryDao');        
+        $this->load->model('SubsidiaryDao');
         $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
         $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.js');
         $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.es.js');
         $this->layout->assets(base_url() . 'assets/js/user/maintenanceUser.js');
-        
+
         $data['dbr_user'] = array();
         $data['is_new'] = true;
         if (isset($userid) && $userid) {

@@ -8,13 +8,13 @@
 class UserDao extends CI_Model {
 
     //put your code here
-    public function getAllUsers() {
+    public function getAllUsers($pagination, $segment) {
 
         $this->db->select('u.id, u.num_doc, u.full_name, u.status, p.id as profile_id, p.name as profile_name, s.id as subsidiarie_id, s.name as subsidiarie_name');
         $this->db->from('hpl_user u');
         $this->db->join('hpl_profile p', 'u.profile_id = p.id');
         $this->db->join('hpl_subsidiaries s', 'u.subsidiaries_id = s.id');
-
+        $this->db->limit($pagination, $segment);
         $query = $this->db->get();
 
         return $query->result();

@@ -45,7 +45,9 @@
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-                </table>                
+                </table> 
+                
+                <div id="pagination"><?php echo $pagination; ?></div>	
             </div>
         </div>
     </div>
