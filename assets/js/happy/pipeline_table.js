@@ -146,7 +146,7 @@ if ($.fn.DataTable.TableTools) {
 /* Table initialisation */
 $(document).ready(function() {
     $('#dataTable').dataTable({
-        "sAjaxSource": 'http://localhost/happyland/perfil/cargar-datos-tabla.html',
+        "sAjaxSource": 'http://192.168.0.13/happyland/perfil/cargar-datos-tabla.html',
         "sPaginationType": "bootstrap",
         "oLanguage": {
             "sProcessing":     "Procesando...",

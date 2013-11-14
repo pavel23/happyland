@@ -283,20 +283,18 @@ class Profile extends My_Controller {
     }
     
     public function testChart() {
-        
-
-        
         $this->layout->assets(base_url() . 'assets/js/dist/jquery.jqplot.min.js');
-
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/shCore.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/shBrushJScript.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/shBrushXml.min.js');
-
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.barRenderer.min.js');
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.categoryAxisRenderer.min.js');
         $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.highlighter.min.js');
         $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.cursor.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.dateAxisRenderer.min.js');
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pointLabels.min.js');
+        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pieRenderer.min.js');
+        
+        $this->layout->assets(base_url() . 'assets/js/happy/chart.js');
         $this->layout->assets(base_url() . 'assets/css/dist/jquery.jqplot.min.css');
-        //$this->layout->assets(base_url() . 'assets/js/happy/chart.js');
+        
         $this->layout->view('Profile/testChart');
+        
     }
 }

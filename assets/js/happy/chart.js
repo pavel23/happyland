@@ -1,29 +1,51 @@
-$(function() {
-  var line1=[['23-May-08', 578.55], ['20-Jun-08', 566.5], ['25-Jul-08', 480.88], ['22-Aug-08', 509.84],
-      ['26-Sep-08', 454.13], ['24-Oct-08', 379.75], ['21-Nov-08', 303], ['26-Dec-08', 308.56],
-      ['23-Jan-09', 299.14], ['20-Feb-09', 346.51], ['20-Mar-09', 325.99], ['24-Apr-09', 386.15]];
-  
-    var plot1 = $.jqplot('chart1', [line1], {
-      title:'Data Point Highlighting',
-      axes:{
-        xaxis:{
-          renderer:$.jqplot.DateAxisRenderer,
-          tickOptions:{
-            formatString:'%b&nbsp;%#d'
+$(document).ready(function () {
+    var ajaxDataRenderer = function(url, plot, options) {
+        var ret = null;
+        $.ajax({
+          // have to use synchronous here, else the function
+          // will return before the data is fetched
+          async: false,
+          url: url,
+          dataType:"json",
+          success: function(data) {
+            ret = data;
           }
+        });
+        return ret;
+      };
+
+      // The url for our json data
+    var jsonurl = "http://localhost/test/jsondata.txt";
+    var ticks = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'];
+
+    plot2 = $.jqplot('chart2', jsonurl, {
+        animate: true,
+        animateReplot: true,
+        dataRenderer: ajaxDataRenderer,
+            dataRendererOptions: {
+              unusedOptionalUrl: jsonurl
         },
-        yaxis:{
-          tickOptions:{
-            formatString:'$%.2f'
+        cursor: {
+            show: false,
+            zoom: false,
+            looseZoom: false,
+            showTooltip: true
+        },
+        legend: {
+            show: true,
+            location: 'e',
+            placement: 'outside'
+        },
+        seriesDefaults: {
+            renderer:$.jqplot.BarRenderer,
+            pointLabels: { show: true }
+        },
+        axes: {
+            xaxis: {
+                renderer: $.jqplot.CategoryAxisRenderer,
+                ticks: ticks
             }
         }
-      },
-      highlighter: {
-        show: true,
-        sizeAdjust: 7.5
-      },
-      cursor: {
-        show: false
-      }
-  });
+    });
+
 });
