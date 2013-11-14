@@ -12,20 +12,33 @@
  * @author jroque
  */
 class DailySaleDao extends CI_Model {
-    
+
     private $loggedin = array();
+
     public function __construct() {
-        $this->loggedin  = $this->session->userdata('loggedin');
+        $this->loggedin = $this->session->userdata('loggedin');
     }
 
     public function getDailySaleById($daily_sale_id) {
 
-        return $this->db->select('*')->from('hpl_daily_sales')
-                        ->where('id', $daily_sale_id)->get()->row();
+        return $this->db->select('id, status, date_sale,total_opening_cash, total_closing_cash, total_master_card, total_visa_card, total_retirement_pen, total_retirementl_dol, grand_total_calculated, grand_total_z_format, total_difference_money, total_diferrence_values, total_num_transactions, total_hours_by_cash')
+                        ->from('hpl_daily_sales')
+                        ->where('id', $daily_sale_id)
+                        ->where('subsidiaries_id', $this->loggedin['subsidiaries'])->get()->row();
     }
 
-    public function getDailySaleCalendar($star, $end) {       
-        
+    public function getDailySaleByDateSale($date_sale = null) {
+
+        $timestamp = strtotime(($date_sale ? $date_sale : Date('Y-m-d')));
+
+        return $this->db->select('id, date_sale')
+                        ->from('hpl_daily_sales')
+                        ->where('UNIX_TIMESTAMP(date_sale)', $timestamp)
+                        ->where('subsidiaries_id', $this->loggedin['subsidiaries'])->get()->row();
+    }
+
+    public function getDailySaleCalendar($star, $end) {
+
         $sql = 'SELECT id, grand_total_calculated, status, date_sale 
                 FROM hpl_daily_sales 
                 WHERE date_sale >= FROM_UNIXTIME(?, "%Y-%m-%d") AND date_sale <= FROM_UNIXTIME(?, "%Y-%m-%d")

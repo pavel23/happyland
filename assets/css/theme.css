@@ -1,5 +1,5 @@
 #top > .navbar {
-	border-top: 3px solid #028cd2;
+	border-top: 3px solid #F29600;
 }
 
 #top > .navbar .dropdown-menu > li > a:hover,
@@ -11,4 +11,13 @@
 	background-repeat: repeat-x;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff028cd2', endColorstr='#ff026a9f', GradientType=0);
 	color: #fff;
+}
+
+.head {
+    text-align: center;
+    background: none repeat scroll 0 0 #0099DE;
+}
+//.navbar-inverse
+#wrap {
+    background-color: #A2C418;
 }

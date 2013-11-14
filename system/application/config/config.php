@@ -15,6 +15,7 @@
 |
 */
 $config['base_url']	= 'http://localhost/happyland/';
+//$config['base_url']	= 'http://192.168.0.13/happyland/';
 
 /*
 |--------------------------------------------------------------------------

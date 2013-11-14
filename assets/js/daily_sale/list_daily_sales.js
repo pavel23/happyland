@@ -1,4 +1,4 @@
-
+                  
 $(function() {
 
     var url_full_calendar = $('#url_full_calendar').val();

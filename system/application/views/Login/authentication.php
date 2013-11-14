@@ -1,6 +1,7 @@
 <div class="text-center">
-    <img src="assets/img/logo.png" alt="Metis Logo">
+    <img src="<?php echo base_url();?>/assets/images/logo-bg-white.jpg" alt="Intranet de Sociedad Happyland Perú" width="400">
 </div>
+<br />
 <div class="tab-content">
     <div id="login" class="tab-pane active">
         <?php echo form_open(base_url() . 'login/authentication', array('class' => 'form-signin')); ?>
@@ -34,9 +35,9 @@
         </form>
     </div>
 </div>
-<div class="text-center">
+<!-- div class="text-center">
     <ul class="list-inline">
         <li><a class="text-muted" href="#login" data-toggle="tab">Login</a></li>
         <li><a class="text-muted" href="#forgot" data-toggle="tab">Recordar Contraseña</a></li>
     </ul>
-</div>
+</div -->

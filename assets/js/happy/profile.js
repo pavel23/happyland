@@ -4,11 +4,6 @@
  * and open the template in the editor.
  */
 $(function() {
-
-    /*if($("input:radio[name='formprofile[access_permition]']:checked").val()!='custom') {
-        $('#module_profile_access_container').hide()
-    }*/
-
     var $obj_checked_permission = $("input:radio[name='formprofile[access_permition]']");
         $obj_checked_permission.on('click', function(){
             var checked = $(this).attr('checked', true);
@@ -29,7 +24,6 @@ $(function() {
     for (var selector in config) {
         $(selector).chosen(config[selector]);
     }
-    
     
     $('#set_permission_by_module').on('click', function(e) {
         e.preventDefault();
@@ -69,33 +63,47 @@ $(function() {
                                             $('#formpermission').attr('action'), 
                                             $('#formpermission').serialize(), 
                                             function(dataResponse, textStatus, jqXHR){
-                                                //console.log($('.form-horizontal').serialize());
                                                 console.log(dataResponse);
                                             });
-                                    
                                 }
                             },
                             danger: {
                                 label: "Cancelar!",
                                 className: "btn-danger",
                                 callback: function() {
-
                                     console.log(modalPermission);
-
-                                    //modalPermission.show("uh oh, look out!");
                                 }
-                            }/*,
-                            main: {
-                                label: "Click ME!",
-                                className: "btn-primary",
-                                callback: function() {
-                                    modalPermission.show("Primary button");
-                                }
-                            }*/
+                            }
                         }
                     });
                 }).done(function() {
-                    console.log("second success");
+                    var $frm_permission = $('#formpermission');
+                     $frm_permission.find('.parent_read').on( 'click', function() {
+                        $this = $(this);
+                        $frm_permission.find('.child_read_' + $this.attr('module_id')).prop('checked', $this.is(':checked'));
+                     });
+                     $frm_permission.find('.parent_write').on( 'click', function() {
+                        $this = $(this);
+                        $frm_permission.find('.child_write_' + $this.attr('module_id')).prop('checked', $this.is(':checked'));
+                     });
+                     $frm_permission.find('.parent_download').on( 'click', function() {
+                        $this = $(this);
+                        $frm_permission.find('.child_download_' + $this.attr('module_id')).prop('checked', $this.is(':checked'));
+                     });
+                     $frm_permission.find('.child_read').on( 'click', function() {
+                        $this = $(this);
+                        //console.log('Mark --> ' + $( 'input:checked.child_read').length);
+                        $frm_permission.find('.parent_read_' + $this.attr('parent_module_id')).prop('checked', false);
+                     });
+                     $frm_permission.find('.child_write').on( 'click', function() {
+                        $this = $(this);
+                        $frm_permission.find('.parent_write_' + $this.attr('parent_module_id')).prop('checked', false);
+                     });
+                     $frm_permission.find('.child_download').on( 'click', function() {
+                        $this = $(this);
+                        $frm_permission.find('.parent_download_' + $this.attr('parent_module_id')).prop('checked', false);
+                     });
+                     
                 }).fail(function() {
                     console.log("error");
                 }).always(function() {
