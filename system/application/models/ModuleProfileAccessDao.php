@@ -71,7 +71,7 @@ class ModuleProfileAccessDao extends CI_Model {
         if (intval($profile_id)==0) {
             return FALSE;
         }
-        $this->db->select('mpa.module_id, mdl.name, mdl.description, mdl.parent_id, mdl.url, mpa.profile_id, mpa.read, mpa.write, mpa.download');
+        $this->db->select('mpa.module_id, mdl.name, mdl.description, mdl.parent_id, mdl.module_name, mdl.module_action, mpa.profile_id, mpa.read, mpa.write, mpa.download');
         $this->db->from('hpl_module_profile_access mpa');
         $this->db->join('hpl_module mdl', 'mpa.module_id=mdl.id', 'inner');
         $this->db->where('mpa.profile_id', $profile_id);
@@ -85,20 +85,25 @@ class ModuleProfileAccessDao extends CI_Model {
         }
 
         foreach($dbl_modules_by_profile as $dbr_module) {
+            if(strlen(trim($dbr_module->module_name))>0){
+                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action][$dbr_module->module_id]['read']     = $dbr_module->read;
+                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action][$dbr_module->module_id]['write']    = $dbr_module->write;
+                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action][$dbr_module->module_id]['download'] = $dbr_module->download;
+            }
             if(!$dbr_module->parent_id) {
-                $a_module_access[$dbr_module->module_id]['name']                    = $dbr_module->name;
-                $a_module_access[$dbr_module->module_id]['description']             = $dbr_module->description;
-                $a_module_access[$dbr_module->module_id]['url']                     = $dbr_module->url;
-                $a_module_access[$dbr_module->module_id]['read']                    = $dbr_module->read;
-                $a_module_access[$dbr_module->module_id]['write']                   = $dbr_module->write;
-                $a_module_access[$dbr_module->module_id]['download']                = $dbr_module->download;
+                $a_module_access['menu_permission'][$dbr_module->module_id]['name']                    = $dbr_module->name;
+                $a_module_access['menu_permission'][$dbr_module->module_id]['description']             = $dbr_module->description;
+                $a_module_access['menu_permission'][$dbr_module->module_id]['url']                     = $dbr_module->module_name. '/' . $dbr_module->module_action;
+                $a_module_access['menu_permission'][$dbr_module->module_id]['read']                    = $dbr_module->read;
+                $a_module_access['menu_permission'][$dbr_module->module_id]['write']                   = $dbr_module->write;
+                $a_module_access['menu_permission'][$dbr_module->module_id]['download']                = $dbr_module->download;
             } else {
-                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['name']           = $dbr_module->name;
-                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['description']    = $dbr_module->description;
-                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['url']            = $dbr_module->url;
-                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['read']           = $dbr_module->read;
-                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['write']          = $dbr_module->write;
-                $a_module_access[$dbr_module->parent_id]['child'][$dbr_module->module_id]['download']       = $dbr_module->download;
+                $a_module_access['menu_permission'][$dbr_module->parent_id]['child'][$dbr_module->module_id]['name']           = $dbr_module->name;
+                $a_module_access['menu_permission'][$dbr_module->parent_id]['child'][$dbr_module->module_id]['description']    = $dbr_module->description;
+                $a_module_access['menu_permission'][$dbr_module->parent_id]['child'][$dbr_module->module_id]['url']            = $dbr_module->module_name. '/' . $dbr_module->module_action;
+                $a_module_access['menu_permission'][$dbr_module->parent_id]['child'][$dbr_module->module_id]['read']           = $dbr_module->read;
+                $a_module_access['menu_permission'][$dbr_module->parent_id]['child'][$dbr_module->module_id]['write']          = $dbr_module->write;
+                $a_module_access['menu_permission'][$dbr_module->parent_id]['child'][$dbr_module->module_id]['download']       = $dbr_module->download;
             }
         }
         return $a_module_access;

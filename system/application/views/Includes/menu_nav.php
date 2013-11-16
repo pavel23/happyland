@@ -12,7 +12,7 @@
 
     <?php 
         $a_session              = $this->session->userdata('loggedin');
-        $a_module_permission    = $a_session['module_permission'];
+        $a_module_permission    = $a_session['menu_permission'];
     ?>
     
     <?php if(count($a_module_permission)>0){?>

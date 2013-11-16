@@ -19,7 +19,6 @@ class Login extends CI_Controller {
     }
 
     public function index() {
-
         $this->load->helper('url');
         $data['token'] = $this->token();
         $this->layout->view('Login/authentication', $data);
@@ -29,33 +28,26 @@ class Login extends CI_Controller {
         $user_credentials = $this->input->post('formLogin');
 
         if ($user_credentials['token'] && $user_credentials['token'] == $this->session->userdata('token')) {
-
             $this->form_validation->set_rules('formLogin[dni]', 'DNI', 'required|trim|min_length[8]|max_length[8]|xss_clean');
             $this->form_validation->set_rules('formLogin[password]', 'Contraseña', 'required|trim|min_length[6]|max_length[150]|xss_clean');
-
             //lanzamos mensajes de error si es que los hay
             $this->form_validation->set_message('required', 'El %s es requerido');
             $this->form_validation->set_message('min_length', 'El %s debe tener al menos %s carácteres');
             $this->form_validation->set_message('max_length', 'El %s debe tener al menos %s carácteres');
-
             $this->form_validation->set_error_delimiters('<span class="has-error">', '</span>');
 
             if ($this->form_validation->run() == FALSE) {
                 $this->index();
             } else {
-
                 $username = $user_credentials['dni'];
                 $password = sha1($user_credentials['password']);
-
                 $dbr_user = $this->LoginDao->loginUser($username);
 
                 if (!$dbr_user) {
-                    $this->session->set_flashdata('message', 'DNI Invalido');
+                    $this->session->set_flashdata('message', 'Usuario no registrado');
                     redirect('Login/index');
                 }
-
                 if ($password == $dbr_user->password) {
-
                     $this->login = $dbr_user;
                     $this->set_session();
                     redirect('Profile/index');
@@ -79,7 +71,8 @@ class Login extends CI_Controller {
             'num_doc' => $this->login->num_doc,
             'name' => $this->login->full_name,
             'isLoggedIn' => true,
-            'module_permission' => $a_module_permission
+            'menu_permission' => $a_module_permission['menu_permission'],
+            'module_permission' => $a_module_permission['module_permission']
             )
         );
     }
