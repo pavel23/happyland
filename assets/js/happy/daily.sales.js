@@ -64,7 +64,7 @@ var DailySales = function() {
         if (source === 'loadData') {
             var data_row = _instance.handsontable('getData');
             $(_instance).find('tbody tr').each(function(i) {
-
+                
                 if (data_row[i] && data_row[i].id) {
                     if (data_row[i].operator_id > 0) {
                         $(this).data('operator_id', data_row[i].operator_id);

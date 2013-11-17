@@ -86,12 +86,15 @@ class DailySales extends My_Controller {
 
             $dbl_daily_sales_detail = $this->DailySaleDao->getDailyOtherSale();
         }
+        
+     //   print_r($dbl_daily_sales_detail);
+        
 
         $data_daily_sale = array();
-
+        $index = 0;
         foreach ($dbl_daily_sales_detail as $dbr_daily_sale_detail) {
-            $data_daily_sale[] = array(
-                'type_of_sales_id' => (int) $dbr_daily_sale_detail->id,
+            $data_daily_sale[$index] = array(
+                'type_of_sales_id' => (int)($is_new ? $dbr_daily_sale_detail->id : $dbr_daily_sale_detail->type_of_sales_id) ,
                 'name' => ($is_new ? ($dbr_daily_sale_detail->is_other_sales == 1 ? $dbr_daily_sale_detail->name : '') : $dbr_daily_sale_detail->name),
                 'is_other_sales' => (int) $dbr_daily_sale_detail->is_other_sales,
                 'operator_id' => ($is_new ? '' : ($dbr_daily_sale_detail->operator_id ? $dbr_daily_sale_detail->operator_id : '') ),
@@ -109,6 +112,12 @@ class DailySales extends My_Controller {
                 'difference_values' => ($is_new ? '' : ($dbr_daily_sale_detail->difference_values ? $dbr_daily_sale_detail->difference_values : '') ),
                 'num_transacctions' => ($is_new ? '' : ($dbr_daily_sale_detail->num_transacctions ? $dbr_daily_sale_detail->num_transacctions : '') ),
                 'hour_by_cash' => ($is_new ? '' : ($dbr_daily_sale_detail->hour_by_cash ? $dbr_daily_sale_detail->hour_by_cash : '') ),);
+
+            if (!$is_new) {
+                $data_daily_sale[$index] = array_merge($data_daily_sale[$index], array('id' => (int) $dbr_daily_sale_detail->id));
+            }
+            
+            $index ++;
         }
 
         $data['is_readonly'] = 0;
