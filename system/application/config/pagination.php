@@ -20,7 +20,10 @@
 // --------------------------------------------------------------------------
 
 $config['per_page'] = 20;
-$config['page_query_string'] = TRUE;
+$config['page_query_string'] = FALSE;
+//$config['enable_query_strings'] = TRUE;
+
+$config['use_page_numbers'] = TRUE;
 
 $config['full_tag_open'] = '<div class="dataTables_paginate paging_bootstrap"><ul class="pagination">';
 $config['full_tag_close'] = '</ul ></div><!--pagination-->';

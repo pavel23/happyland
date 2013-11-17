@@ -2639,4 +2639,9 @@ fieldset[disabled] .btn-line.btn-metis-6.active {
   margin-bottom: -1px;
   border-radius: 0;
 }
+
+#daily_sales, #daily_sales_others, #daily_sales_totals{
+    margin-top: 8px;
+}
+
 /* END LOGIN PAGE STYLES */

@@ -1,8 +1,29 @@
+$.number_format = function(number, decimals, dec_point, thousands_sep) {
+    number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+    var n = !isFinite(+number) ? 0 : +number,
+            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals), sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+            s = '',
+            toFixedFix = function(n, prec) {
+        var k = Math.pow(10, prec);
+        return '' + Math.round(n * k) / k;
+    };
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (s[0].length > 3) {
+        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+    if ((s[1] || '').length < prec) {
+        s[1] = s[1] || '';
+        s[1] += new Array(prec - s[1].length + 1).join('0');
+    }
+    return s.join(dec);
+};
+
 var DailySales = function() {
     var _daily_sale_id = 0;
     var _instance = null, _user_map_ids = null,
-            column_array = {'name': 0, 'cash_number': 1, 'opening_cash': 2, 'closing_cash': 3, 'master_card_amount': 4, 'visa_amount': 5, 'retirement_amount_pen': 6, 'retirement_amount_dol': 7, 'total_calculated': 8, 'total_x_format': 9, 'difference_money': 10, 'difference_values': 11, 'num_transacctions': 12, 'hour_by_cash': 13},
-    a_header_totals = {2: 'total_opening_cash', 3: 'total_closing_cash', 4: 'total_master_card', 5: 'total_visa_card', 6: 'total_retirement_pen', 7: 'total_retirementl_dol', 8: 'grand_total_calculated', 9: 'grand_total_z_format', 10: 'total_difference_money', 11: 'total_diferrence_values', 12: 'total_num_transactions', 13: 'total_hours_by_cash'};
+            column_array = {'name': 0, 'cash_number': 1, 'opening_cash': 2, 'closing_cash': 3, 'master_card_amount': 4, 'visa_amount': 5, 'web_payment': 6, 'retirement_amount_pen': 7, 'retirement_amount_dol': 8, 'total_calculated': 9, 'total_x_format': 10, 'difference_money': 11, 'difference_values': 12, 'num_transacctions': 13, 'hour_by_cash': 14},
+    a_header_totals = {2: 'total_opening_cash', 3: 'total_closing_cash', 4: 'total_master_card', 5: 'total_visa_card', 6: 'total_web_payment', 7: 'total_retirement_pen', 8: 'total_retirementl_dol', 9: 'grand_total_calculated', 10: 'grand_total_z_format', 11: 'total_difference_money', 12: 'total_diferrence_values', 13: 'total_num_transactions', 14: 'total_hours_by_cash'};
 
     function setUserMapIds(p_user_map_ids) {
         _user_map_ids = p_user_map_ids;
@@ -79,28 +100,27 @@ var DailySales = function() {
 
             data_params = {daily_sale_id: daily_sale_id, daily_sale_detail_id: daily_sale_detail_id, operator_id: $trow.data('operator_id'), data: data_params_detail};
 
-            data_params.data.total_calculated = parseFloat(_instance.handsontable('getCell', row_index, 8).innerHTML);
-            data_params.data.difference_money = parseFloat(_instance.handsontable('getCell', row_index, 10).innerHTML);
+            data_params.data.total_calculated = parseFloat(_instance.handsontable('getCell', row_index, 9).innerHTML);
+            data_params.data.difference_money = parseFloat(_instance.handsontable('getCell', row_index, 11).innerHTML);
             data_params.data.type_of_sales_id = $(document).data('type_of_sales_id');
 
             if (col_index !== 'name' && col_index !== 'cash_number') {
                 var sum_one = getTotals(col_index, $('#daily_sales')) || 0;
                 var sum_two = getTotals(col_index, $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array[col_index], sum_one + sum_two);
-
+                instance_total.handsontable('setDataAtCell', 0, column_array[col_index], 'S/. ' + $.number_format((sum_one + sum_two), 2));
 
                 var sum_total_one = getTotals('total_calculated', $('#daily_sales')) || 0;
                 var sum_total_difference_one = getTotals('total_calculated', $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array['total_calculated'], sum_total_one + sum_total_difference_one);
+                instance_total.handsontable('setDataAtCell', 0, column_array['total_calculated'], 'S/. ' + $.number_format((sum_total_one + sum_total_difference_one), 2));
 
                 var sum_total_two = getTotals('difference_money', $('#daily_sales')) || 0;
                 var sum_total_difference_two = getTotals('difference_money', $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array['difference_money'], sum_total_two + sum_total_difference_two);
+                instance_total.handsontable('setDataAtCell', 0, column_array['difference_money'], 'S/. ' + $.number_format((sum_total_two + sum_total_difference_two), 2));
 
                 data_params.data_headers = {};
                 data_params.data_headers[a_header_totals[column_array[col_index]]] = sum_one + sum_two;
-                data_params.data_headers[a_header_totals[8]] = sum_total_one + sum_total_difference_one;
-                data_params.data_headers[a_header_totals[10]] = sum_total_two + sum_total_difference_two;
+                data_params.data_headers[a_header_totals[9]] = sum_total_one + sum_total_difference_one;
+                data_params.data_headers[a_header_totals[11]] = sum_total_two + sum_total_difference_two;
 
             }
 
@@ -119,9 +139,9 @@ var DailySales = function() {
                 if (JSONsaveResponse.daily_sale_id > 0 && daily_sale_id === 0) {
                     $(document).data('daily_sale_id', JSONsaveResponse.daily_sale_id);
                 }
-                
-                if(JSONsaveResponse.url_close_daily_sale && !$('#save_daily_sales').attr('href')){
-                    $('#save_daily_sales').attr('href',JSONsaveResponse.url_close_daily_sale );
+
+                if (JSONsaveResponse.url_close_daily_sale && !$('#save_daily_sales').attr('href')) {
+                    $('#save_daily_sales').attr('href', JSONsaveResponse.url_close_daily_sale);
                 }
 
             });
@@ -146,38 +166,69 @@ var myAutocompleteRenderer = function(instance, td, row, col, prop, value, cellP
 };
 
 var sumRowsTotalCash = function(instance, row) {
-    var a, b, c, d, e, f;
+    var a, b, c, d, e, f, g;
     a = parseFloat(instance.getDataAtCell(row, 'opening_cash')) || 0;
     b = parseFloat(instance.getDataAtCell(row, 'closing_cash')) || 0;
     c = parseFloat(instance.getDataAtCell(row, 'master_card_amount')) || 0;
     d = parseFloat(instance.getDataAtCell(row, 'visa_amount')) || 0;
-    e = parseFloat(instance.getDataAtCell(row, 'retirement_amount_pen')) || 0;
-    f = parseFloat(instance.getDataAtCell(row, 'retirement_amount_dol')) || 0;
-    return ((b + c + d + e + f) - a);
+    e = parseFloat(instance.getDataAtCell(row, 'web_payment')) || 0;
+    f = parseFloat(instance.getDataAtCell(row, 'retirement_amount_pen')) || 0;
+    g = parseFloat(instance.getDataAtCell(row, 'retirement_amount_dol')) || 0;
+    return ((b + c + d + e + f + g) - a);
 }
 var sumCalculateTotalCash = function(instance, td, row, col, prop, value, cellProperties) {
     Handsontable.TextCell.renderer.apply(this, arguments);
+    var sum = 0;
+
 
     $(td).css({
         background: '#9DEDF3',
-        color: 'black',
+        color: '#000000',
         textAlign: 'right'
     });
 
-    td.innerHTML = parseFloat(sumRowsTotalCash(instance, row));
+    sum = parseFloat(sumRowsTotalCash(instance, row));
+
+    if (sum < 0) {
+        $(td).css({color: '#FF0000'});
+    }
+
+    td.innerHTML = sum;
 }
 
 var sumCalculateDifferenceCash = function(instance, td, row, col, prop, value, cellProperties) {
     Handsontable.TextCell.renderer.apply(this, arguments);
-    var b;
+    var b, sum;
     b = parseFloat(instance.getDataAtCell(row, 'total_x_format')) || 0;
 
     $(td).css({
         background: '#CDFF95',
-        color: 'black',
+        color: '#000000',
         textAlign: 'right'
     });
-    td.innerHTML = parseFloat(sumRowsTotalCash(instance, row)) - parseFloat(b);
+
+    sum = parseFloat(sumRowsTotalCash(instance, row)) - parseFloat(b);
+
+    if (sum < 0) {
+        $(td).css({color: '#FF0000'});
+    }
+    td.innerHTML = sum;
+};
+
+var totalRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.TextCell.renderer.apply(this, arguments);
+
+    var $td = $(td);
+    $td.css({
+        background: '#FFD966',
+        textAlign: 'right',
+        color: '#000000',
+        fontWeight: 'bold'
+    });
+
+    if ($td.index() === 0) {
+        $td.css({textAlign: 'left'});
+    }
 };
 
 $(function() {
@@ -219,18 +270,18 @@ $(function() {
     $container_daily_sales_totals.handsontable({
         data: data_type_of_sale_totals,
         startRows: 1,
-        startCols: 14,
-        minSpareRows: 0,
+        startCols: 15,
         readOnly: true,
-        colWidths: [230, 60, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
+        colWidths: [280, 60, 90, 90, 90, 90, 90, 100, 100, 90, 90, 90, 90, 90, 90],
         contextMenu: true,
         columns: [
             {data: 'name', type: 'text'},
             {type: 'text'},
-            {data: 'total_opening_cash', type: 'numeric'},
+            {data: 'total_opening_cash', type: 'numeric', format: '0,0.00'},
             {data: 'total_closing_cash', type: 'numeric', format: '0,0.00'},
             {data: 'total_master_card', type: 'numeric', format: '0,0.00'},
             {data: 'total_visa_card', type: 'numeric', format: '0,0.00'},
+            {data: 'total_web_payment', type: 'numeric', format: '0,0.00'},
             {data: 'total_retirement_pen', type: 'numeric', format: '0,0.00'},
             {data: 'total_retirementl_dol', type: 'numeric', format: '0,0.00'},
             {data: 'grand_total_calculated', type: 'numeric', format: '0,0.00'},
@@ -239,31 +290,37 @@ $(function() {
             {data: 'total_diferrence_values', type: 'numeric', format: '0,0.00'},
             {data: 'total_num_transactions', type: 'numeric', format: '0,0.00'},
             {data: 'total_hours_by_cash', type: 'numeric', format: '0,0.00'}
-        ]
+        ],
+        cells: function(row, col, prop) {
+            if (row === 0) {
+                this.renderer = totalRenderer;
+            }
+        }
     });
 
     $container_daily_sales.handsontable({
         data: data_type_of_sale_one,
         startRows: 1,
         readOnly: (parseInt($wrapper.data('is_readonly')) === 0 ? false : true),
-        startCols: 14,
-        minSpareRows: 1,
-        colWidths: [230, 60, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
+        startCols: 15,
+        minSpareRows: (parseInt($wrapper.data('is_readonly')) === 0 ? 1 : 0),
+        colWidths: [280, 60, 90, 90, 90, 90, 90, 100, 100, 90, 90, 90, 90, 90, 90],
         contextMenu: true,
         colHeaders: [
             'Nombres y Apellidos',
             'Caja',
-            'Apertura<br />Inicio (S/.)',
-            'Apertura<br />Fin (S/.)',
-            'Tarjeta<br />Master Card (S/.)',
-            'Tarjeta<br />Visa (S/.)',
-            'Retiro (S/.)',
-            'Retiro ($)',
+            'Apertura Caja <br/> (S/.)',
+            'Cierre Caja<br /> (S/.)',
+            'Master Card <br />(S/.)',
+            'Visa <br />(S/.)',
+            'Web <br />(S/.)',
+            'Venta Efectivo <br />(S/.)',
+            'Venta Efectivo <br />($)',
             'Total<br/>Efectivo (S/.)',
-            'Total<br/>Formato Z (S/.)',
+            'Formato X <br/>(S/.)',
             'Dif.<br />Dinero (S/.)',
             'Dif.<br />Valores',
-            'Transacciones',
+            'Transac.',
             'Horas/Caja'
         ],
         columns: [
@@ -289,6 +346,7 @@ $(function() {
             {data: 'closing_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'},
             {data: 'master_card_amount', type: 'numeric', allowInvalid: false, format: '0,0.00'},
             {data: 'visa_amount', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+            {data: 'web_payment', type: 'numeric', allowInvalid: false, format: '0,0.00'},
             {data: 'retirement_amount_pen', type: 'numeric', allowInvalid: false, format: '0,0.00'},
             {data: 'retirement_amount_dol', type: 'numeric', allowInvalid: false, format: '0,0.00'},
             {data: 'total_calculated', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateTotalCash, format: '0,0.00'},
@@ -306,18 +364,18 @@ $(function() {
     $container_other_operations.handsontable({
         data: data_type_of_sale_two,
         startRows: 1,
-        startCols: 14,
-        minSpareRows: 0,
+        startCols: 15,
         readOnly: (parseInt($wrapper.data('is_readonly')) === 0 ? false : true),
-        colWidths: [230, 60, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90, 90],
+        colWidths: [280, 60, 90, 90, 90, 90, 90, 100, 100, 90, 90, 90, 90, 90, 90],
         contextMenu: true,
         columns: [
             {data: 'name', type: 'text', readOnly: true},
-            {data: 'cash_number', type: 'numeric', allowInvalid: true},
-            {data: 'opening_cash', type: 'numeric', allowInvalid: true, format: '0,0.00'},
-            {data: 'closing_cash', type: 'numeric', allowInvalid: true, format: '0,0.00'},
-            {data: 'master_card_amount', type: 'numeric', allowInvalid: true, format: '0,0.00'},
-            {data: 'visa_amount', type: 'numeric', allowInvalid: true, format: '0,0.00'},
+            {data: 'cash_number', type: 'numeric', allowInvalid: true, readOnly: true},
+            {data: 'opening_cash', type: 'numeric', allowInvalid: true, format: '0,0.00', readOnly: true},
+            {data: 'closing_cash', type: 'numeric', allowInvalid: true, format: '0,0.00', readOnly: true},
+            {data: 'master_card_amount', type: 'numeric', allowInvalid: true, format: '0,0.00', readOnly: true},
+            {data: 'visa_amount', type: 'numeric', allowInvalid: true, format: '0,0.00', readOnly: true},
+            {data: 'web_payment', type: 'numeric', allowInvalid: false, format: '0,0.00', readOnly: true},
             {data: 'retirement_amount_pen', type: 'numeric', allowInvalid: true, format: '0,0.00'},
             {data: 'retirement_amount_dol', type: 'numeric', allowInvalid: true, format: '0,0.00'},
             {data: 'total_calculated', type: 'numeric', allowInvalid: true, readOnly: true, renderer: sumCalculateTotalCash, format: '0,0.00'},

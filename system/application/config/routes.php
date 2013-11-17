@@ -48,7 +48,9 @@ $route['login.html']                    = 'Login/index';
 /*
  * Rutas de acceso al modulo de perfiles
  */
-$route['usuarios/listar.html']                      = 'User/index';
+//$route['usuarios/page/(:num)/listar.html']               = 'User/index';
+//$route['usuarios/listar.html']                      = 'User/index';
+$route['user/page/(:num)'] = "user/index";
 $route['usuarios/agregar.html']                     = 'User/maintenanceUser';
 $route['usuarios/(:num)/modificar.html']            = 'User/maintenanceUser/$1';
 
