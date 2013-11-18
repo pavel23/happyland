@@ -9,28 +9,25 @@
             </div>
         </div>
    </div>
-
     <?php 
         $a_session              = $this->session->userdata('loggedin');
-        $a_module_permission    = $a_session['menu_permission'];
-    ?>
-    
+        $a_module_permission    = json_decode($this->encrypt->decode($a_session['menu_permission']));       
+        ?>
     <?php if(count($a_module_permission)>0){?>
     <!-- /.topnav -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <!-- .nav -->
         <ul class="nav navbar-nav">
-            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="index.html">Dashboard</a></li>
             <?php foreach($a_module_permission as $module_id=>$a_module){?>
-                <?php //echo $module_id;?>
                 <li class='dropdown '>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <?php echo $a_module['name'];?><b class="caret"></b>
+                        <?php echo $a_module->name;?><b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                    <?php if(array_key_exists('child', $a_module)){?>
-                        <?php foreach($a_module['child'] as $a_child){?>
-                            <li><a href="<?php echo site_url($a_child['url']);?>"><?php echo $a_child['name'];?></a></li>
+                    <?php if($a_module->child){?>
+                        <?php foreach($a_module->child as $a_child){?>
+                            <li><a href="<?php echo site_url($a_child->url);?>"><?php echo $a_child->name;?></a></li>
                         <?php }?>
                     <?php }?>
                     </ul>

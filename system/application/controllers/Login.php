@@ -71,8 +71,8 @@ class Login extends CI_Controller {
             'num_doc' => $this->login->num_doc,
             'name' => $this->login->full_name,
             'isLoggedIn' => true,
-            'menu_permission' => $a_module_permission['menu_permission'],
-            'module_permission' => $a_module_permission['module_permission']
+            'menu_permission' => $this->encrypt->encode(json_encode($a_module_permission['menu_permission'])),
+            'module_permission' => $this->encrypt->encode(json_encode($a_module_permission['module_permission']))
             )
         );
     }

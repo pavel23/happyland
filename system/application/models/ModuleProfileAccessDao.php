@@ -78,7 +78,8 @@ class ModuleProfileAccessDao extends CI_Model {
         $this->db->where('mdl.show_menu', 1);
         $this->db->order_by('mdl.position_order', 1);
         $query  = $this->db->get();
-        $dbl_modules_by_profile = ($query->num_rows() > 0 ? $query->result() : FALSE);
+        $dbl_modules_by_profile = $query->result();
+
         $a_module_access    = array();
         if(!$dbl_modules_by_profile) {
             return $a_module_access;

@@ -20,12 +20,17 @@ class Profile extends My_Controller {
     public function index() {
         try {
             $a_session  = $this->session->userdata('loggedin');
-            echo '<pre>';
-            print_r($a_session);
-            print_r($a_session['menu_permission']);
-            print_r($a_session['module_permission']);
+            /*echo '<pre>';
+            echo '<hr />';
+            echo 'MENU';
+            echo '<hr />';
+            print_r($this->encrypt->decode($a_session['menu_permission']));
+            echo '<hr />';
+            echo 'MODULE';
+            echo '<hr />';
+            print_r($this->encrypt->decode($a_session['module_permission']));
             echo '</pre>';
-            //die('--------');
+            die('Profile/Index--------');*/
             $data['profile_data'] = $this->ProfileDao->getAllProfiles();
             $this->layout->view('Profile/listProfile', $data);
         } catch (Exception $e) {
