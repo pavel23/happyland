@@ -21,7 +21,7 @@ class DailySaleDao extends CI_Model {
 
     public function getDailySaleById($daily_sale_id) {
 
-        return $this->db->select('id, status, date_sale,total_opening_cash, total_closing_cash, total_master_card, total_visa_card, total_retirement_pen, total_retirementl_dol, grand_total_calculated, grand_total_z_format, total_difference_money, total_diferrence_values, total_num_transactions, total_hours_by_cash')
+        return $this->db->select('id, status, date_sale,total_opening_cash, total_closing_cash, total_master_card, total_visa_card, total_web_payment ,total_retirement_pen, total_retirementl_dol, grand_total_calculated, grand_total_z_format, total_difference_money, total_diferrence_values, total_num_transactions, total_hours_by_cash')
                         ->from('hpl_daily_sales')
                         ->where('id', $daily_sale_id)
                         ->where('subsidiaries_id', $this->loggedin['subsidiaries'])->get()->row();
@@ -51,7 +51,7 @@ class DailySaleDao extends CI_Model {
 
     public function getDailySaleDetailBySaleId($daily_sale_id) {
 
-        $this->db->select('dsd.id,IF(dsd.operator_id <> 0,(SELECT  full_name from hpl_user where id = dsd.operator_id ),tys.name ) as name, tys.is_other_sales, tys.id as type_of_sales_id,dsd.operator_id,dsd.cash_number,dsd.opening_cash,dsd.closing_cash,dsd.master_card_amount,dsd.visa_amount,dsd.retirement_amount_pen,dsd.retirement_amount_dol,dsd.total_calculated,dsd.total_x_format,dsd.difference_money,dsd.difference_values,dsd.num_transacctions,dsd.hour_by_cash')
+        $this->db->select('dsd.id,IF(dsd.operator_id <> 0,(SELECT  full_name from hpl_user where id = dsd.operator_id ),tys.name ) as name, tys.is_other_sales, tys.id as type_of_sales_id,dsd.operator_id,dsd.cash_number,dsd.opening_cash,dsd.closing_cash,dsd.master_card_amount,dsd.visa_amount, dsd.web_payment,dsd.retirement_amount_pen,dsd.retirement_amount_dol,dsd.total_calculated,dsd.total_x_format,dsd.difference_money,dsd.difference_values,dsd.num_transacctions,dsd.hour_by_cash')
                 ->from('hpl_type_of_sales tys')
                 ->join('hpl_daily_sales_detail dsd', 'tys.id=dsd.type_of_sales_id', 'left');
         $this->db->where('dsd.daily_sales_id', $daily_sale_id);

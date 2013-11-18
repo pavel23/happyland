@@ -22,7 +22,6 @@ class DailySales extends My_Controller {
     }
 
     public function index() {
-        $this->layout->assets(base_url() . 'assets/css/daily_sales.css');
         $this->layout->assets(base_url() . 'assets/css/lib/fullcalendar.css');
         $this->layout->assets('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js');
         $this->layout->assets(base_url() . 'assets/js/lib/fullcalendar.min.js');
@@ -58,6 +57,7 @@ class DailySales extends My_Controller {
 
     public function maintenanceForm($daily_sale_id = null) {
         $this->layout->assets(base_url() . 'assets/css/dist/jquery.handsontable.full.css');
+        $this->layout->assets('//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js');
         $this->layout->assets(base_url() . 'assets/js/lib/jquery.ajaxQueue.min.js');
         $this->layout->assets(base_url() . 'assets/js/dist/jquery.handsontable.full.js');
         $this->layout->assets(base_url() . 'assets/js/happy/daily.sales.js');
@@ -86,32 +86,38 @@ class DailySales extends My_Controller {
 
             $dbl_daily_sales_detail = $this->DailySaleDao->getDailyOtherSale();
         }
+        
+     //   print_r($dbl_daily_sales_detail);
+        
 
         $data_daily_sale = array();
+        $index = 0;
+        foreach ($dbl_daily_sales_detail as $dbr_daily_sale_detail) {
+            $data_daily_sale[$index] = array(
+                'type_of_sales_id' => (int)($is_new ? $dbr_daily_sale_detail->id : $dbr_daily_sale_detail->type_of_sales_id) ,
+                'name' => ($is_new ? ($dbr_daily_sale_detail->is_other_sales == 1 ? $dbr_daily_sale_detail->name : '') : $dbr_daily_sale_detail->name),
+                'is_other_sales' => (int) $dbr_daily_sale_detail->is_other_sales,
+                'operator_id' => ($is_new ? '' : ($dbr_daily_sale_detail->operator_id ? $dbr_daily_sale_detail->operator_id : '') ),
+                'cash_number' => ($is_new ? '' : ($dbr_daily_sale_detail->cash_number ? $dbr_daily_sale_detail->cash_number : '') ),
+                'opening_cash' => ($is_new ? '' : ($dbr_daily_sale_detail->opening_cash ? $dbr_daily_sale_detail->opening_cash : '') ),
+                'closing_cash' => ($is_new ? '' : ($dbr_daily_sale_detail->closing_cash ? $dbr_daily_sale_detail->closing_cash : '') ),
+                'master_card_amount' => ($is_new ? '' : ($dbr_daily_sale_detail->master_card_amount ? $dbr_daily_sale_detail->master_card_amount : '') ),
+                'visa_amount' => ($is_new ? '' : ($dbr_daily_sale_detail->visa_amount ? $dbr_daily_sale_detail->visa_amount : '') ),
+                'web_payment' => ($is_new ? '' : ($dbr_daily_sale_detail->web_payment ? $dbr_daily_sale_detail->web_payment : '') ),
+                'retirement_amount_pen' => ($is_new ? '' : ($dbr_daily_sale_detail->retirement_amount_pen ? $dbr_daily_sale_detail->retirement_amount_pen : '') ),
+                'retirement_amount_dol' => ($is_new ? '' : ($dbr_daily_sale_detail->retirement_amount_dol ? $dbr_daily_sale_detail->retirement_amount_dol : '') ),
+                'total_calculated' => ($is_new ? '' : ($dbr_daily_sale_detail->total_calculated ? $dbr_daily_sale_detail->total_calculated : '') ),
+                'total_x_format' => ($is_new ? '' : ($dbr_daily_sale_detail->total_x_format ? $dbr_daily_sale_detail->total_x_format : '') ),
+                'difference_money' => ($is_new ? '' : ($dbr_daily_sale_detail->difference_money ? $dbr_daily_sale_detail->difference_money : '') ),
+                'difference_values' => ($is_new ? '' : ($dbr_daily_sale_detail->difference_values ? $dbr_daily_sale_detail->difference_values : '') ),
+                'num_transacctions' => ($is_new ? '' : ($dbr_daily_sale_detail->num_transacctions ? $dbr_daily_sale_detail->num_transacctions : '') ),
+                'hour_by_cash' => ($is_new ? '' : ($dbr_daily_sale_detail->hour_by_cash ? $dbr_daily_sale_detail->hour_by_cash : '') ),);
 
-        if (!$is_new && $dbl_daily_sales_detail) {
-            $data_daily_sale = $dbl_daily_sales_detail;
-        } else {
-            foreach ($dbl_daily_sales_detail as $dbr_daily_sale_detail) {
-                $data_daily_sale[] = array(
-                    'type_of_sales_id' => (int) $dbr_daily_sale_detail->id,
-                    'name' => ($dbr_daily_sale_detail->is_other_sales == 1 ? $dbr_daily_sale_detail->name : ''),
-                    'is_other_sales' => (int) $dbr_daily_sale_detail->is_other_sales,
-                    'operator_id' => '',
-                    'cash_number' => '',
-                    'opening_cash' => '',
-                    'closing_cash' => '',
-                    'master_card_amount' => '',
-                    'visa_amount' => '',
-                    'retirement_amount_pen' => '',
-                    'retirement_amount_dol' => '',
-                    'total_calculated' => '',
-                    'total_x_format' => '',
-                    'difference_money' => '',
-                    'difference_values' => '',
-                    'num_transacctions' => '',
-                    'hour_by_cash' => '');
+            if (!$is_new) {
+                $data_daily_sale[$index] = array_merge($data_daily_sale[$index], array('id' => (int) $dbr_daily_sale_detail->id));
             }
+            
+            $index ++;
         }
 
         $data['is_readonly'] = 0;
@@ -126,18 +132,19 @@ class DailySales extends My_Controller {
             'status' => '',
             'name' => 'Totales del Día',
             'is_other_sales' => 2,
-            'total_opening_cash' => (isset($dbr_daily_sale->total_opening_cash) ? $dbr_daily_sale->total_opening_cash : 0),
-            'total_closing_cash' => (isset($dbr_daily_sale->total_closing_cash) ? $dbr_daily_sale->total_closing_cash : 0),
-            'total_master_card' => (isset($dbr_daily_sale->total_master_card) ? $dbr_daily_sale->total_master_card : 0),
-            'total_visa_card' => (isset($dbr_daily_sale->total_visa_card) ? $dbr_daily_sale->total_visa_card : 0),
-            'total_retirement_pen' => (isset($dbr_daily_sale->total_retirement_pen) ? $dbr_daily_sale->total_retirement_pen : 0),
-            'total_retirementl_dol' => (isset($dbr_daily_sale->total_retirementl_dol) ? $dbr_daily_sale->total_retirementl_dol : 0),
-            'grand_total_calculated' => (isset($dbr_daily_sale->grand_total_calculated) ? $dbr_daily_sale->grand_total_calculated : 0),
-            'grand_total_z_format' => (isset($dbr_daily_sale->grand_total_z_format) ? $dbr_daily_sale->grand_total_z_format : 0),
-            'total_difference_money' => (isset($dbr_daily_sale->total_difference_money) ? $dbr_daily_sale->total_difference_money : 0),
-            'total_diferrence_values' => (isset($dbr_daily_sale->total_diferrence_values) ? $dbr_daily_sale->total_diferrence_values : 0),
-            'total_num_transactions' => (isset($dbr_daily_sale->total_num_transactions) ? $dbr_daily_sale->total_num_transactions : 0),
-            'total_hours_by_cash' => (isset($dbr_daily_sale->total_hours_by_cash) ? $dbr_daily_sale->total_hours_by_cash : 0)
+            'total_opening_cash' => (isset($dbr_daily_sale->total_opening_cash) ? 'S/. ' . number_format($dbr_daily_sale->total_opening_cash, 2) : ''),
+            'total_closing_cash' => (isset($dbr_daily_sale->total_closing_cash) ? 'S/. ' . number_format($dbr_daily_sale->total_closing_cash, 2) : ''),
+            'total_master_card' => (isset($dbr_daily_sale->total_master_card) ? 'S/. ' . number_format($dbr_daily_sale->total_master_card, 2) : ''),
+            'total_visa_card' => (isset($dbr_daily_sale->total_visa_card) ? 'S/. ' . number_format($dbr_daily_sale->total_visa_card, 2) : ''),
+            'total_web_payment' => (isset($dbr_daily_sale->total_web_payment) ? 'S/. ' . number_format($dbr_daily_sale->total_web_payment, 2) : ''),
+            'total_retirement_pen' => (isset($dbr_daily_sale->total_retirement_pen) ? 'S/. ' . number_format($dbr_daily_sale->total_retirement_pen, 2) : ''),
+            'total_retirementl_dol' => (isset($dbr_daily_sale->total_retirementl_dol) ? 'S/. ' . number_format($dbr_daily_sale->total_retirementl_dol, 2) : ''),
+            'grand_total_calculated' => (isset($dbr_daily_sale->grand_total_calculated) ? 'S/. ' . number_format($dbr_daily_sale->grand_total_calculated, 2) : ''),
+            'grand_total_z_format' => (isset($dbr_daily_sale->grand_total_z_format) ? 'S/. ' . number_format($dbr_daily_sale->grand_total_z_format, 2) : ''),
+            'total_difference_money' => (isset($dbr_daily_sale->total_difference_money) ? 'S/. ' . number_format($dbr_daily_sale->total_difference_money, 2) : ''),
+            'total_diferrence_values' => (isset($dbr_daily_sale->total_diferrence_values) ? 'S/. ' . number_format($dbr_daily_sale->total_diferrence_values, 2) : ''),
+            'total_num_transactions' => (isset($dbr_daily_sale->total_num_transactions) ? 'S/. ' . number_format($dbr_daily_sale->total_num_transactions, 2) : ''),
+            'total_hours_by_cash' => (isset($dbr_daily_sale->total_hours_by_cash) ? 'S/. ' . number_format($dbr_daily_sale->total_hours_by_cash, 2) : '')
         );
 
         $data['dailySale'] = $data_daily_sale;

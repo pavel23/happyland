@@ -1,0 +1,2 @@
+ALTER TABLE `hpl_daily_sales` ADD `total_web_payment` FLOAT NOT NULL DEFAULT '0' AFTER `total_visa_card` ;
+ALTER TABLE `hpl_daily_sales_detail` ADD `web_payment` FLOAT NOT NULL DEFAULT '0' AFTER `visa_amount` ;

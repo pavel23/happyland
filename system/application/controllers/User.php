@@ -20,12 +20,21 @@ class User extends My_Controller {
         $this->layout->title = "Admin Happyland - Usuarios";
     }
 
-    public function index() {
-        $this->pagination->base_url = base_url() . 'User/index?';
+    public function index( ) {
+
+        $this->pagination->base_url = base_url() . 'user';
+        $this->pagination->first_url = base_url().'user/';
+        $this->pagination->prefix = '/page/';
+        $this->pagination->per_page = '20';
+        $this->pagination->uri_segment = 3;
         $this->pagination->total_rows = $this->db->get('hpl_user')->num_rows();
         $data['pagination'] = $this->pagination->create_links();
-        $page = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
-        $data['dbr_users'] = $this->UserDao->getAllUsers($this->pagination->per_page, $page);
+        
+          $inicio = 0;
+        if($this->uri->segment(3))
+        $inicio = ($this->uri->segment(3)-1)*$this->pagination->per_page;
+        
+        $data['dbr_users'] = $this->UserDao->getAllUsers($this->pagination->per_page, $inicio);
         $this->layout->view('User/userList', $data);
     }
 
