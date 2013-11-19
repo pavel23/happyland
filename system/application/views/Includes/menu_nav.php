@@ -18,7 +18,7 @@
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <!-- .nav -->
         <ul class="nav navbar-nav">
-            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="<?php echo site_url('Dashboard/index');?>">Dashboard</a></li>
             <?php foreach($a_module_permission as $module_id=>$a_module){?>
                 <li class='dropdown '>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">

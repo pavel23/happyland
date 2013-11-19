@@ -362,3 +362,11 @@ $config['proxy_ips'] = '';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
+
+function __autoload($class)
+{
+ if (file_exists(APPPATH."controllers/".$class.EXT))
+ {
+ require_once(APPPATH.'controllers/'.$class.EXT);
+ }
+}

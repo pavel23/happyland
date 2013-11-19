@@ -50,7 +50,7 @@ class Login extends CI_Controller {
                 if ($password == $dbr_user->password) {
                     $this->login = $dbr_user;
                     $this->set_session();
-                    redirect('Profile/index');
+                    redirect('Dashboard/index');
                 } else {
                     $this->session->set_flashdata('message', 'Contraseña Invalido');
                     redirect('Login/index');

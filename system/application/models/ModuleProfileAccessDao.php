@@ -87,9 +87,9 @@ class ModuleProfileAccessDao extends CI_Model {
 
         foreach($dbl_modules_by_profile as $dbr_module) {
             if(strlen(trim($dbr_module->module_name))>0){
-                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action][$dbr_module->module_id]['read']     = $dbr_module->read;
-                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action][$dbr_module->module_id]['write']    = $dbr_module->write;
-                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action][$dbr_module->module_id]['download'] = $dbr_module->download;
+                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action]['read']     = $dbr_module->read;
+                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action]['write']    = $dbr_module->write;
+                $a_module_access['module_permission'][$dbr_module->module_name][$dbr_module->module_action]['download'] = $dbr_module->download;
             }
             if(!$dbr_module->parent_id) {
                 $a_module_access['menu_permission'][$dbr_module->module_id]['name']                    = $dbr_module->name;

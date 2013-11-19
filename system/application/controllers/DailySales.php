@@ -8,7 +8,7 @@ if (!defined('BASEPATH'))
  *
  * @author jroque
  */
-class DailySales extends My_Controller {
+class DailySales extends ValidateAccess {
 
     function __construct() {
         parent::__construct();

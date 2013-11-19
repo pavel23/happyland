@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Profile extends My_Controller {
+class Profile extends ValidateAccess {
 
     public function __construct() {
         parent::__construct();
@@ -19,10 +19,7 @@ class Profile extends My_Controller {
     
     public function index() {
         try {
-            $a_session  = $this->session->userdata('loggedin');
-            echo '<pre>';
-            print_r(json_decode($this->encrypt->decode($a_session['module_permission'])));
-            echo '</pre>';
+            $this->validateAccessByModule();
             $data['profile_data'] = $this->ProfileDao->getAllProfiles();
             $this->layout->view('Profile/listProfile', $data);
         } catch (Exception $e) {
@@ -31,6 +28,7 @@ class Profile extends My_Controller {
     }
 
     public function maintenanceProfile($profile_id = null) {
+        $this->validateAccessByModule();
         $data['dbr_profile'] = array();
         $data['is_new'] = true;
         if (isset($profile_id) && $profile_id) {
@@ -214,6 +212,7 @@ class Profile extends My_Controller {
     }
 
     public function deleteProfile($params = array()) {
+        $this->validateAccessByModule();
         //$this->load->helper('url');
         redirect('', 'refresh');
     }

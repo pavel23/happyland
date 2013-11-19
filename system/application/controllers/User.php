@@ -8,7 +8,7 @@ if (!defined('BASEPATH'))
  *
  * @author Pavel
  */
-class User extends My_Controller {
+class User extends ValidateAccess {
 
     public function __construct() {
         parent::__construct();
@@ -21,7 +21,7 @@ class User extends My_Controller {
     }
 
     public function index( ) {
-
+        $this->validateAccessByModule();
         $this->pagination->base_url = base_url() . 'user';
         $this->pagination->first_url = base_url().'user/';
         $this->pagination->prefix = '/page/';
@@ -39,7 +39,7 @@ class User extends My_Controller {
     }
 
     public function maintenanceUser($userid = null) {
-
+        $this->validateAccessByModule();
         $this->load->model('ProfileDao');
         $this->load->model('SubsidiaryDao');
         $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
