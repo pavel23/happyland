@@ -74,6 +74,10 @@ class DailySales extends My_Controller {
 
         if (!$is_new) {
             $dbl_daily_sales_detail = $this->DailySaleDao->getDailySaleDetailBySaleId($dbr_daily_sale->id);
+
+            $dbl_daily_sales_detail_two = $this->DailySaleDao->getDailyOtherSale();
+
+            $dbl_daily_sales_detail = array_merge($dbl_daily_sales_detail, $dbl_daily_sales_detail_two);
         } else {
 
             $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale();
@@ -87,37 +91,48 @@ class DailySales extends My_Controller {
             $dbl_daily_sales_detail = $this->DailySaleDao->getDailyOtherSale();
         }
         
-     //   print_r($dbl_daily_sales_detail);
-        
-
         $data_daily_sale = array();
+        $data_daily_sale_ids = array();
         $index = 0;
         foreach ($dbl_daily_sales_detail as $dbr_daily_sale_detail) {
+
             $data_daily_sale[$index] = array(
-                'type_of_sales_id' => (int)($is_new ? $dbr_daily_sale_detail->id : $dbr_daily_sale_detail->type_of_sales_id) ,
+                'type_of_sales_id' => (int)$dbr_daily_sale_detail->type_of_sales_id ,
                 'name' => ($is_new ? ($dbr_daily_sale_detail->is_other_sales == 1 ? $dbr_daily_sale_detail->name : '') : $dbr_daily_sale_detail->name),
                 'is_other_sales' => (int) $dbr_daily_sale_detail->is_other_sales,
-                'operator_id' => ($is_new ? '' : ($dbr_daily_sale_detail->operator_id ? $dbr_daily_sale_detail->operator_id : '') ),
-                'cash_number' => ($is_new ? '' : ($dbr_daily_sale_detail->cash_number ? $dbr_daily_sale_detail->cash_number : '') ),
-                'opening_cash' => ($is_new ? '' : ($dbr_daily_sale_detail->opening_cash ? $dbr_daily_sale_detail->opening_cash : '') ),
-                'closing_cash' => ($is_new ? '' : ($dbr_daily_sale_detail->closing_cash ? $dbr_daily_sale_detail->closing_cash : '') ),
-                'master_card_amount' => ($is_new ? '' : ($dbr_daily_sale_detail->master_card_amount ? $dbr_daily_sale_detail->master_card_amount : '') ),
-                'visa_amount' => ($is_new ? '' : ($dbr_daily_sale_detail->visa_amount ? $dbr_daily_sale_detail->visa_amount : '') ),
-                'web_payment' => ($is_new ? '' : ($dbr_daily_sale_detail->web_payment ? $dbr_daily_sale_detail->web_payment : '') ),
-                'retirement_amount_pen' => ($is_new ? '' : ($dbr_daily_sale_detail->retirement_amount_pen ? $dbr_daily_sale_detail->retirement_amount_pen : '') ),
-                'retirement_amount_dol' => ($is_new ? '' : ($dbr_daily_sale_detail->retirement_amount_dol ? $dbr_daily_sale_detail->retirement_amount_dol : '') ),
-                'total_calculated' => ($is_new ? '' : ($dbr_daily_sale_detail->total_calculated ? $dbr_daily_sale_detail->total_calculated : '') ),
-                'total_x_format' => ($is_new ? '' : ($dbr_daily_sale_detail->total_x_format ? $dbr_daily_sale_detail->total_x_format : '') ),
-                'difference_money' => ($is_new ? '' : ($dbr_daily_sale_detail->difference_money ? $dbr_daily_sale_detail->difference_money : '') ),
-                'difference_values' => ($is_new ? '' : ($dbr_daily_sale_detail->difference_values ? $dbr_daily_sale_detail->difference_values : '') ),
-                'num_transacctions' => ($is_new ? '' : ($dbr_daily_sale_detail->num_transacctions ? $dbr_daily_sale_detail->num_transacctions : '') ),
-                'hour_by_cash' => ($is_new ? '' : ($dbr_daily_sale_detail->hour_by_cash ? $dbr_daily_sale_detail->hour_by_cash : '') ),);
+                'operator_id' => ($is_new ? '' : (isset($dbr_daily_sale_detail->operator_id)  ? $dbr_daily_sale_detail->operator_id : '') ),
+                'cash_number' => ($is_new ? '' : (isset($dbr_daily_sale_detail->cash_number) && $dbr_daily_sale_detail->cash_number > 0 ? $dbr_daily_sale_detail->cash_number : '') ),
+                'opening_cash' => ($is_new ? '' : (isset($dbr_daily_sale_detail->opening_cash) && $dbr_daily_sale_detail->opening_cash > 0 ? $dbr_daily_sale_detail->opening_cash : '') ),
+                'closing_cash' => ($is_new ? '' : (isset($dbr_daily_sale_detail->closing_cash) && $dbr_daily_sale_detail->closing_cash > 0 ? $dbr_daily_sale_detail->closing_cash : '') ),
+                'master_card_amount' => ($is_new ? '' : (isset($dbr_daily_sale_detail->master_card_amount) && $dbr_daily_sale_detail->master_card_amount > 0 ? $dbr_daily_sale_detail->master_card_amount : '') ),
+                'visa_amount' => ($is_new ? '' : (isset($dbr_daily_sale_detail->visa_amount) && $dbr_daily_sale_detail->visa_amount > 0 ? $dbr_daily_sale_detail->visa_amount : '') ),
+                'web_payment' => ($is_new ? '' : (isset($dbr_daily_sale_detail->web_payment) && $dbr_daily_sale_detail->web_payment > 0 ? $dbr_daily_sale_detail->web_payment : '') ),
+                'retirement_amount_pen' => ($is_new ? '' : (isset($dbr_daily_sale_detail->retirement_amount_pen) ? $dbr_daily_sale_detail->retirement_amount_pen : '') ),
+                'retirement_amount_dol' => ($is_new ? '' : (isset($dbr_daily_sale_detail->retirement_amount_dol) ? $dbr_daily_sale_detail->retirement_amount_dol : '') ),
+                'total_calculated' => ($is_new ? '' : (isset($dbr_daily_sale_detail->total_calculated) ? $dbr_daily_sale_detail->total_calculated : '') ),
+                'total_x_format' => ($is_new ? '' : (isset($dbr_daily_sale_detail->total_x_format) ? $dbr_daily_sale_detail->total_x_format : '') ),
+                'difference_money' => ($is_new ? '' : (isset($dbr_daily_sale_detail->difference_money) ? $dbr_daily_sale_detail->difference_money : '') ),
+                'difference_values' => ($is_new ? '' : (isset($dbr_daily_sale_detail->difference_values) ? $dbr_daily_sale_detail->difference_values : '') ),
+                'num_transacctions' => ($is_new ? '' : (isset($dbr_daily_sale_detail->num_transacctions) ? $dbr_daily_sale_detail->num_transacctions : '') ),
+                'hour_by_cash' => ($is_new ? '' : (isset($dbr_daily_sale_detail->hour_by_cash) ? $dbr_daily_sale_detail->hour_by_cash : '') ),);
 
-            if (!$is_new) {
+            if (!$is_new && isset($dbr_daily_sale_detail->id)) {
+                $data_daily_sale_ids[] = $dbr_daily_sale_detail->type_of_sales_id;
                 $data_daily_sale[$index] = array_merge($data_daily_sale[$index], array('id' => (int) $dbr_daily_sale_detail->id));
             }
-            
+
             $index ++;
+        }
+
+        if(count($data_daily_sale_ids) > 0){
+            $data_daily_sale_ids = array_unique($data_daily_sale_ids);
+            
+            foreach ($data_daily_sale as $key => $data) {
+                if(in_array($data['type_of_sales_id'], $data_daily_sale_ids) && !isset($data['id'])){
+                    unset($data_daily_sale[$key]);
+                }
+            }
+            
         }
 
         $data['is_readonly'] = 0;

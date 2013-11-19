@@ -64,7 +64,7 @@ var DailySales = function() {
         if (source === 'loadData') {
             var data_row = _instance.handsontable('getData');
             $(_instance).find('tbody tr').each(function(i) {
-                
+
                 if (data_row[i] && data_row[i].id) {
                     if (data_row[i].operator_id > 0) {
                         $(this).data('operator_id', data_row[i].operator_id);
@@ -84,11 +84,13 @@ var DailySales = function() {
 
         if (data_params_detail.type_of_sales_id) {
             $(document).data('type_of_sales_id', data_params_detail.type_of_sales_id);
+        }else{
+            $(document).data('type_of_sales_id', 1);
         }
 
         if (parseFloat(old_value) !== parseFloat(new_value)) {
 
-            if (col_index === 'name') {
+            if (col_index === 'name' && _user_map_ids) {
                 for (var i = 0; i < _user_map_ids.length; i++) {
                     if (_user_map_ids[i].full_name === new_value) {
                         operator_id = _user_map_ids[i].id;
@@ -241,8 +243,46 @@ $(function() {
             $container_daily_sales_totals = $('#daily_sales_totals'),
             url_save_data = $('#url-save-daily-sales').val(),
             url_data_autocomplete = $('#url-data-operators').val(),
-            user_map_ids = null, daily_sale_id = $('#dayli_sale_id').val() || 0,
+            daily_sale_id = $('#dayli_sale_id').val() || 0,
             $wrapper = $('#wrapper_daily_sale');
+
+    var columns = [
+        {
+            data: 'name',
+            type: {renderer: myAutocompleteRenderer, editor: Handsontable.AutocompleteEditor},
+            options: {items: 10},
+            source: function(params, process) {
+                $.ajax({
+                    url: url_data_autocomplete,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(autocompleteResponse) {
+                        process(autocompleteResponse.full_names);
+                        dailySaleOne.setUserMapIds(autocompleteResponse.ids)
+                    }
+                });
+            },
+            strict: true
+        },
+        {data: 'cash_number', type: 'numeric', allowInvalid: false},
+        {data: 'opening_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'closing_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'master_card_amount', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'visa_amount', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'web_payment', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'retirement_amount_pen', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'retirement_amount_dol', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'total_calculated', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateTotalCash, format: '0,0.00'},
+        {data: 'total_x_format', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'difference_money', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateDifferenceCash, format: '0,0.00'},
+        {data: 'difference_values', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'num_transacctions', type: 'numeric', allowInvalid: false, format: '0,0.00'},
+        {data: 'hour_by_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'}
+    ];
+
+
+    columns = $.map(columns, function(value, i) {
+        return ((i === 0 && parseInt($wrapper.data('is_readonly')) === 1) ? {data: 'name', type: 'text', readOnly: true} : value);
+    });
 
     if (daily_sale_id > 0) {
         $(document).data('daily_sale_id', daily_sale_id);
@@ -323,39 +363,7 @@ $(function() {
             'Transac.',
             'Horas/Caja'
         ],
-        columns: [
-            {
-                data: 'name',
-                type: {renderer: myAutocompleteRenderer, editor: Handsontable.AutocompleteEditor},
-                options: {items: 10},
-                source: function(params, process) {
-                    $.ajax({
-                        url: url_data_autocomplete,
-                        contentType: 'application/json; charset=utf-8',
-                        success: function(autocompleteResponse) {
-                            process(autocompleteResponse.full_names);
-                            dailySaleOne.setUserMapIds(autocompleteResponse.ids)
-                            user_map_ids = autocompleteResponse.ids;
-                        }
-                    });
-                },
-                strict: true
-            },
-            {data: 'cash_number', type: 'numeric', allowInvalid: false},
-            {data: 'opening_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'closing_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'master_card_amount', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'visa_amount', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'web_payment', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'retirement_amount_pen', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'retirement_amount_dol', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'total_calculated', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateTotalCash, format: '0,0.00'},
-            {data: 'total_x_format', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'difference_money', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateDifferenceCash, format: '0,0.00'},
-            {data: 'difference_values', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'num_transacctions', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-            {data: 'hour_by_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'}
-        ],
+        columns: columns,
         afterChange: function(change, source) {
             dailySaleOne.saveDailySales(url_save_data, change, source, $container_daily_sales_totals);
         }

@@ -55,14 +55,14 @@ class DailySaleDao extends CI_Model {
                 ->from('hpl_type_of_sales tys')
                 ->join('hpl_daily_sales_detail dsd', 'tys.id=dsd.type_of_sales_id', 'left');
         $this->db->where('dsd.daily_sales_id', $daily_sale_id);
-        $this->db->or_where('ISNULL(dsd.daily_sales_id )');
+        //$this->db->or_where('ISNULL(dsd.daily_sales_id )');
 
         $query = $this->db->get();
         return ($query->num_rows() > 0 ? $query->result() : null);
     }
 
     public function getDailyOtherSale() {
-        return $this->db->select('id,name, is_other_sales')->from('hpl_type_of_sales')
+    return $this->db->select('id as type_of_sales_id, name, is_other_sales, is_other_sales as other_sale')->from('hpl_type_of_sales')
                         ->where('status', Status::STATUS_ACTIVO)
                         ->where('is_deleted', 0)->get()->result();
     }
