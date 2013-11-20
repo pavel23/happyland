@@ -33,4 +33,19 @@ class Dashboard extends ValidateAccess {
             echo $e;
         }
     }
+    
+    public function DayliSalesBarChart() {
+        $dbl_daily_sales_report     = $this->ReportDao->getDailySalesReport();
+        $a_grant_total_calculate    = array();
+        $a_grand_total_z_format     = array();
+        $a_data_bar_chart           = array();
+        
+        foreach($dbl_daily_sales_report as $dbr_daily_sales_report) {
+            $a_grant_total_calculate[]  = ($dbr_daily_sales_report->grand_total_calculated);
+            $a_grand_total_z_format[]   = ($dbr_daily_sales_report->grand_total_z_format);
+        }
+        $a_data_bar_chart   = array($a_grant_total_calculate, $a_grand_total_z_format);
+        header("Content-type: application/json");
+        echo json_encode($a_data_bar_chart);
+    }
 }

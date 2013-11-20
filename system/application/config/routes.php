@@ -55,6 +55,7 @@ $route['usuarios/agregar.html']                     = 'User/maintenanceUser';
 $route['usuarios/(:num)/modificar.html']            = 'User/maintenanceUser/$1';
 
 $route['index.html']                                = 'Dashboard/index';
+$route['ventas-diarias/datos-grafico-barras.html']  = 'Dashboard/DayliSalesBarChart';
 
 /*
  * Rutas de acceso al modulo de perfiles

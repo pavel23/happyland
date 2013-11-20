@@ -1,4 +1,7 @@
-Pagina por defecto
+<?php
+$data_chart1[]  = array(1,2,3,4,5,6,7,8,9);
+$data_chart1[]  = array(2,4,6,7,10,12,14,16,18);
+?>
 <div class="row">
     <div class="col-lg-8">
 	<div class="box">
@@ -33,6 +36,7 @@ Pagina por defecto
                         <?php }?>
 		    </tbody>
 		</table>
+                <input type="hidden" id="data-chart-url" value="<?php echo site_url('Dashboard/DayliSalesBarChart');?>">
 	    </div>
 	</div>
     </div>
