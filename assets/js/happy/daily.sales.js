@@ -84,7 +84,7 @@ var DailySales = function() {
 
         if (data_params_detail.type_of_sales_id) {
             $(document).data('type_of_sales_id', data_params_detail.type_of_sales_id);
-        }else{
+        } else {
             $(document).data('type_of_sales_id', 1);
         }
 
@@ -109,7 +109,7 @@ var DailySales = function() {
             if (col_index !== 'name' && col_index !== 'cash_number') {
                 var sum_one = getTotals(col_index, $('#daily_sales')) || 0;
                 var sum_two = getTotals(col_index, $('#daily_sales_others')) || 0;
-                instance_total.handsontable('setDataAtCell', 0, column_array[col_index], 'S/. ' + $.number_format((sum_one + sum_two), 2));
+                instance_total.handsontable('setDataAtCell', 0, column_array[col_index], (column_array[col_index] === 13 || column_array[col_index] === 14 ? '' : 'S/. ') + $.number_format((sum_one + sum_two), 2));
 
                 var sum_total_one = getTotals('total_calculated', $('#daily_sales')) || 0;
                 var sum_total_difference_one = getTotals('total_calculated', $('#daily_sales_others')) || 0;
@@ -195,7 +195,7 @@ var sumCalculateTotalCash = function(instance, td, row, col, prop, value, cellPr
         $(td).css({color: '#FF0000'});
     }
 
-    td.innerHTML = sum;
+    td.innerHTML = $.number_format(sum, 2);
 }
 
 var sumCalculateDifferenceCash = function(instance, td, row, col, prop, value, cellProperties) {
@@ -214,7 +214,7 @@ var sumCalculateDifferenceCash = function(instance, td, row, col, prop, value, c
     if (sum < 0) {
         $(td).css({color: '#FF0000'});
     }
-    td.innerHTML = sum;
+    td.innerHTML = $.number_format(sum, 2);
 };
 
 var totalRenderer = function(instance, td, row, col, prop, value, cellProperties) {
@@ -275,8 +275,8 @@ $(function() {
         {data: 'total_x_format', type: 'numeric', allowInvalid: false, format: '0,0.00'},
         {data: 'difference_money', type: 'numeric', allowInvalid: false, readOnly: true, renderer: sumCalculateDifferenceCash, format: '0,0.00'},
         {data: 'difference_values', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-        {data: 'num_transacctions', type: 'numeric', allowInvalid: false, format: '0,0.00'},
-        {data: 'hour_by_cash', type: 'numeric', allowInvalid: false, format: '0,0.00'}
+        {data: 'num_transacctions', type: 'numeric', allowInvalid: false},
+        {data: 'hour_by_cash', type: 'numeric', allowInvalid: false}
     ];
 
 
@@ -328,8 +328,8 @@ $(function() {
             {data: 'grand_total_z_format', type: 'numeric', format: '0,0.00'},
             {data: 'total_difference_money', type: 'numeric', format: '0,0.00'},
             {data: 'total_diferrence_values', type: 'numeric', format: '0,0.00'},
-            {data: 'total_num_transactions', type: 'numeric', format: '0,0.00'},
-            {data: 'total_hours_by_cash', type: 'numeric', format: '0,0.00'}
+            {data: 'total_num_transactions', type: 'numeric'},
+            {data: 'total_hours_by_cash', type: 'numeric'}
         ],
         cells: function(row, col, prop) {
             if (row === 0) {
@@ -390,8 +390,8 @@ $(function() {
             {data: 'total_x_format', type: 'numeric', allowInvalid: true, format: '0,0.00'},
             {data: 'difference_money', type: 'numeric', allowInvalid: true, readOnly: true, renderer: sumCalculateDifferenceCash, format: '0,0.00'},
             {data: 'difference_values', type: 'numeric', allowInvalid: true, format: '0,0.00'},
-            {data: 'num_transacctions', type: 'numeric', allowInvalid: true, format: '0,0.00'},
-            {data: 'hour_by_cash', type: 'numeric', allowInvalid: true, format: '0,0.00'}
+            {data: 'num_transacctions', type: 'numeric', allowInvalid: true},
+            {data: 'hour_by_cash', type: 'numeric', allowInvalid: true}
         ],
         afterChange: function(change, source) {
             dailySaleTwo.saveDailySales(url_save_data, change, source, $container_daily_sales_totals);

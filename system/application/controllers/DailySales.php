@@ -113,8 +113,8 @@ class DailySales extends ValidateAccess {
                 'total_x_format' => ($is_new ? '' : (isset($dbr_daily_sale_detail->total_x_format) ? $dbr_daily_sale_detail->total_x_format : '') ),
                 'difference_money' => ($is_new ? '' : (isset($dbr_daily_sale_detail->difference_money) ? $dbr_daily_sale_detail->difference_money : '') ),
                 'difference_values' => ($is_new ? '' : (isset($dbr_daily_sale_detail->difference_values) ? $dbr_daily_sale_detail->difference_values : '') ),
-                'num_transacctions' => ($is_new ? '' : (isset($dbr_daily_sale_detail->num_transacctions) ? $dbr_daily_sale_detail->num_transacctions : '') ),
-                'hour_by_cash' => ($is_new ? '' : (isset($dbr_daily_sale_detail->hour_by_cash) ? $dbr_daily_sale_detail->hour_by_cash : '') ),);
+                'num_transacctions' =>  ($is_new ? '' : (isset($dbr_daily_sale_detail->num_transacctions) ? intval($dbr_daily_sale_detail->num_transacctions) : '') ),
+                'hour_by_cash' => ($is_new ? '' : (isset($dbr_daily_sale_detail->hour_by_cash) ? intval($dbr_daily_sale_detail->hour_by_cash) : '') ),);
 
             if (!$is_new && isset($dbr_daily_sale_detail->id)) {
                 $data_daily_sale_ids[] = $dbr_daily_sale_detail->type_of_sales_id;
@@ -158,8 +158,8 @@ class DailySales extends ValidateAccess {
             'grand_total_z_format' => (isset($dbr_daily_sale->grand_total_z_format) ? 'S/. ' . number_format($dbr_daily_sale->grand_total_z_format, 2) : ''),
             'total_difference_money' => (isset($dbr_daily_sale->total_difference_money) ? 'S/. ' . number_format($dbr_daily_sale->total_difference_money, 2) : ''),
             'total_diferrence_values' => (isset($dbr_daily_sale->total_diferrence_values) ? 'S/. ' . number_format($dbr_daily_sale->total_diferrence_values, 2) : ''),
-            'total_num_transactions' => (isset($dbr_daily_sale->total_num_transactions) ? 'S/. ' . number_format($dbr_daily_sale->total_num_transactions, 2) : ''),
-            'total_hours_by_cash' => (isset($dbr_daily_sale->total_hours_by_cash) ? 'S/. ' . number_format($dbr_daily_sale->total_hours_by_cash, 2) : '')
+            'total_num_transactions' => (isset($dbr_daily_sale->total_num_transactions) ? intval($dbr_daily_sale->total_num_transactions) : ''),
+            'total_hours_by_cash' => (isset($dbr_daily_sale->total_hours_by_cash) ? intval($dbr_daily_sale->total_hours_by_cash) : '')
         );
 
         $data['dailySale'] = $data_daily_sale;
