@@ -20,11 +20,39 @@ class Profile extends ValidateAccess {
     public function index() {
         try {
             $this->validateAccessByModule();
-            $data['profile_data'] = $this->ProfileDao->getAllProfiles();
-            $this->layout->view('Profile/listProfile', $data);
+            //$data['profile_data'] = $this->ProfileDao->getAllProfiles();
+            $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
+            $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
+            $this->layout->assets(base_url() . 'assets/js/happy/load.table.list.js');
+            //$this->layout->assets(base_url() . 'assets/css/lib/bootstrap.css');
+            $this->layout->assets(base_url() . 'assets/css/data-table.css');
+            $this->layout->view('Profile/listProfile');
         } catch (Exception $e) {
             echo $e;
         }
+    }
+
+    public function getDataTableList() {
+        $dbl_profile = $this->ProfileDao->getAllProfiles();
+        $a_profile_list = array();
+        foreach ($dbl_profile as $dbr_profile) {
+            if($dbr_profile->sys_block){
+                $delete_buttom  = '<div class="btn btn-primary btn-xs disabled" style="cursor:not-allowed"><i class="icon-trash icon-white disabled"></i><span><strong>Eliminar</strong></span></div>';
+            } else {
+                $delete_buttom  = anchor(site_url('Profile/deleteProfile/' . $dbr_profile->id), '<i class="icon-trash icon-white"></i><span><strong>Eliminar</strong></span>', array('class' => 'delete-action btn btn-primary btn-xs'));
+            }
+            $a_profile_list["aaData"][]  = array(
+                                                    $dbr_profile->id, 
+                                                    $dbr_profile->name, 
+                                                    $dbr_profile->description, 
+                                                    Status::getHTMLStatus($dbr_profile->status),
+                                                    anchor(site_url('Profile/maintenanceProfile/' . $dbr_profile->id), '<i class="icon-edit icon-white"></i><span><strong>Editar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
+                                                    . ' ' .
+                                                    $delete_buttom
+                                                );
+        }
+        header("Content-type: application/json");
+        echo json_encode($a_profile_list);
     }
 
     public function maintenanceProfile($profile_id = null) {
@@ -51,7 +79,7 @@ class Profile extends ValidateAccess {
         
         $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
         $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
-        $this->layout->assets(base_url() . 'assets/js/happy/profile.js');
+        $this->layout->assets(base_url() . 'assets/js/happy/profile.edit.js');
         $this->layout->assets(base_url() . 'assets/js/lib/bootbox.min.js');
         $this->layout->view('Profile/maintenanceProfile', $data);
     }
@@ -74,7 +102,7 @@ class Profile extends ValidateAccess {
         if ($this->form_validation->run()) {
             $dbr_profile        = $this->ProfileDao->existProfileId($profile_id);
             $profile_id         = $dbr_profile ? $dbr_profile->id : null;
-            $module_array_ids   = $profile_credentials['modules'];
+            $module_array_ids   = (array_key_exists('modules', $profile_credentials) ? $profile_credentials['modules'] : null);
             $access_permition   = $profile_credentials['access_permition'];
             unset($profile_credentials['modules']);
             unset($profile_credentials['profile_id']);
@@ -203,18 +231,20 @@ class Profile extends ValidateAccess {
         } catch (Exception $e) {
             $response_method['success'] = 0;
             $response_method['message'] = $e->getMessage();
-        }
-        
-        /*
-        $this->session->set_flashdata('message', 'Se guardo el perfil satisfactorimente');
-        redirect('Profile/index');
-        */        
+        }     
     }
 
-    public function deleteProfile($params = array()) {
-        $this->validateAccessByModule();
-        //$this->load->helper('url');
-        redirect('', 'refresh');
+    public function deleteProfile($profile_id) {
+        $dbr_profile = $this->ProfileDao->existProfileId($profile_id);
+        $message  = '';
+        if($dbr_profile){
+            $this->ProfileDao->deleteProfile($profile_id);
+            $message = 'Se elimino el perfil <strong>' . $dbr_profile->name . '</strong>';
+        } else {
+            $message = 'No se encontró el perfil ' . $profile_id;
+        }
+        $this->session->set_flashdata('message', $message);
+        redirect('Profile/index');
     }
 
     public function exportExcel() {
@@ -250,47 +280,5 @@ class Profile extends ValidateAccess {
         // Escribir
         $writer->save('php://output');
         exit;
-    }
-
-    public function testTable() {
-        $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
-        $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
-        $this->layout->assets(base_url() . 'assets/css/lib/bootstrap.css');
-        //$this->layout->assets(base_url() . 'assets/css/data-table.css');
-        $this->layout->view('Profile/testTable');
-    }
-    
-    public function getDataTable() {
-        $dbl_profile = $this->ProfileDao->getAllProfiles();
-        $a_profile_list = array();
-        foreach ($dbl_profile as $dbr_profile) {
-            $a_profile_list["aaData"][]  = array(
-                                                    $dbr_profile->id, 
-                                                    $dbr_profile->name, 
-                                                    $dbr_profile->description, 
-                                                    Status::getHTMLStatus($dbr_profile->status),
-                                                    anchor(site_url('Profile/maintenanceProfile/' . $dbr_profile->id), '<i class="icon-edit icon-white"></i><span><strong>Editar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
-                                                    . ' ' .
-                                                    anchor(site_url('Profile/deleteProfile/' . $dbr_profile->id), '<i class="icon-trash icon-white"></i><span><strong>Eliminar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
-                                                );
-        }
-        header("Content-type: application/json");
-        echo json_encode($a_profile_list);
-    }
-    
-    public function testChart() {
-        $this->layout->assets(base_url() . 'assets/js/dist/jquery.jqplot.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.barRenderer.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.categoryAxisRenderer.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.highlighter.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.cursor.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pointLabels.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pieRenderer.min.js');
-        
-        $this->layout->assets(base_url() . 'assets/js/happy/chart.js');
-        $this->layout->assets(base_url() . 'assets/css/dist/jquery.jqplot.min.css');
-        
-        $this->layout->view('Profile/testChart');
-        
     }
 }

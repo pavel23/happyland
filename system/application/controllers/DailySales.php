@@ -18,6 +18,7 @@ class DailySales extends ValidateAccess {
         $this->load->library(array('session'));
         $this->load->model('ProfileDao');
         $this->load->model('DailySaleDao');
+        $this->load->model('SubsidiaryDao');
         $this->load->helper('url');
     }
 
@@ -26,30 +27,29 @@ class DailySales extends ValidateAccess {
         $this->layout->assets('//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js');
         $this->layout->assets(base_url() . 'assets/js/lib/fullcalendar.min.js');
         $this->layout->assets(base_url() . 'assets/js/daily_sale/list_daily_sales.js');
-        $this->layout->view('daily_sales/list_template');
+        $data['a_subsidiaries'] = $this->SubsidiaryDao->getDropdownSubsidiaries();
+        $this->layout->view('daily_sales/list_template', $data);
     }
 
     public function getDailySaleCalendar() {
         $daily_sale_credentials = $this->input->get();
-        $dblDailyDao = $this->DailySaleDao->getDailySaleCalendar($daily_sale_credentials['start'], $daily_sale_credentials['end']);
+        $subsidiaries_id = (array_key_exists('subsidiaries_id', $daily_sale_credentials) ? $daily_sale_credentials['subsidiaries_id'] : null);
+        $dblDailyDao = $this->DailySaleDao->getDailySaleCalendar($daily_sale_credentials['start'], $daily_sale_credentials['end'], $subsidiaries_id);
         $timestamp = strtotime(Date('Y-m-d'));
-
-        $jsonArray[] = array('title' => "Agregar Venta \n Estado: Abierto", 'start' => Date('Y-m-d', $timestamp), 'className' => 'label label-important', 'url' => site_url('DailySales/maintenanceForm/'));
+        $jsonArray[] = array('title' => "Agregar Venta \n Estado: Abierto", 'start' => Date('Y-m-d', $timestamp), 'className' => 'label label-important', 'url' => site_url('DailySales/maintenanceForm/') . ($subsidiaries_id ? '?sd_id=' . $subsidiaries_id : ''));
 
         foreach ($dblDailyDao as $dbrDailyDao) {
-
             $jsonArray[] = array(
                 'title' => "Venta del Día \n S/ " . $dbrDailyDao->grand_total_calculated . "\n Estado: " . Status::$statuses[$dbrDailyDao->status],
                 'start' => $dbrDailyDao->date_sale,
                 'className' => 'label ' . ($dbrDailyDao->status == Status::STATUS_ABIERTO ? 'label-info' : 'label-success'),
-                'url' => site_url('DailySales/maintenanceForm/' . $dbrDailyDao->id)
+                'url' => site_url('DailySales/maintenanceForm/' . $dbrDailyDao->id) . ($subsidiaries_id ? '?sd_id=' . $subsidiaries_id : '')
             );
 
             if ($timestamp == strtotime($dbrDailyDao->date_sale)) {
                 unset($jsonArray[0]);
             }
         }
-
         $jsonArray = array_values($jsonArray);
 
         echo json_encode($jsonArray);
@@ -61,14 +61,15 @@ class DailySales extends ValidateAccess {
         $this->layout->assets(base_url() . 'assets/js/lib/jquery.ajaxQueue.min.js');
         $this->layout->assets(base_url() . 'assets/js/dist/jquery.handsontable.full.js');
         $this->layout->assets(base_url() . 'assets/js/happy/daily.sales.js');
-
+        
         $is_new = true;
         $dbr_daily_sale = null;
         $dbl_daily_sales_detail = null;
         $daily_sale_id = ($daily_sale_id ? (int) $daily_sale_id : 0);
+        $subsidiaries_id = ($this->input->get('sd_id') ? $this->input->get('sd_id') : null);
 
         if ($daily_sale_id > 0) {
-            $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id);
+            $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id, $subsidiaries_id);
             $is_new = ($dbr_daily_sale ? false : true);
         }
 
@@ -80,7 +81,7 @@ class DailySales extends ValidateAccess {
             $dbl_daily_sales_detail = array_merge($dbl_daily_sales_detail, $dbl_daily_sales_detail_two);
         } else {
 
-            $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale();
+            $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale('',$subsidiaries_id);
 
             if ($dbr_daily_sale_current) {
                 $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día1');
@@ -163,25 +164,26 @@ class DailySales extends ValidateAccess {
         );
 
         $data['dailySale'] = $data_daily_sale;
+        $data['subsidiaries_id'] = $subsidiaries_id;
 
         $this->layout->view('daily_sales/maintenance_template', $data);
     }
 
     public function closeDailySale($daily_sale_id) {
-
+        $subsidiaries_id = ($this->input->get('sd_id') ? $this->input->get('sd_id') : null);
         if (!$daily_sale_id) {
             $this->session->set_flashdata('message_danger', 'No tiene registrada ninguna venta');
             redirect('DailySales/index');
         }
 
-        $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id);
+        $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id, $subsidiaries_id);
 
         if (!$dbr_daily_sale) {
             $this->session->set_flashdata('message_danger', 'No tiene registrada ninguna venta');
             redirect('DailySales/index');
         }
 
-        $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale();
+        $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale(null, $subsidiaries_id);
 
         if ($dbr_daily_sale_current && $dbr_daily_sale_current->id == $dbr_daily_sale->id && $dbr_daily_sale->status == Status::STATUS_CERRADO) {
             $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día2');
@@ -195,6 +197,36 @@ class DailySales extends ValidateAccess {
         }
 
         $this->DailySaleDao->saveDailySale(array('status' => Status::STATUS_CERRADO), $dbr_daily_sale->id);
+        $this->session->set_flashdata('message_success', 'Venta Registrada Satisfactoriamente');
+        redirect('DailySales/index');
+    }
+
+    public function openDailySale($daily_sale_id) {
+        echo $subsidiaries_id = ($this->input->get('sd_id') ? $this->input->get('sd_id') : null);
+        
+        if (!$daily_sale_id) {
+            $this->session->set_flashdata('message_danger', 'No tiene registrada ninguna venta');
+            redirect('DailySales/index');
+        }
+        $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id, $subsidiaries_id);
+
+        if (!$dbr_daily_sale) {
+            $this->session->set_flashdata('message_danger', 'No tiene registrada ninguna venta');
+            redirect('DailySales/index');
+        }
+        $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale(null, $subsidiaries_id);
+        if ($dbr_daily_sale_current && $dbr_daily_sale_current->id == $dbr_daily_sale->id && $dbr_daily_sale->status == Status::STATUS_ABIERTO) {
+            $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día');
+            redirect('DailySales/index');
+        }
+        unset($dbr_daily_sale_current);
+
+        if ($dbr_daily_sale->status == Status::STATUS_ABIERTO) {
+            $this->session->set_flashdata('message_danger', 'Esta venta ya se encuentra registrado en estado ' . Status::getStatusLabel(Status::STATUS_ABIERTO));
+            redirect('DailySales/index');
+        }
+
+        $this->DailySaleDao->saveDailySale(array('status' => Status::STATUS_ABIERTO), $dbr_daily_sale->id);
         $this->session->set_flashdata('message_success', 'Venta Registrada Satisfactoriamente');
         redirect('DailySales/index');
     }

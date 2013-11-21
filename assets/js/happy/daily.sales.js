@@ -46,13 +46,11 @@ var DailySales = function() {
     }
 
     function getTotals(column, instance_current) {
-
         var $column = instance_current.data('handsontable').getDataAtProp(column), sum = $column.reduce(function(a, b) {
             a = parseFloat(a || 0);
             b = parseFloat(b || 0);
             return a + b;
         });
-
         return sum;
     }
 
@@ -89,7 +87,6 @@ var DailySales = function() {
         }
 
         if (parseFloat(old_value) !== parseFloat(new_value)) {
-
             if (col_index === 'name' && _user_map_ids) {
                 for (var i = 0; i < _user_map_ids.length; i++) {
                     if (_user_map_ids[i].full_name === new_value) {
@@ -99,9 +96,7 @@ var DailySales = function() {
                     }
                 }
             }
-
             data_params = {daily_sale_id: daily_sale_id, daily_sale_detail_id: daily_sale_detail_id, operator_id: $trow.data('operator_id'), data: data_params_detail};
-
             data_params.data.total_calculated = parseFloat(_instance.handsontable('getCell', row_index, 9).innerHTML);
             data_params.data.difference_money = parseFloat(_instance.handsontable('getCell', row_index, 11).innerHTML);
             data_params.data.type_of_sales_id = $(document).data('type_of_sales_id');
@@ -123,21 +118,17 @@ var DailySales = function() {
                 data_params.data_headers[a_header_totals[column_array[col_index]]] = sum_one + sum_two;
                 data_params.data_headers[a_header_totals[9]] = sum_total_one + sum_total_difference_one;
                 data_params.data_headers[a_header_totals[11]] = sum_total_two + sum_total_difference_two;
-
             }
-
             $.ajaxQueue({
                 url: url_save_data,
                 dataType: 'json',
                 type: 'POST',
                 data: data_params
             }).done(function(response) {
-
                 JSONsaveResponse = response;
                 if (JSONsaveResponse.daily_sale_detail_id > 0 && daily_sale_detail_id === 0) {
                     $trow.data('daily_sale_detail_id', JSONsaveResponse.daily_sale_detail_id);
                 }
-
                 if (JSONsaveResponse.daily_sale_id > 0 && daily_sale_id === 0) {
                     $(document).data('daily_sale_id', JSONsaveResponse.daily_sale_id);
                 }
@@ -145,11 +136,9 @@ var DailySales = function() {
                 if (JSONsaveResponse.url_close_daily_sale && !$('#save_daily_sales').attr('href')) {
                     $('#save_daily_sales').attr('href', JSONsaveResponse.url_close_daily_sale);
                 }
-
             });
         }
     }
-
     return {
         setUserMapIds: setUserMapIds,
         setInstance: setInstance,
@@ -181,7 +170,6 @@ var sumRowsTotalCash = function(instance, row) {
 var sumCalculateTotalCash = function(instance, td, row, col, prop, value, cellProperties) {
     Handsontable.TextCell.renderer.apply(this, arguments);
     var sum = 0;
-
 
     $(td).css({
         background: '#9DEDF3',

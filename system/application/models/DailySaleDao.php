@@ -19,32 +19,31 @@ class DailySaleDao extends CI_Model {
         $this->loggedin = $this->session->userdata('loggedin');
     }
 
-    public function getDailySaleById($daily_sale_id) {
-
+    public function getDailySaleById($daily_sale_id, $subsidiaries_id=null) {
+        $subsidiaries_id    = ($subsidiaries_id ? $subsidiaries_id : $this->loggedin['subsidiaries']);
         return $this->db->select('id, status, date_sale,total_opening_cash, total_closing_cash, total_master_card, total_visa_card, total_web_payment ,total_retirement_pen, total_retirementl_dol, grand_total_calculated, grand_total_z_format, total_difference_money, total_diferrence_values, total_num_transactions, total_hours_by_cash')
                         ->from('hpl_daily_sales')
                         ->where('id', $daily_sale_id)
-                        ->where('subsidiaries_id', $this->loggedin['subsidiaries'])->get()->row();
+                        ->where('subsidiaries_id', $subsidiaries_id)->get()->row();
     }
 
-    public function getDailySaleByDateSale($date_sale = null) {
-
+    public function getDailySaleByDateSale($date_sale = null, $subsidiaries_id=null) {
+        $subsidiaries_id    = ($subsidiaries_id ? $subsidiaries_id : $this->loggedin['subsidiaries']);
         $timestamp = strtotime(($date_sale ? $date_sale : Date('Y-m-d')));
-
         return $this->db->select('id, date_sale')
                         ->from('hpl_daily_sales')
                         ->where('UNIX_TIMESTAMP(date_sale)', $timestamp)
-                        ->where('subsidiaries_id', $this->loggedin['subsidiaries'])->get()->row();
+                        ->where('subsidiaries_id', $subsidiaries_id)->get()->row();
     }
 
-    public function getDailySaleCalendar($star, $end) {
+    public function getDailySaleCalendar($star, $end, $subsidiaries_id=null) {
 
         $sql = 'SELECT id, grand_total_calculated, status, date_sale 
                 FROM hpl_daily_sales 
                 WHERE date_sale >= FROM_UNIXTIME(?, "%Y-%m-%d") AND date_sale <= FROM_UNIXTIME(?, "%Y-%m-%d")
                 AND subsidiaries_id = ?';
-
-        $query = $this->db->query($sql, array($star, $end, $this->loggedin['subsidiaries']));
+        $subsidiaries_id    = ($subsidiaries_id ? $subsidiaries_id : $this->loggedin['subsidiaries']);
+        $query = $this->db->query($sql, array($star, $end, $subsidiaries_id));
 
         return ($query->num_rows() > 0 ? $query->result() : array());
     }

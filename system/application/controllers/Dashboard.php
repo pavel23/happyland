@@ -7,6 +7,7 @@ class Dashboard extends ValidateAccess {
     public function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->load->model('SubsidiaryDao');
         $this->load->model('ReportDao');
         $this->load->library(array('form_validation', 'session'));
         $this->load->helper(array('form', 'url'));
@@ -23,10 +24,9 @@ class Dashboard extends ValidateAccess {
             $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.cursor.min.js');
             $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pointLabels.min.js');
             $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pieRenderer.min.js');
-
             $this->layout->assets(base_url() . 'assets/js/happy/chart.js');
             $this->layout->assets(base_url() . 'assets/css/dist/jquery.jqplot.min.css');
-
+            $data['a_subsidiaries']         = $this->SubsidiaryDao->getDropdownSubsidiaries();
             $data['dbl_daily_sales_report'] = $this->ReportDao->getDailySalesReport();
             $this->layout->view('Dashboard/defaultPage', $data);
         } catch (Exception $e) {
@@ -35,16 +35,19 @@ class Dashboard extends ValidateAccess {
     }
     
     public function DayliSalesBarChart() {
-        $dbl_daily_sales_report     = $this->ReportDao->getDailySalesReport();
+        $dbl_daily_sales_report     = $this->ReportDao->getDailySalesReport($a_subsidiaries_id=array(10));
         $a_grant_total_calculate    = array();
         $a_grand_total_z_format     = array();
+        $a_date_label               = array();
         $a_data_bar_chart           = array();
         
         foreach($dbl_daily_sales_report as $dbr_daily_sales_report) {
             $a_grant_total_calculate[]  = ($dbr_daily_sales_report->grand_total_calculated);
             $a_grand_total_z_format[]   = ($dbr_daily_sales_report->grand_total_z_format);
+            $a_date_label[]             = $dbr_daily_sales_report->month_sale;
         }
-        $a_data_bar_chart   = array($a_grant_total_calculate, $a_grand_total_z_format);
+        $a_data_bar_chart['data_bar_chart'] = array($a_grant_total_calculate, $a_grand_total_z_format);
+        $a_data_bar_chart['data_labels']    = $a_date_label;
         header("Content-type: application/json");
         echo json_encode($a_data_bar_chart);
     }

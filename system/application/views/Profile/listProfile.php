@@ -10,38 +10,22 @@
                 </div>
             </header>
             <div class="body">
+                <?php if ($this->session->flashdata('message')) : ?>
+                    <div class="alert alert-success">
+                        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->session->flashdata('message') ?>
+                    </div>
+                <?php endif; ?>
+                <input type="hidden" id="url-load-data" value="<?php echo site_url('Profile/getDataTableList');?>">
                 <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Descripción</th>
-                            <th>Estado</th>
+                            <th><div align="center">Estado</div></th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-
-                        <?php foreach ($profile_data as $profile): ?>
-                            <tr>
-                                <td><?php echo $profile->id; ?></td>
-                                <td><?php echo $profile->name; ?></td>
-                                <td><?php echo $profile->description; ?></td>
-                                <td><?php echo Status::$statuses[$profile->status]; ?></td>
-                                <td>                                  
-                                    <a href="<?php echo site_url('Profile/maintenanceProfile/' . $profile->id); ?>" class="btn btn-primary btn-xs">
-                                        <i class="icon-edit icon-white"></i>
-                                        <span><strong>Editar</strong></span>       
-                                    </a> 	
-
-                                    <a href="<?php echo site_url('Profile/deleteProfile/' . $profile->id); ?>" class="btn btn-primary btn-xs">
-                                        <i class="icon-trash icon-white"></i>
-                                        <span><strong>Eliminar</strong></span>        	
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
                 </table>                
             </div>
         </div>

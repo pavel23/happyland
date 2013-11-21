@@ -14,40 +14,20 @@
                         <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->session->flashdata('message') ?>
                     </div>
                 <?php endif; ?>
+                <input type="hidden" id="url-load-data" value="<?php echo site_url('User/getDataTableList');?>">
                 <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
                     <thead>
                         <tr>
+                            <th>ID</th>
+                            <th>DNI</th>
                             <th>Nombre y apeliidos</th>
                             <th>Local</th>
                             <th>Perfil</th>
-                            <th>Estado</th>
+                            <th><div align="center">Estado</div></th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($dbr_users as $dbr_user): ?>
-                            <tr>
-                                <td><?php echo $dbr_user->full_name; ?></td>
-                                <td><?php echo $dbr_user->subsidiarie_name; ?></td>
-                                <td><?php echo $dbr_user->profile_name; ?></td>
-                                <td><?php echo Status::$statuses[$dbr_user->status]; ?></td>
-                                <td>                                  
-                                    <a href="<?php echo site_url('User/maintenanceUser/' . $dbr_user->id); ?>" class="btn btn-primary btn-xs">
-                                        <i class="icon-edit icon-white"></i>
-                                        <span><strong>Editar</strong></span>       
-                                    </a> 	
-
-                                    <a href="#" class="btn btn-primary btn-xs">
-                                        <i class="icon-trash icon-white"></i>
-                                        <span><strong>Eliminar</strong></span>        	
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
                 </table> 
-                
-                <div id="pagination"><?php echo $pagination; ?></div>	
             </div>
         </div>
     </div>

@@ -20,19 +20,27 @@ class ProfileDao extends CI_Model {
     }
     
     public function existProfileId($profile_id) {
-        $this->db->select('id');
+        $this->db->select('id, name');
         $this->db->where('id', $profile_id);
         $query = $this->db->get('hpl_profile');
         return ($query->num_rows() == 1 ? $query->row() : null);
     }
     
     public function saveProfile($data, $profile_id = null) {
-
         if ($profile_id) {
             $this->db->where('id', $profile_id);
             $this->db->update('hpl_profile', $data);
         } else {
             $this->db->insert('hpl_profile', $data);
+        }
+    }
+    
+    public function deleteProfile($profile_id = null) {
+        if ($profile_id) {
+            $data['is_deleted'] = 1;
+            $this->db->where('id', $profile_id);
+            $this->db->where('sys_block', 0);
+            $this->db->update('hpl_profile', $data);
         }
     }
 

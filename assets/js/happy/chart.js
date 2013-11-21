@@ -9,24 +9,24 @@ $(document).ready(function () {
             ret = data;
           }
         });
-        return ret;
+        return ret.data_bar_chart;
       };
 
     var jsonurl = $('#data-chart-url').val();
-    var ticks = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'];
+    var ticks = ['Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'];
 
     plot2 = $.jqplot('dayliSaleBudget', jsonurl, {
         animate: true,
         animateReplot: true,
         dataRenderer: ajaxDataRenderer,
-            dataRendererOptions: {
-              unusedOptionalUrl: jsonurl
+        dataRendererOptions: {
+            unusedOptionalUrl: jsonurl
         },
         cursor: {
             show: false,
             zoom: false,
             looseZoom: false,
-            showTooltip: true
+            showTooltip: false
         },
         legend: {
             show: true,
@@ -37,10 +37,17 @@ $(document).ready(function () {
             renderer:$.jqplot.BarRenderer,
             pointLabels: { show: true }
         },
+        series:[
+            {label:'Venta Real'},
+            {label:'Venta Presupuestada'}
+        ],
         axes: {
             xaxis: {
                 renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: ticks
+                ticks: ticks//ajaxDataRenderer.data_labels//
+            },
+            yaxis: {
+                tickOptions: {formatString: 'S/. %d'}
             }
         },
         rendererOptions: {

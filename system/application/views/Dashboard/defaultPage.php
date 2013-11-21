@@ -1,20 +1,28 @@
-<?php
-$data_chart1[]  = array(1,2,3,4,5,6,7,8,9);
-$data_chart1[]  = array(2,4,6,7,10,12,14,16,18);
-?>
 <div class="row">
-    <div class="col-lg-8">
-	<div class="box">
+    <div class="col-lg-12">
+        <div class="box success">
 	    <header>
-		<h5>Venta Diaria Real VS Valor Presupuestado</h5>
+		<h5>Estas viendo información de:</h5>
+                <?php echo form_dropdown('list_subsidiaries_id', $a_subsidiaries, '', 'id="list_subsidiaries_id" class="form-control autotab"'); ?>
+	    </header>
+	</div>
+	<div class="box inverse">
+	    <header>
+		<div class="icons"><i class="icon-th"></i></div>
+                <h5>Venta Diaria Real VS Valor Presupuestado</h5>
 	    </header>
             <div class="body">
                 <div id="dayliSaleBudget"></div>
             </div>
 	</div>
     </div>
+    
     <div class="col-lg-4">
-	<div class="box">
+	<div class="box inverse">
+            <header>
+		<div class="icons"><i class="icon-th"></i></div>
+                <h5>Datos x Mes</h5>
+	    </header>
 	    <div class="body">
 		<table class="table table-condensed table-hovered sortableTable">
 		    <thead>
@@ -40,10 +48,11 @@ $data_chart1[]  = array(2,4,6,7,10,12,14,16,18);
 	    </div>
 	</div>
     </div>
-    <div class="col-lg-8">
-	<div class="box">
+    <div class="col-lg-4">
+	<div class="box inverse">
 	    <header>
-		<h5>Detalle de Venta Diaria</h5>
+		<div class="icons"><i class="icon-th"></i></div>
+                <h5>Detalle de Venta Diaria</h5>
 	    </header>
             <div class="body">
                 <div id="chart2"></div>

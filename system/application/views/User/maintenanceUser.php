@@ -40,6 +40,23 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                         <?php echo form_error('formuser[first_name]') ?>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <?php echo form_label('Contraseña', 'formuser_password', array('class' => 'control-label col-lg-4')) ?>
+                    <div class="col-lg-4">
+                        <?php echo form_password(array('name' => 'formuser[password]', 'id' => 'formuser_password', 'type' => 'text', 'placeholder' => 'Contraseña', 'autofocus' => 'autofocus', 'class' => 'form-control')) ?>
+                        <?php echo form_error('formuser[password]') ?>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <?php echo form_label('Confirmar Contraseña', 'formuser_password_confirm', array('class' => 'control-label col-lg-4')) ?>
+                    <div class="col-lg-4">
+                        <?php echo form_password(array('name' => 'formuser[password_confirm]', 'id' => 'formuser_password_confirm', 'type' => 'text', 'placeholder' => 'Confirmar Contraseña', 'autofocus' => 'autofocus', 'class' => 'form-control')) ?>
+                        <?php echo form_error('formuser[password_confirm]') ?>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <?php echo form_label('Correo', 'formuser_email_address', array('class' => 'control-label col-lg-4')) ?>
                     <div class="col-lg-4">
@@ -54,10 +71,18 @@ $finish_date = date("d-m-Y", strtotime("$start_date +3 month"));
                         <?php echo form_dropdown('formuser[subsidiaries_id]', $dbr_subsidiaries, array(), 'class="form-control autotab"') ?>
                     </div>
                 </div>
+                
                 <div class="row form-group">
                     <?php echo form_label('Perfil de Acceso', 'formuser_profile_id', array('class' => 'control-label col-lg-4')) ?>
                     <div class="col-lg-4">
-                        <?php echo form_dropdown('formuser[profile_id]', $dbr_profiles, array(), 'class="form-control autotab"') ?>
+                        <?php echo form_dropdown('formuser[profile_id]', $dbr_profiles, $dbr_user ? $dbr_user->profile_id : null, 'class="form-control autotab"') ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Estado</label>
+                    <div class="col-lg-4">
+                        <?php echo form_dropdown('formprofile[status]', $a_status, $dbr_user ? $dbr_user->status : null, 'class="form-control autotab"') ?>
                     </div>
                 </div>
 

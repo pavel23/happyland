@@ -8,13 +8,18 @@
 class UserDao extends CI_Model {
 
     //put your code here
-    public function getAllUsers($pagination, $segment) {
+    public function getAllUsers($pagination=null, $segment=null) {
 
         $this->db->select('u.id, u.num_doc, u.full_name, u.status, p.id as profile_id, p.name as profile_name, s.id as subsidiarie_id, s.name as subsidiarie_name');
         $this->db->from('hpl_user u');
         $this->db->join('hpl_profile p', 'u.profile_id = p.id');
         $this->db->join('hpl_subsidiaries s', 'u.subsidiaries_id = s.id');
-        $this->db->limit($pagination, $segment);
+        $this->db->where('u.is_deleted',0);
+        $this->db->where('p.is_deleted',0);
+        $this->db->where('s.is_deleted',0);
+        if(intval($pagination)>0 && strlen(trim($segment))>0) {
+            $this->db->limit($pagination, $segment);
+        }
         $query = $this->db->get();
 
         return $query->result();
@@ -45,6 +50,14 @@ class UserDao extends CI_Model {
             $this->db->update('hpl_user', $data);
         } else {
             $this->db->insert('hpl_user', $data);
+        }
+    }
+
+    public function deleteUser($user_id = null) {
+        if ($user_id) {
+            $data['is_deleted'] = 1;
+            $this->db->where('id', $user_id);
+            $this->db->update('hpl_user', $data);
         }
     }
 

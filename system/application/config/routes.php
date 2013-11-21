@@ -50,9 +50,10 @@ $route['login.html']                    = 'Login/index';
  */
 //$route['usuarios/page/(:num)/listar.html']               = 'User/index';
 $route['usuarios/listar.html']                      = 'User/index';
-$route['user/page/(:num)'] = "user/index";
 $route['usuarios/agregar.html']                     = 'User/maintenanceUser';
 $route['usuarios/(:num)/modificar.html']            = 'User/maintenanceUser/$1';
+$route['usuarios/(:num)/eliminar.html']            = 'User/deleteUser/$1';
+$route['usuarios/cargar-datos-tabla.html']          = 'User/getDataTableList';
 
 $route['index.html']                                = 'Dashboard/index';
 $route['ventas-diarias/datos-grafico-barras.html']  = 'Dashboard/DayliSalesBarChart';
@@ -65,8 +66,7 @@ $route['perfil/agregar.html']                       = 'Profile/maintenanceProfil
 $route['perfil/(:num)/modificar.html']              = 'Profile/maintenanceProfile/$1';
 $route['perfil/(:num)/eliminar.html']               = 'Profile/deleteProfile/$1';
 $route['perfil/exportar-excel.html']                = 'Profile/exportExcel';
-$route['perfil/cargar-datos-tabla.html']            = 'Profile/getDataTable';
-
+$route['perfil/cargar-datos-tabla.html']            = 'Profile/getDataTableList';
 $route['perfil/(:num)/permisos-por-modulo.html']    = 'Profile/getModalPermission/$1';
 $route['perfil/guardar-permisos-por-modulo.html']   = 'Profile/saveModalPermission';
 
@@ -78,6 +78,7 @@ $route['venta-diaria/registrar.html']               = 'DailySales/maintenanceFor
 $route['venta-diaria/(:num)/modificar.html']        = 'DailySales/maintenanceForm/$1';
 $route['venta-diaria/procesar-datos.html']          = 'DailySales/processForm';
 $route['venta-diaria/(:num)/cerrar-venta-diaria.html']  = 'DailySales/closeDailySale/$1';
+$route['venta-diaria/(:num)/abrir-venta-diaria.html']  = 'DailySales/openDailySale/$1';
 
 $route['venta-diaria/lista-operarios.html']         = 'DailySales/getJSONOperators';
 $route['venta-diaria/otras-ventas-diarias.html']    = 'DailySales/getJSONDailySaleOthers';

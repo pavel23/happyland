@@ -1,5 +1,5 @@
 @charset "utf-8";
-#data-table{width:960px;height:auto}
+#data-table{width:960px; height:auto}
 #data-table .content-table{border: 1px solid #ddd;border-top:3px solid #ddd;margin-top:5px;padding:2px;width:954px}
 #data-table .columns, #data-table .row{width:954px}
 #data-table .columns{margin:0 3px;/* background: #474747; padding-top: 5px; padding-bottom: 5px;*/}
