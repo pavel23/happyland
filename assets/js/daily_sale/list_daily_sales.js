@@ -63,9 +63,9 @@ $(function() {
             ],
             monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
             buttonText: {
-                prev: '&lt; Mes Anterior ',
+                prev: '&lt; Anterior',
                 next: 'Siguiente &gt;',
-                today: 'Actual'
+                today: 'Mes Actual'
             },
 
             eventSources: [
