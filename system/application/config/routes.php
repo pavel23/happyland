@@ -38,12 +38,15 @@
 |
 */
 
-$route['default_controller']            = 'Login';
+$route['default_controller']            = 'login';
 
 /*
  * Rutas de acceso al modulo de login
  */
 $route['login.html']                    = 'Login/index';
+$route['autenticacion.html']            = 'Login/authentication';
+$route['verificar_usuario.html']        = 'Login/verifyUser';
+$route['recuperar_contrasenia.html']    = 'Login/recovering';
 
 /*
  * Rutas de acceso al modulo de perfiles
@@ -54,6 +57,7 @@ $route['usuarios/agregar.html']                     = 'User/maintenanceUser';
 $route['usuarios/(:num)/modificar.html']            = 'User/maintenanceUser/$1';
 $route['usuarios/(:num)/eliminar.html']            = 'User/deleteUser/$1';
 $route['usuarios/cargar-datos-tabla.html']          = 'User/getDataTableList';
+$route['usuarios/cambiar_contrasenia.html']          = 'User/changePassword';
 
 $route['index.html']                                = 'Dashboard/index';
 $route['ventas-diarias/datos-grafico-barras.html']  = 'Dashboard/DayliSalesBarChart';

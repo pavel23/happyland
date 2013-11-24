@@ -2,7 +2,7 @@ body {
     padding-top: 40px;
     padding-bottom: 40px;
     /*background: url("../images/pattern/black_paper.png") repeat #444;*/
-    background-color: #ffff;//#5295ce;
+    background-color: #FFFFFF; 
 }
 
 .form-signin {
@@ -10,6 +10,9 @@ body {
     padding: 15px;
     margin: 0 auto;
     border: solid 1px #CECECE;
+}
+.form-signin.form-recover{
+    max-width: 500px;
 }
 p.text-muted{
     color: #27588F;
@@ -59,4 +62,7 @@ p.text-muted, a.text-muted{
 
 .form-signin .has-error{
   color: #b94a48;
+}
+.view-recover{
+    display: none;
 }
