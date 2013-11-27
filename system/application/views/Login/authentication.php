@@ -4,8 +4,6 @@ if ($this->session->flashdata('message_recovering')) {
     $is_login = false;
 }
 
-var_dump($is_login);
-var_dump($this->session->flashdata('message_recovering'));
 ?>
 
 <div class="text-center">
