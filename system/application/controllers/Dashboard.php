@@ -17,15 +17,19 @@ class Dashboard extends ValidateAccess {
     
     public function index() {
         try {
-            $this->layout->assets(base_url() . 'assets/js/dist/jquery.jqplot.min.js');
+            $this->layout->assets(base_url() . 'assets/js/dist/jquery.highcharts.js');
+            $this->layout->assets(base_url() . 'assets/js/happy/chart.js');
+            //$this->layout->assets(base_url() . 'assets/js/dist/standalone-framework.js');
+            /*
             $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.barRenderer.min.js');
-            $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.categoryAxisRenderer.min.js');
             $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.highlighter.min.js');
             $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.cursor.min.js');
             $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pointLabels.min.js');
-            $this->layout->assets(base_url() . 'assets/js/dist/jqplot/jqplot.pieRenderer.min.js');
-            $this->layout->assets(base_url() . 'assets/js/happy/chart.js');
+           
             $this->layout->assets(base_url() . 'assets/css/dist/jquery.jqplot.min.css');
+            $this->layout->assets(base_url() . 'assets/css/dist/shCoreDefault.min.css');
+            */
+            
             $data['a_subsidiaries']         = $this->SubsidiaryDao->getDropdownSubsidiaries();
             $data['dbl_daily_sales_report'] = $this->ReportDao->getDailySalesReport();
             $this->layout->view('Dashboard/defaultPage', $data);

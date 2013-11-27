@@ -6,7 +6,6 @@
             </div>
         <?php endif; ?> 
     </div>
-
     <div class="col-lg-12">
         <div class="box success">
             <header>
@@ -14,6 +13,9 @@
                 <?php echo form_dropdown('list_subsidiaries_id', $a_subsidiaries, '', 'id="list_subsidiaries_id" class="form-control autotab"'); ?>
             </header>
         </div>
+    </div>
+
+    <div class="col-lg-8">
         <div class="box inverse">
             <header>
                 <div class="icons"><i class="icon-th"></i></div>
@@ -27,6 +29,7 @@
 
     <div class="col-lg-4">
         <div class="box inverse">
+
             <header>
                 <div class="icons"><i class="icon-th"></i></div>
                 <h5>Datos x Mes</h5>
