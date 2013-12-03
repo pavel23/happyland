@@ -35,6 +35,20 @@
                 <h5>Datos x Mes</h5>
             </header>
             <div class="body">
+                <div id="gauge_chart"></div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="col-lg-4">
+        <div class="box inverse">
+
+            <header>
+                <div class="icons"><i class="icon-th"></i></div>
+                <h5>Datos x Mes</h5>
+            </header>
+            <div class="body">
                 <table class="table table-condensed table-hovered sortableTable">
                     <thead>
                         <tr>
@@ -56,18 +70,6 @@
                     </tbody>
                 </table>
                 <input type="hidden" id="data-chart-url" value="<?php echo site_url('Dashboard/DayliSalesBarChart'); ?>">
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="box inverse">
-            <header>
-                <div class="icons"><i class="icon-th"></i></div>
-                <h5>Detalle de Venta Diaria</h5>
-            </header>
-            <div class="body">
-                <div id="chart2"></div>
-                <div id="resizable1"></div>
             </div>
         </div>
     </div>

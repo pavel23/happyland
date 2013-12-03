@@ -64,5 +64,14 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
+
+$db['game_system']['hostname'] = "Driver=Adaptive Server Anywhere 7.0;ENG=your_server_sybase  ;UID=youruser;PWD=yourpswrd;DBN='';LINKS=TCPIP(HOST=gs_rpc:9000)";
+$db['game_system']['username'] = 'HAPPY';//
+$db['game_system']['password'] = 'land';
+$db['game_system']['database'] = '';
+$db['game_system']['dbdriver'] = "odbc";
+
+   
+    
 /* End of file database.php */
 /* Location: ./application/config/database.php */

@@ -8,6 +8,8 @@ class Profile extends ValidateAccess {
     public function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->db_backend = $this->load->database('game_system', TRUE);
+        
         $this->load->model('ProfileDao');
         $this->load->model('ModuleDao');
         $this->load->model('ModuleProfileAccessDao');
@@ -20,11 +22,9 @@ class Profile extends ValidateAccess {
     public function index() {
         try {
             $this->validateAccessByModule();
-            //$data['profile_data'] = $this->ProfileDao->getAllProfiles();
             $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
             $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
             $this->layout->assets(base_url() . 'assets/js/happy/load.table.list.js');
-            //$this->layout->assets(base_url() . 'assets/css/lib/bootstrap.css');
             $this->layout->assets(base_url() . 'assets/css/data-table.css');
             $this->layout->view('Profile/listProfile');
         } catch (Exception $e) {
@@ -42,11 +42,11 @@ class Profile extends ValidateAccess {
                 $delete_buttom  = anchor(site_url('Profile/deleteProfile/' . $dbr_profile->id), '<i class="icon-trash icon-white"></i><span><strong>Eliminar</strong></span>', array('class' => 'delete-action btn btn-primary btn-xs'));
             }
             $a_profile_list["aaData"][]  = array(
-                                                    $dbr_profile->id, 
-                                                    $dbr_profile->name, 
-                                                    $dbr_profile->description, 
-                                                    Status::getHTMLStatus($dbr_profile->status),
-                                                    anchor(site_url('Profile/maintenanceProfile/' . $dbr_profile->id), '<i class="icon-edit icon-white"></i><span><strong>Editar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
+                                                    'id' => $dbr_profile->id, 
+                                                    'name' => $dbr_profile->name, 
+                                                    'description' => $dbr_profile->description, 
+                                                    'status' => Status::getHTMLStatus($dbr_profile->status),
+                                                    'edit_btn' => anchor(site_url('Profile/maintenanceProfile/' . $dbr_profile->id), '<i class="icon-edit icon-white"></i><span><strong>Editar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
                                                     . ' ' .
                                                     $delete_buttom
                                                 );

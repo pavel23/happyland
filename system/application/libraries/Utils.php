@@ -1405,6 +1405,12 @@ class Utils
     {
       return array('1' => 'Enero', '2' => 'Febrero', '3' => 'Marzo', '4' => 'Abril', '5' => 'Mayo', '6' => 'Junio', '7' => 'Julio', '8' => 'Agosto', '9' => 'Setiembre', '10' => 'Octubre', '11' => 'Noviembre', '12' => 'Diciembre');
     }
+    
+    public static function getMonthsName($month_number=null, $short_text=false) {
+        $a_months = self::getMonths();
+        $s_month_name = ($short_text ? substr($a_months[$month_number], 0, 3) : $a_months[$month_number]);
+        return $s_month_name;
+    }
 
     public static function getYears()
     {

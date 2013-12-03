@@ -1,78 +1,203 @@
 $(document).ready(function() {
+    var jsonurl = $('#data-chart-url').val();
     $('#list_subsidiaries_id').on('change', function() {
-        $('#dayliSaleBudget').highcharts({
-            chart: {
-                zoomType: 'xy'
-            },
-            title: {
-                text: 'Presupuesto Vs Venta Real'
-            },
-            /*subtitle: {
-                text: 'Source: WorldClimate.com'
-            },*/
-            xAxis: [{
-                    categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
-                }],
-            yAxis: [{// Primary yAxis
-                    labels: {
-                        format: 'S/. {value}',
-                        style: {
-                            color: '#89A54E'
-                        }
+        $.ajax({
+            async: false,
+            url: jsonurl,
+            dataType: 'json',
+            method: 'POST',
+            data: {subsidiaries_id: $('#list_subsidiaries_id').val()},
+            success: function(chart_data) {
+                $('#dayliSaleBudget').highcharts({
+                    chart: {
+                        zoomType: 'xy'
                     },
                     title: {
-                        text: 'Venta Real',
-                        style: {
-                            color: '#89A54E'
-                        }
-                    }
-                }, {// Secondary yAxis
-                    title: {
-                        text: 'Presupuesto',
-                        style: {
-                            color: '#4572A7'
-                        }
+                        text: 'Presupuesto Vs Venta Real'
                     },
-                    labels: {
-                        format: 'S/. {value}',
-                        style: {
-                            color: '#4572A7'
-                        }
-                    },
-                    opposite: true
-                }],
-            tooltip: {
-                shared: true
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'left',
-                x: 120,
-                verticalAlign: 'top',
-                y: 100,
-                floating: true,
-                backgroundColor: '#FFFFFF'
-            },
-            series: [{
-                    name: 'Rainfall',
-                    color: '#4572A7',
-                    type: 'column',
-                    yAxis: 1,
-                    data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+                    /*subtitle: {
+                     text: 'Source: WorldClimate.com'
+                     },*/
+                    xAxis: [{
+                            categories: chart_data.month_budget
+                        }],
+                    yAxis: [{// Primary yAxis
+                            labels: {
+                                format: 'S/. {value}',
+                                style: {
+                                    color: Highcharts.getOptions().colors[2]
+                                }
+                            },
+                            title: {
+                                text: 'Venta Real',
+                                style: {
+                                    color: Highcharts.getOptions().colors[2]
+                                }
+                            }
+                        }, {// Secondary yAxis
+                            title: {
+                                text: 'Presupuesto',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            },
+                            labels: {
+                                format: 'S/. {value}',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            },
+                            opposite: true
+                        }],
                     tooltip: {
-                        valueSuffix: ' mm'
-                    }
+                        shared: true
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'left',
+                        x: 120,
+                        verticalAlign: 'top',
+                        y: 100,
+                        floating: true,
+                        backgroundColor: '#FFFFFF'
+                    },
+                    series: [{
+                            name: 'Presupuesto',
+                            color: Highcharts.getOptions().colors[1],
+                            type: 'column',
+                            yAxis: 0,
+                            data: chart_data.budget_amount,
+                            tooltip: {
+                                valuePrefix: 'S/. '
+                            }
 
-                }, {
-                    name: 'Temperature',
-                    color: '#89A54E',
-                    type: 'spline',
-                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-                    tooltip: {
-                        valueSuffix: '°C'
-                    }
-                }]
+                        }, {
+                            name: 'Venta Real',
+                            color: Highcharts.getOptions().colors[2],
+                            type: 'spline',
+                            data: chart_data.daily_sale_avg,
+                            tooltip: {
+                                valuePrefix: 'S/. '
+                            }
+                        }]
+                });
+
+                /**
+                 * 
+                 * */
+
+                $('#gauge_chart').highcharts({
+                    chart: {
+                        type: 'gauge',
+                        plotBackgroundColor: null,
+                        plotBackgroundImage: null,
+                        plotBorderWidth: 0,
+                        plotShadow: false
+                    },
+                    title: {
+                        text: 'Ventas %'
+                    },
+                    pane: {
+                        startAngle: -90,
+                        endAngle: 90,
+                        center: ['50%', '100%'],
+                        background: [{
+                                /*backgroundColor: {
+                                 linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                                 stops: [
+                                 [0, '#FFF'],
+                                 [1, '#333']
+                                 ]
+                                 },*/
+                                borderWidth: 0,
+                                outerRadius: '109%'
+                            }, {
+                                backgroundColor: {
+                                    linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                                    stops: [
+                                        [0, '#333'],
+                                        [1, '#FFF']
+                                    ]
+                                },
+                                borderWidth: 1,
+                                outerRadius: '107%'
+                            }, {
+                                // default background
+                            }, {
+                                backgroundColor: '#DDD',
+                                borderWidth: 0,
+                                outerRadius: '105%',
+                                innerRadius: '103%'
+                            }]
+                    },
+                    // the value axis
+                    yAxis: {
+                        min: 0,
+                        max: 200,
+                        minorTickInterval: 'auto',
+                        minorTickWidth: 1,
+                        minorTickLength: 10,
+                        minorTickPosition: 'inside',
+                        minorTickColor: '#666',
+                        tickPixelInterval: 30,
+                        tickWidth: 2,
+                        tickPosition: 'inside',
+                        tickLength: 10,
+                        tickColor: '#666',
+                        labels: {
+                            step: 2,
+                            rotation: 'auto'
+                        },
+                        title: {
+                            text: 'km/h'
+                        },
+                        plotBands: [{
+                                from: 0,
+                                to: 120,
+                                color: '#55BF3B' // green
+                            }, {
+                                from: 120,
+                                to: 160,
+                                color: '#DDDF0D' // yellow
+                            }, {
+                                from: 160,
+                                to: 200,
+                                color: '#DF5353' // red
+                            }]
+                    },
+                    series: [{
+                            name: 'Speed',
+                            data: [80],
+                            tooltip: {
+                                valueSuffix: ' km/h'
+                            }
+                        }]
+
+                }/*,
+                 // Add some life
+                 function(chart) {
+                 if (!chart.renderer.forExport) {
+                 setInterval(function() {
+                 var point = chart.series[0].points[0],
+                 newVal,
+                 inc = Math.round((Math.random() - 0.5) * 20);
+                 
+                 newVal = point.y + inc;
+                 if (newVal < 0 || newVal > 200) {
+                 newVal = point.y - inc;
+                 }
+                 
+                 point.update(newVal);
+                 
+                 }, 3000);
+                 }
+                 }*/
+                );
+            }
         });
+
+
+
 
     });
 
