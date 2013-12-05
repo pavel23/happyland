@@ -34,6 +34,15 @@ class SubsidiaryDao extends CI_Model {
         }
         return $a_subsidiaries;
     }
+    
+    public function getSubsidiaryById($subsidiary_id=null) {
+        if(!$subsidiary_id) {
+            return false;
+        }
+        $this->db->where('id', $subsidiary_id);
+        $query = $this->db->get('hpl_subsidiaries');
+        return ($query->num_rows() == 1 ? $query->row() : null);
+    }
 }
 
 ?>

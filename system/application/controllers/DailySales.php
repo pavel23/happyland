@@ -319,46 +319,4 @@ class DailySales extends ValidateAccess {
             echo $e;
         }
     }
-    
-    public function listBudget() {
-        $this->validateAccessByModule();
-        $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
-        $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
-        $this->layout->assets(base_url() . 'assets/js/happy/budget.table.list.js');
-        $this->layout->assets(base_url() . 'assets/css/data-table.css');
-        $this->layout->view('daily_sales/listBudget');
-    }
-
-    public function getDataTableList() {
-        $dbl_budget             = $this->BudgetDao->getAllBudgets();
-        $a_budget_list          = array();
-        $a_budget_monthly       = array();
-        $a_budget_subsidiaries  = array();
-
-        foreach ($dbl_budget as $dbr_budget) {
-            $a_budget_subsidiaries[$dbr_budget->subsidiaries_name] = $dbr_budget->subsidiaries_name;
-            $a_budget_monthly[$dbr_budget->subsidiaries_name][$dbr_budget->budget_month] = number_format($dbr_budget->budget_amount_monthly,2);
-        }
-        $a_budget_subsidiaries  = array_filter($a_budget_subsidiaries);
-
-        foreach($a_budget_subsidiaries as $s_subsidiarie_name) {
-            foreach (Utils::getMonths() as $month_num=>$month_text) {
-                $budget_amount_monthly = array_key_exists($month_num, $a_budget_monthly) ? $a_budget_monthly[$s_subsidiarie_name][$month_num] : 0;
-                
-                $a_budget_list["aaData"][]  = array(
-                                                    'subsidiarie_name' => $s_subsidiarie_name,
-                                                    'month_text' => $month_text,
-                                                    'budget_amount' => 'S/. ' . number_format($budget_amount_monthly,2),
-                                                    'edit_btn' => anchor(site_url('DailySales/maintenanceBudget/' . $month_text), '<i class="icon-edit icon-white"></i><span><strong>Editar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
-                                                );
-            }  
-        }
-        header("Content-type: application/json");
-        echo json_encode($a_budget_list);
-    }
-
-    public function maintenanceBudget($daily_sale_id = null) {
-        $this->layout->view('daily_sales/maintenanceBudget');
-    }
-
 }

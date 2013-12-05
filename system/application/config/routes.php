@@ -88,9 +88,15 @@ $route['venta-diaria/(:num)/cerrar-venta-diaria.html'] = 'DailySales/closeDailyS
 $route['venta-diaria/(:num)/abrir-venta-diaria.html'] = 'DailySales/openDailySale/$1';
 $route['venta-diaria/(:num)/abrir-venta-diaria.html'] = 'DailySales/openDailySale/$1';
 
-$route['venta-diaria/listar-presupuesto.html'] = 'DailySales/listBudget';
-$route['venta-diaria/registrar-presupuesto.html'] = 'DailySales/maintenanceBudget';
-$route['venta-diaria/(:num)/modificar-presupuesto.html'] = 'DailySales/maintenanceBudget/$1';
+
+
+$route['venta-diaria/listar-presupuesto.html'] = 'BudgetSales/listBudget';
+$route['venta-diaria/registrar-presupuesto.html'] = 'BudgetSales/maintenanceBudget';
+$route['venta-diaria/(:num)/modificar-presupuesto.html'] = 'BudgetSales/maintenanceBudget/$1';
+$route['venta-diaria/(:num)/cargar-datos-presupuesto.html'] = 'BudgetSales/getDataBudgetJson/$1';
+$route['venta-diaria/(:num)/guardar-datos-presupuesto.html'] = 'BudgetSales/saveDataBudget/$1';
+
+
 
 $route['venta-diaria/lista-operarios.html'] = 'DailySales/getJSONOperators';
 $route['venta-diaria/otras-ventas-diarias.html'] = 'DailySales/getJSONDailySaleOthers';

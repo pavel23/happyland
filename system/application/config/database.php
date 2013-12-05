@@ -63,14 +63,24 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
-
-
-$db['game_system']['hostname'] = "Driver=Adaptive Server Anywhere 7.0;ENG=your_server_sybase  ;UID=youruser;PWD=yourpswrd;DBN='';LINKS=TCPIP(HOST=gs_rpc:9000)";
-$db['game_system']['username'] = 'HAPPY';//
-$db['game_system']['password'] = 'land';
-$db['game_system']['database'] = '';
-$db['game_system']['dbdriver'] = "odbc";
-
+/*
+$db['default']['hostname'] = '192.168.13.2';
+$db['default']['username'] = 'HAPPY';
+$db['default']['password'] = 'land';
+$db['default']['database'] = 'E:\GS\Data\DB\CTDatos.cnt';
+$db['default']['port']      = 3050;
+$db['default']['dbdriver'] = 'interbase';
+$db['default']['dbprefix'] = '';
+$db['default']['pconnect'] = FALSE;    
+$db['default']['db_debug'] = TRUE;
+$db['default']['cache_on'] = FALSE;
+$db['default']['cachedir'] = '';
+$db['default']['char_set'] = 'utf8';
+$db['default']['dbcollat'] = 'utf8_general_ci';
+$db['default']['swap_pre'] = '';
+$db['default']['autoinit'] = TRUE;
+$db['default']['stricton'] = FALSE;
+*/
    
     
 /* End of file database.php */

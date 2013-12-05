@@ -38,4 +38,7 @@
 #data-table .row a.ac5_disabled{background-position: -328px -110px}
 #data-table .row a.ac7_disabled{background-position: -266px -186px}
 #data-table .row a.ac8_disabled{background-position: -282px -186px}
+td.left{text-align: left;}
+td.right{text-align: right;}
+td.center{text-align: center;}
 ul.list_msg_errors > li,div.sumary_error{margin:3px 0}

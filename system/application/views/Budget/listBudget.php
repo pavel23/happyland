@@ -14,15 +14,13 @@
                         <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->session->flashdata('message') ?>
                     </div>
                 <?php endif; ?>
-                <input type="hidden" id="url-load-data" value="<?php echo site_url('DailySales/getDataTableList');?>">
-                <input type="hidden" id="url-image-btn" value="<?php echo base_url(). 'assets/images/details_open.png';?>">
+                <input type="hidden" id="url-load-data" value="<?php echo site_url('BudgetSales/getDataTableList');?>">
                 <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>Nombre Local</th>
-                            <th>Mes</th>
-                            <th><div align="center">Monto (S/.)</div></th>
+                            <th><div align="center">Ppto Acumulado <?php echo date('Y');?> (S/.)</div></th>
+                            <th><div align="center">Ppto Acumulado <?php echo date('Y') - 1;?> (S/.)</div></th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
