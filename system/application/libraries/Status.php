@@ -48,16 +48,17 @@ class Status {
     }
     
     public static function getHTMLStatus($status_key=null){
-        
+
+        if(strlen(trim($status_key))!=3) {
+            return '';
+        }
         switch ($status_key) {
             case 'act': $class_label = 'btn-success'; break;
             case 'ina': $class_label = 'btn-danger'; break;
             case 'opn': $class_label = 'btn-info'; break;
             case 'cls': $class_label = 'btn-warning'; break;
             default: $class_label = 'btn-default'; break;
-            
         }
-        //$html_status = '<span class="label ' . $class_label . '">' . self::$statuses[$status_key] . '</span>';
         $html_status = '<div align="center"><span class="btn btn-sm ' . $class_label . '">' . self::$statuses[$status_key] . '</span></div>';
         return $html_status;
     }

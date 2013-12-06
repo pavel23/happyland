@@ -81,6 +81,8 @@ $route['perfil/guardar-permisos-por-modulo.html'] = 'Profile/saveModalPermission
  * Rutas de acceso al modulo de ventas diarias
  */
 $route['venta-diaria/listar.html'] = 'DailySales/index';
+$route['venta-diaria/listado-control-gestion.html'] = 'DailySales/managementIndex';
+$route['venta-diaria/cargar-datos-venta-control-gestion.html'] = 'DailySales/getManagementListData';
 $route['venta-diaria/registrar.html'] = 'DailySales/maintenanceForm';
 $route['venta-diaria/(:num)/modificar.html'] = 'DailySales/maintenanceForm/$1';
 $route['venta-diaria/procesar-datos.html'] = 'DailySales/processForm';

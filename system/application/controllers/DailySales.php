@@ -29,8 +29,45 @@ class DailySales extends ValidateAccess {
         $this->layout->assets(base_url() . 'assets/js/lib/fullcalendar.min.js');
         $this->layout->assets(base_url() . 'assets/js/daily_sale/list_daily_sales.js');
         $data['a_subsidiaries'] = $this->SubsidiaryDao->getDropdownSubsidiaries();
-        $this->layout->view('daily_sales/list_template', $data);
+        $this->layout->view('DailySales/list_template', $data);
     }
+
+    public function managementIndex() {
+        $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
+        $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
+        $this->layout->assets(base_url() . 'assets/js/happy/load.table.list.js');
+        $this->layout->assets(base_url() . 'assets/css/data-table.css');
+        $this->layout->view('DailySales/management-list-template');
+    }
+
+    public function getManagementListData() {
+        $dbl_daily_sales    = $this->DailySaleDao->getDailySaleManagementList();
+        foreach($dbl_daily_sales as $dbr_daily_sales) {
+            $a_daily_sales_list['aaData'][]  = array(
+                                                    $dbr_daily_sales->subsidiary_name,
+                                                    $dbr_daily_sales->date_sale? Utils::getFormattedDate($dbr_daily_sales->date_sale, '%d-%m-%Y') : 'No Registrado',
+                                                    'S/. ' . number_format($dbr_daily_sales->total_opening_cash, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->total_closing_cash, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->total_master_card, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->total_visa_card, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->total_web_payment, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->total_retirement_pen, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->total_retirementl_dol, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->grand_total_calculated, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->grand_total_z_format, 2),
+                                                    'S/. ' . number_format($dbr_daily_sales->total_difference_money, 2),
+                                                    number_format($dbr_daily_sales->total_diferrence_values, 0),
+                                                    number_format($dbr_daily_sales->total_num_transactions, 0),
+                                                    number_format($dbr_daily_sales->total_hours_by_cash, 0),
+                                                    Status::getHTMLStatus($dbr_daily_sales->status),
+                                                    anchor(site_url('DailySales/maintenanceForm/'.$dbr_daily_sales->id), '<i class="icon-edit icon-white"></i><span><strong>Editar</strong></span>', array('class' => 'btn btn-primary btn-xs'))
+                                                );
+        }
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode($a_daily_sales_list));
+    }
+    
 
     public function getDailySaleCalendar() {
         $daily_sale_credentials = $this->input->get();
@@ -167,7 +204,7 @@ class DailySales extends ValidateAccess {
         $data['dailySale'] = $data_daily_sale;
         $data['subsidiaries_id'] = $subsidiaries_id;
 
-        $this->layout->view('daily_sales/maintenance_template', $data);
+        $this->layout->view('DailySales/maintenance_template', $data);
     }
 
     public function closeDailySale($daily_sale_id) {

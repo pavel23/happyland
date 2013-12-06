@@ -91,5 +91,16 @@ class DailySaleDao extends CI_Model {
 
         return $daily_sale_detail_id;
     }
+    
+    public function getDailySaleManagementList() {
+        $this->db->select('dls.id, sbs.name AS subsidiary_name, dls.status, dls.date_sale,total_opening_cash, dls.total_closing_cash, dls.total_master_card, dls.total_visa_card, dls.total_web_payment, dls.total_retirement_pen, dls.total_retirementl_dol, dls.grand_total_calculated, dls.grand_total_z_format, dls.total_difference_money, dls.total_diferrence_values, dls.total_num_transactions, dls.total_hours_by_cash');
+        $this->db->from('hpl_subsidiaries sbs');
+        $this->db->join('hpl_daily_sales dls', 'sbs.id=dls.subsidiaries_id','inner');
+        $this->db->where('sbs.is_princ_office',0);
+        $this->db->order_by('sbs.name ASC');
+        $this->db->order_by('dls.date_sale ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
 }

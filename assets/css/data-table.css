@@ -42,3 +42,6 @@ td.left{text-align: left;}
 td.right{text-align: right;}
 td.center{text-align: center;}
 ul.list_msg_errors > li,div.sumary_error{margin:3px 0}
+.table-custom-happyland {
+    font-size: 12px;
+}
