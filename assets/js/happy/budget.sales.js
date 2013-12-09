@@ -1,27 +1,11 @@
 $(function() {
     var $container_budget_sales = $('#budget_sales');
-    var url_process             = $('#url-data-budget-save').val();
+    /*var url_process             = $('#url-data-budget-save').val();*/
     var headers                 = $('#budget_headers').text();
     var autosaveNotification    = null;
-    var current_value           = null;
+    /*var current_value           = null;
     var new_value               = null;
-    var row_position            = null;
-
-    var saveCurrentBudget = function(url_process, data_for_process) {
-        $.ajax({
-            url: url_process,
-            dataType: 'json',
-            type: 'POST',
-            data: {'data_for_process': data_for_process},
-            complete: function(data_reponse) {
-                autosaveNotification = setTimeout(function() {
-                    console.log('Changes will be autosaved');
-                    console.log(data_reponse);
-                    $('#list_month_id').trigger('change');
-                }, 1000);
-            }
-        });
-    }
+    var row_position            = null;*/
 
     $container_budget_sales.handsontable({
         //startRows: 8,
@@ -50,7 +34,7 @@ $(function() {
             if (source === 'loadData') {
                 return; //don't save this change
             }
-            if (source === 'paste') {
+            /*if (source === 'paste') {
                 clearTimeout(autosaveNotification);
                 saveCurrentBudget(url_process, handsontable.getData());
             } else {
@@ -61,7 +45,7 @@ $(function() {
                     clearTimeout(autosaveNotification);
                     saveCurrentBudget(url_process, [handsontable.getData()[row_position]]);
                 }
-            }
+            }*/
         }
     });
 
@@ -78,4 +62,20 @@ $(function() {
         });
     });
     $('#list_month_id').trigger('change');
+
+    $('#btn-save-budget').on('click', function(e){
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('href'),
+            dataType: 'json',
+            type: 'POST',
+            data: {'data_for_process': handsontable.getData()},
+            complete: function(data_reponse) {
+                autosaveNotification = setTimeout(function() {
+                $('#list_month_id').trigger('change');
+                }, 1000);
+            }
+        });
+    });
+   
 });

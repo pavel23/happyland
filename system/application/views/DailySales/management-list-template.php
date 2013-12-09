@@ -4,6 +4,7 @@
             <header>
                 <div class="icons"><i class="icon-th"></i></div>
                 <h5>Listado de Venta Diaria - Control Gestión</h5>
+                <a href="<?php echo site_url('DailySales/exportExcel'); ?>" id="btn-save-budget" class="btn btn-success" title="">Exportar Excel</a>
             </header>
             <div class="body">
                 <?php if ($this->session->flashdata('message')) : ?>

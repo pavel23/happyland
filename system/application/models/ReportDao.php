@@ -36,18 +36,18 @@ class ReportDao extends CI_Model {
         }
         $query .= 'GROUP BY sbb.subsidiaries_id, YEAR(sbb.date), MONTH(sbb.date)';
         return $this->db->query($query)->result();
-  /*      
-        $this->db->select('MONTH (sbb.date) AS month_budget');
-        $this->db->select('AVG(sbb.budget_amount) AS budget_amount');
-        $this->db->select('(SELECT AVG(IFNULL(dsl.grand_total_z_format, dsl.grand_total_calculated)) FROM hpl_daily_sales dsl WHERE dsl.subsidiaries_id=sbb.subsidiaries_id AND MONTH(dsl.date_sale)=MONTH(sbb.date)) AS daily_sale_avg');
-        $this->db->from('hpl_subsidiaries_budget sbb');
-        $this->db->where('YEAR(sbb.date)', $n_year);
-        $this->db->group_by('MONTH(sbb.date)');
-        $this->db->order_by('sbb.date', 'ASC');
-        $query = $this->db->get();
-*/
-        //echo $this->db->last_query(); 
-        //return $query->result();
     }
 
+    public function getConsolidateDailySale($month=null){
+        $this->db->select('sbs.id AS subsidiaries_id, sbs.name AS subsidiary_name, sbs.parent_id, dls.id AS daily_sale_id, dls.date_sale, dls.grand_total_z_format, sbb.budget_amount, sbb.budget_amount_assigned');
+        $this->db->from('hpl_subsidiaries sbs ');
+        $this->db->join('hpl_daily_sales dls', 'sbs.id=dls.subsidiaries_id', 'left');
+        $this->db->join('hpl_subsidiaries_budget sbb', 'dls.subsidiaries_id=sbb.subsidiaries_id AND dls.date_sale=sbb.date', 'left');
+        $this->db->where('sbs.is_princ_office', 0);
+        if($month){
+            $this->db->where('MONTH(dls.date_sale)', $month);
+        }
+        $query = $this->db->get();
+        return ;$query->result();
+    }
 }

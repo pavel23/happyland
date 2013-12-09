@@ -9,6 +9,7 @@ class ProfileDao extends CI_Model {
 
     public function getAllProfiles() {
         $this->db->where('is_deleted', 0);
+        $this->db->where('status', Status::STATUS_ACTIVO);
         $query  = $this->db->get('hpl_profile');
         return ($query->num_rows() >0 ? $query->result() : null);
     }
@@ -42,6 +43,15 @@ class ProfileDao extends CI_Model {
             $this->db->where('sys_block', 0);
             $this->db->update('hpl_profile', $data);
         }
+    }
+
+    public function getDropdownProfiles(){
+        $dbl_profiles = $this->getAllProfiles();
+        $a_profiles = array();
+        foreach ($dbl_profiles as $dbr_profiles) {
+            $a_profiles[$dbr_profiles->id]  = $dbr_profiles->name;
+        }
+        return $a_profiles;
     }
 
 }

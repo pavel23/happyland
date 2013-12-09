@@ -1,6 +1,4 @@
 $(document).ready(function() {
-    console.log('teewts');
-
     $('#form_recover_dni').on('keyup', function() {
         var $this = $(this);
         if (!$this.val()) {

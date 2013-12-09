@@ -12,7 +12,6 @@
             </header>
             <div id="div-5" class="accordion-body collapse in body">
                 <input type="hidden" id="url-data-budget" name="url-data-budget" value="<?php echo site_url('BudgetSales/getDataBudgetJson/'.$subsidiary_id); ?>">
-                <input type="hidden" id="url-data-budget-save" name="url-data-budget-save" value="<?php echo site_url('BudgetSales/saveDataBudget/'.$subsidiary_id); ?>">
                 <div id="budget_headers" style="display:none;"><?php echo json_encode($a_data_budget);?></div>
                 <?php if ($this->session->flashdata('message_danger')) : ?>
                     <div class="alert alert-danger">
@@ -24,6 +23,7 @@
                         <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->session->flashdata('message_success') ?>
                     </div>
                 <?php endif; ?>
+                <a href="<?php echo site_url('BudgetSales/saveDataBudget/'.$subsidiary_id); ?>" id="btn-save-budget" class="btn btn-primary" title="">Guardar Presupuesto</a>
                 <div id="budget_sales"></div>
             </div>
         </div>

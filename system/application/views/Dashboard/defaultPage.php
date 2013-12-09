@@ -10,7 +10,7 @@
         <div class="box success">
             <header>
                 <h5>Estas viendo información de:</h5>
-                <?php echo form_dropdown('list_subsidiaries_id', $a_subsidiaries, '', 'id="list_subsidiaries_id" class="form-control autotab"'); ?>
+                <?php echo form_dropdown('list_subsidiaries_id', $a_subsidiaries, '', 'id="list_subsidiaries_id" class="chosen-select form-control autotab"'); ?>
             </header>
         </div>
     </div>
@@ -39,8 +39,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <div class="col-lg-4">
         <div class="box inverse">
 
@@ -48,6 +48,7 @@
                 <div class="icons"><i class="icon-th"></i></div>
                 <h5>Datos x Mes</h5>
             </header>
+            
             <div class="body">
                 <table class="table table-condensed table-hovered sortableTable">
                     <thead>
@@ -74,3 +75,56 @@
         </div>
     </div>
 </div>
+
+<?php foreach($dbl_subsidiaries_parents as $dbl_parents){?>
+<div class="col-lg-5">
+    <div class="box inverse">
+
+        <header>
+            <div class="icons"><i class="icon-th"></i></div>
+            <h5>Datos x Mes</h5>
+        </header>
+        <div class="body">
+            <table class="table table-condensed table-hovered sortableTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Resultados Diarios</th>
+                        <th>15/11/2013</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>2013</th>
+                        <th>Ppto</th>
+                        <th>2012</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($dbl_consolidate_daily_sales as $dbl_consolidate) { ?>
+                        <?php if(!$dbl_consolidate->parent_id) {?>
+                        <tr>
+                            <td><?php echo $dbl_consolidate->subsidiary_name;?></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <?php } else {?>
+                        <tr>
+                            <td><?php echo $dbl_consolidate->subsidiary_name;?></td>
+                            <td><?php echo $dbl_consolidate->subsidiary_name;?></td>
+                            <td><?php echo number_format($dbl_consolidate->grand_total_z_format, 2);?></td>
+                            <td><?php echo number_format($dbl_consolidate->budget_amount, 2);?></td>
+                            <td><?php echo number_format($dbl_consolidate->budget_amount_assigned, 2);?></td>    
+                        </tr>
+                        <?php }?>                    
+                    <?php } ?>
+                </tbody>
+            </table>      
+        </div>
+    </div>
+</div>
+<?php }?>

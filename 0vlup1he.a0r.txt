@@ -1,0 +1,30 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	modified:   assets/js/daily_sale/list_daily_sales.js
+#	modified:   assets/js/happy/budget.sales.js
+#	new file:   assets/js/happy/dashboard.js
+#	modified:   assets/js/user/login.js
+#	modified:   docs/Model/WB-Happyland-Model.mwb
+#	renamed:    docs/Model/WB-Happyland-Model.mwb -> docs/Model/WB-Happyland-Model.mwb.bak
+#	new file:   docs/query/happyland_071213-1703.sql
+#	modified:   system/application/config/routes.php
+#	modified:   system/application/controllers/BudgetSales.php
+#	modified:   system/application/controllers/DailySales.php
+#	modified:   system/application/controllers/Dashboard.php
+#	modified:   system/application/controllers/Profile.php
+#	modified:   system/application/controllers/User.php
+#	modified:   system/application/models/BudgetDao.php
+#	modified:   system/application/models/ModuleDao.php
+#	modified:   system/application/models/ProfileDao.php
+#	modified:   system/application/models/ReportDao.php
+#	modified:   system/application/models/SubsidiaryDao.php
+#	modified:   system/application/views/Budget/maintenanceBudget.php
+#	modified:   system/application/views/DailySales/management-list-template.php
+#	modified:   system/application/views/Dashboard/defaultPage.php
+#
+

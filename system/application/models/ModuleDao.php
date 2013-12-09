@@ -34,7 +34,6 @@ class ModuleDao extends CI_Model {
         $this->db->where('mdl.parent_id', NULL);
         $this->db->where('mdl.is_deleted', 0);
         $this->db->where('mdl.status', Status::STATUS_ACTIVO);
-        //$this->db->where('mpa.profile_id', $profile_id);
         $this->db->order_by('mdl.position_order', 'ASC');
         $query = $this->db->get();
         return $query->result();
@@ -97,5 +96,15 @@ class ModuleDao extends CI_Model {
         $this->db->order_by('position_order', 'ASC');
         $query = $this->db->get('hpl_module');
         return $query->result_array();
+    }
+    
+    public function getDropdownModule($profile_id) {
+        $dbl_modules    = ($profile_id ? $this->getParentModulesWithData(array(), $profile_id) : $this->getParentModules());
+        $a_parent_modules   = array();
+        foreach($dbl_modules as $dbr_module) {
+            $a_parent_modules['a_modules'][$dbr_module->id]  = $dbr_module->name;
+            $a_parent_modules['a_modules_selected'][]        = ($profile_id ? $dbr_module->module_id : null);
+        }
+        return $a_parent_modules;
     }
 }

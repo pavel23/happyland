@@ -88,9 +88,7 @@ $route['venta-diaria/(:num)/modificar.html'] = 'DailySales/maintenanceForm/$1';
 $route['venta-diaria/procesar-datos.html'] = 'DailySales/processForm';
 $route['venta-diaria/(:num)/cerrar-venta-diaria.html'] = 'DailySales/closeDailySale/$1';
 $route['venta-diaria/(:num)/abrir-venta-diaria.html'] = 'DailySales/openDailySale/$1';
-$route['venta-diaria/(:num)/abrir-venta-diaria.html'] = 'DailySales/openDailySale/$1';
-
-
+$route['venta-diaria/exportar-venta-diaria.html'] = 'DailySales/exportExcel';
 
 $route['venta-diaria/listar-presupuesto.html'] = 'BudgetSales/listBudget';
 $route['venta-diaria/registrar-presupuesto.html'] = 'BudgetSales/maintenanceBudget';
@@ -98,12 +96,9 @@ $route['venta-diaria/(:num)/modificar-presupuesto.html'] = 'BudgetSales/maintena
 $route['venta-diaria/(:num)/cargar-datos-presupuesto.html'] = 'BudgetSales/getDataBudgetJson/$1';
 $route['venta-diaria/(:num)/guardar-datos-presupuesto.html'] = 'BudgetSales/saveDataBudget/$1';
 
-
-
 $route['venta-diaria/lista-operarios.html'] = 'DailySales/getJSONOperators';
 $route['venta-diaria/otras-ventas-diarias.html'] = 'DailySales/getJSONDailySaleOthers';
 $route['venta-diaria/venta-diaria-por_fecha.html'] = 'DailySales/getDailySaleCalendar';
-
 $route['venta-diaria/cargar-datos-tabla.html'] = 'DailySales/getDataTableList';
 
 $route['404_override'] = '';

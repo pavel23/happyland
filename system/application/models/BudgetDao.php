@@ -57,5 +57,4 @@ class BudgetDao extends CI_Model {
             echo $this->db->last_query();
         }
     }
-
 }

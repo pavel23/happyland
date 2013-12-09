@@ -157,7 +157,7 @@ class BudgetSales extends ValidateAccess {
         $a_data_budget_id    = array();
 
         foreach($a_data_budget as $data_budget) {
-            $a_data_budget_id = $data_budget['id'];
+            $a_data_budget_id[] = $data_budget['id'];
             $budget_date      = Utils::getFormattedDate($data_budget['date'], '%Y-%m-%d');
             if(!$data_budget['id']){
                 $a_new_budgets_date[] = $budget_date;
@@ -166,23 +166,21 @@ class BudgetSales extends ValidateAccess {
             $a_last_real_sale_assig[$budget_date]   = $data_budget['last_real_sale_assig'];            
         }
         if(count($a_data_budget_id)>0) {
-            $dbl_budget_by_date = $this->BudgetDao->getBudgetByIds($a_data_budget_id, $subsidiary_id);
+            $dbl_budget_ids = $this->BudgetDao->getBudgetByIds($a_data_budget_id, $subsidiary_id);
         }
-        if($dbl_budget_by_date){
+        if($dbl_budget_ids){
             $data_update_batch = array();
             $index=0;
-            foreach($dbl_budget_by_date as $dbr_budget_by_date) {
+            foreach($dbl_budget_ids as $dbr_budget_by_date) {
                 $budget_date                = Utils::getFormattedDate($dbr_budget_by_date->date, '%Y-%m-%d');
                 $data_update_batch[$index]['id']  = $dbr_budget_by_date->id;
                 $data_update_batch[$index]['budget_amount'] = $a_current_ppto[$budget_date];
                 $data_update_batch[$index]['budget_amount_assigned'] = $a_last_real_sale_assig[$budget_date];
                 $index++;
-                print_r($data_update_batch);
             }
             $this->BudgetDao->update_budget_batch($data_update_batch);
             unset($data_update_batch);
         }
-
         if(count($a_new_budgets_date)>0) {
             $data_insert_batch  = array();
             $index=0;

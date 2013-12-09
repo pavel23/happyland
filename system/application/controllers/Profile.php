@@ -51,8 +51,9 @@ class Profile extends ValidateAccess {
                                                     $delete_buttom
                                                 );
         }
-        header("Content-type: application/json");
-        echo json_encode($a_profile_list);
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode($a_profile_list));
     }
 
     public function maintenanceProfile($profile_id = null) {
@@ -60,23 +61,17 @@ class Profile extends ValidateAccess {
         $data['dbr_profile'] = array();
         $data['is_new'] = true;
         if (isset($profile_id) && $profile_id) {
-            $data['dbr_profile'] = $this->ProfileDao->getProfileById($profile_id);
+            $data['dbr_profile'] = $this->ProfileDao->getProfileById($profile_id); 
             $data['is_new'] = false;
         }
-        $dbl_modules    = $this->ModuleDao->getParentModulesWithData(array(), $profile_id);
-        $a_parent_modules      = array();
-        foreach($dbl_modules as $dbr_module) {
-            $a_parent_modules[$dbr_module->id]  = $dbr_module->name;
-            $a_parent_modules_selected[]        = $dbr_module->module_id;
-        }
-        $data['a_parent_modules']               = $a_parent_modules;
-        $data['a_parent_modules_selected']      = $a_parent_modules_selected;
+        $a_modules   = $this->ModuleDao->getDropdownModule($profile_id);
+        $data['a_parent_modules']           = $a_modules['a_modules'];
+        $data['a_parent_modules_selected']  = $a_modules['a_modules_selected'];
         $data['a_status']           = Status::getProfileStatus();
 
         if ($this->input->post()) {
             $this->saveProfile();
         }
-        
         $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
         $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
         $this->layout->assets(base_url() . 'assets/js/happy/profile.edit.js');
@@ -135,22 +130,24 @@ class Profile extends ValidateAccess {
         return $a_parent_modules;
     }
     
-    public function getModalPermission($profile_id) {
+    public function getModalPermission($profile_id=null) {
+        $a_permission_filter    = $this->input->post('permission_filter');
+        $a_parent_modules       = array();
+        $a_children_modules     = array();
         $data['is_new'] = true;
         if (isset($profile_id) && $profile_id) {
             $data['is_new'] = false;
+            $dbl_modules    = $this->ModuleDao->getParentModulesWithData($a_permission_filter, $profile_id);
+        } else {
+            $dbl_modules    = $this->ModuleDao->getParentModules($a_permission_filter);    
         }
-        $a_permission_filter    = $this->input->post('permission_filter');
-        $dbl_modules            = $this->ModuleDao->getParentModulesWithData($a_permission_filter, $profile_id);
-        $a_parent_modules       = array();
-        $a_children_modules     = array();
         foreach($dbl_modules as $dbr_modules){
             if(!$dbr_modules->parent_id) {
                 $a_parent_modules[$dbr_modules->id]['name']         = $dbr_modules->name;
                 $a_parent_modules[$dbr_modules->id]['description']  = $dbr_modules->description;
-                $a_parent_modules[$dbr_modules->id]['read']         = $dbr_modules->read;
-                $a_parent_modules[$dbr_modules->id]['write']        = $dbr_modules->write;
-                $a_parent_modules[$dbr_modules->id]['download']     = $dbr_modules->download;
+                $a_parent_modules[$dbr_modules->id]['read']         = $profile_id ? $dbr_modules->read : 0;
+                $a_parent_modules[$dbr_modules->id]['write']        = $profile_id ? $dbr_modules->write : 0;
+                $a_parent_modules[$dbr_modules->id]['download']     = $profile_id ? $dbr_modules->download : 0;
             }
         }
         $dbl_children_modules   =   $this->ModuleDao->getChildModulesWithData($a_permission_filter, $profile_id);

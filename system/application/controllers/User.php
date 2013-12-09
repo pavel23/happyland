@@ -14,6 +14,8 @@ class User extends ValidateAccess {
         parent::__construct();
         $this->load->database();
         $this->load->model('UserDao');
+        $this->load->model('ProfileDao');
+        $this->load->model('SubsidiaryDao');
         $this->load->library(array('form_validation', 'session', 'pagination'));
         $this->load->helper(array('form', 'url'));
         $this->layout->isLogin = false;
@@ -56,8 +58,6 @@ class User extends ValidateAccess {
 
     public function maintenanceUser($userid = null) {
         $this->validateAccessByModule();
-        $this->load->model('ProfileDao');
-        $this->load->model('SubsidiaryDao');
         //$this->layout->assets(base_url() . 'assets/css/lib/validationEngine.jquery.css');
         $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
         $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.js');
@@ -70,28 +70,13 @@ class User extends ValidateAccess {
             $data['dbr_user'] = $this->UserDao->getUserById($userid);
             $data['is_new'] = false;
         }
-
-        $dbr_profiles = $this->ProfileDao->getAllProfiles();
-
-        $a_profiles = array();
-        foreach ($dbr_profiles as $dbr_profile) {
-            $a_profiles[$dbr_profile->id] = $dbr_profile->name;
-        }
-
-        $dbr_subsidiaries = $this->SubsidiaryDao->getAllSubsidiaries();
-
-        $a_subsidiaries = array();
-        foreach ($dbr_subsidiaries as $dbr_subsidiary) {
-            $a_subsidiaries[$dbr_subsidiary->id] = $dbr_subsidiary->name;
-        }
+        $data['dbr_subsidiaries']   = $this->SubsidiaryDao->getDropdownSubsidiaries();
+        $data['dbr_profiles'] = $this->ProfileDao->getDropdownProfiles();
         $data['a_status'] = Status::getProfileStatus();
-        $data['dbr_profiles'] = $a_profiles;
-        $data['dbr_subsidiaries'] = $a_subsidiaries;
-
+        
         if ($this->input->post()) {
             $this->saveUser();
         }
-
         $this->layout->view('User/maintenanceUser', $data);
     }
 

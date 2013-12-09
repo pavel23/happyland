@@ -20,9 +20,14 @@ class Dashboard extends ValidateAccess {
             $this->layout->assets(base_url() . 'assets/js/dist/jquery.highcharts.js');
             $this->layout->assets(base_url() . 'assets/js/dist/jquery.highcharts-more.js');
             $this->layout->assets(base_url() . 'assets/js/happy/chart.js');
+            $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
+            $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
 
             $data['a_subsidiaries']         = $this->SubsidiaryDao->getDropdownSubsidiaries();
             $data['dbl_daily_sales_report'] = $this->ReportDao->getDailySalesReport();
+            $data['dbl_subsidiaries_parents'] = $this->SubsidiaryDao->getSubsidiarieParents();
+            $data['dbl_consolidate_daily_sales'] = $this->ReportDao->getConsolidateDailySale('11');
+                        
             $this->layout->view('Dashboard/defaultPage', $data);
         } catch (Exception $e) {
             echo $e;
