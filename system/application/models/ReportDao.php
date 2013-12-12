@@ -38,16 +38,36 @@ class ReportDao extends CI_Model {
         return $this->db->query($query)->result();
     }
 
-    public function getConsolidateDailySale($month=null){
+    public function getDailySaleAccumulate($month=null){
+        $this->db->select('sbs.id AS subsidiaries_id, sbs.name AS subsidiary_name, sbs.parent_id, dls.id AS daily_sale_id, dls.date_sale, SUM(dls.grand_total_z_format) AS grand_total_z_format, SUM(sbb.budget_amount) AS budget_amount, SUM(sbb.budget_amount_assigned) AS budget_amount_assigned');
+        $this->db->from('hpl_subsidiaries sbs ');
+        $this->db->join('hpl_daily_sales dls', 'sbs.id=dls.subsidiaries_id', 'left');
+        $this->db->join('hpl_subsidiaries_budget sbb', 'dls.subsidiaries_id=sbb.subsidiaries_id AND dls.date_sale=sbb.date', 'left');
+        $this->db->where('sbs.is_princ_office', 0);
+        $this->db->where('sbs.parent_id > 0');
+        if($month){
+            $this->db->where('MONTH(dls.date_sale)', $month);
+        }
+        $this->db->group_by('dls.subsidiaries_id ASC');
+        $this->db->group_by('YEAR(dls.date_sale) ASC');
+        $this->db->group_by('MONTH(dls.date_sale) ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function getDailySaleByDay($date=null){
         $this->db->select('sbs.id AS subsidiaries_id, sbs.name AS subsidiary_name, sbs.parent_id, dls.id AS daily_sale_id, dls.date_sale, dls.grand_total_z_format, sbb.budget_amount, sbb.budget_amount_assigned');
         $this->db->from('hpl_subsidiaries sbs ');
         $this->db->join('hpl_daily_sales dls', 'sbs.id=dls.subsidiaries_id', 'left');
         $this->db->join('hpl_subsidiaries_budget sbb', 'dls.subsidiaries_id=sbb.subsidiaries_id AND dls.date_sale=sbb.date', 'left');
         $this->db->where('sbs.is_princ_office', 0);
-        if($month){
-            $this->db->where('MONTH(dls.date_sale)', $month);
+        $this->db->where('sbs.parent_id > 0');
+        if($date){
+            $this->db->where('dls.date_sale', $date);
         }
+        $this->db->group_by('dls.subsidiaries_id ASC');
+        $this->db->group_by('YEAR(dls.date_sale) ASC');
+        $this->db->group_by('MONTH(dls.date_sale) ASC');
         $query = $this->db->get();
-        return ;$query->result();
+        return $query->result();
     }
 }

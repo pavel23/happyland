@@ -22,12 +22,28 @@ class Dashboard extends ValidateAccess {
             $this->layout->assets(base_url() . 'assets/js/happy/chart.js');
             $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
             $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
+            
+            $a_daily_sales_accumulate   = array();
+            $a_daily_sales_by_day       = array();
+            $month_selected             = '11';
+            $date_selected              = '15/11/2013';
+            $data['a_subsidiaries']             = $this->SubsidiaryDao->getDropdownSubsidiaries();
+            $data['dbl_subsidiaries_parents']   = $this->SubsidiaryDao->getSubsidiarieParents();
+            $dbl_daily_sales_accumulate         = $this->ReportDao->getDailySaleAccumulate($month_selected);
+            $dbl_daily_sales_by_day             = $this->ReportDao->getDailySaleByDay(Utils::cambiaf_a_mysql($date_selected));
 
-            $data['a_subsidiaries']         = $this->SubsidiaryDao->getDropdownSubsidiaries();
-            $data['dbl_daily_sales_report'] = $this->ReportDao->getDailySalesReport();
-            $data['dbl_subsidiaries_parents'] = $this->SubsidiaryDao->getSubsidiarieParents();
-            $data['dbl_consolidate_daily_sales'] = $this->ReportDao->getConsolidateDailySale('11');
-                        
+            foreach($dbl_daily_sales_accumulate as $dbr_daily_sales_accumulate) {
+                $a_daily_sales_accumulate[$dbr_daily_sales_accumulate->parent_id][]   = $dbr_daily_sales_accumulate;
+            }
+            $data['a_daily_sales_accumulate'] = $a_daily_sales_accumulate;
+             foreach($dbl_daily_sales_by_day as $dbr_daily_sales_by_day) {
+                $a_daily_sales_by_day[$dbr_daily_sales_by_day->parent_id][]   = $dbr_daily_sales_by_day;
+            }
+            $data['a_daily_sales_by_day'] = $a_daily_sales_by_day;
+
+            $data['month_selected']             = $month_selected;
+            $data['date_selected']              = $date_selected;
+
             $this->layout->view('Dashboard/defaultPage', $data);
         } catch (Exception $e) {
             echo $e;
@@ -40,8 +56,8 @@ class Dashboard extends ValidateAccess {
         $a_data_chart               = array();
         
         foreach($dbl_daily_sales_report as $dbr_daily_sales_report) {
-            $a_data_chart['daily_sale_avg'][]   = floatval($dbr_daily_sales_report->daily_sale_avg);
-            $a_data_chart['budget_amount'][]    = floatval($dbr_daily_sales_report->budget_amount);
+            $a_data_chart['daily_sale_avg'][]   = floatval(number_format($dbr_daily_sales_report->daily_sale_avg, 2));
+            $a_data_chart['budget_amount'][]    = floatval(number_format($dbr_daily_sales_report->budget_amount, 2,'.', ','));
             $a_data_chart['month_budget'][]     = Utils::getMonthsName($dbr_daily_sales_report->month_budget, TRUE);
         }
         header("Content-type: application/json");
