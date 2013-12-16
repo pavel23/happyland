@@ -1,5 +1,5 @@
 /*!
- * FullCalendar v1.6.4
+ * FullCalendar v1.6.2
  * Docs & License: http://arshaw.com/fullcalendar/
  * (c) 2013 Adam Shaw
  */
@@ -86,9 +86,7 @@ var defaults = {
 	//selectable: false,
 	unselectAuto: true,
 	
-	dropAccept: '*',
-	
-	handleWindowResize: true
+	dropAccept: '*'
 	
 };
 
@@ -115,7 +113,7 @@ var rtlDefaults = {
 
 ;;
 
-var fc = $.fullCalendar = { version: "1.6.4" };
+var fc = $.fullCalendar = { version: "1.6.2" };
 var fcViews = fc.views = {};
 
 
@@ -143,8 +141,7 @@ $.fn.fullCalendar = function(options) {
 		}
 		return this;
 	}
-
-	options = options || {};
+	
 	
 	// would like to have this logic in EventManager, but needs to happen before options are recursively extended
 	var eventSources = options.eventSources || [];
@@ -228,8 +225,10 @@ function Calendar(element, options, eventSources) {
 	var content;
 	var tm; // for making theme classes
 	var currentView;
+	var viewInstances = {};
 	var elementOuterWidth;
 	var suggestedViewHeight;
+	var absoluteViewElement;
 	var resizeUID = 0;
 	var ignoreWindowResize = 0;
 	var date = new Date();
@@ -248,11 +247,11 @@ function Calendar(element, options, eventSources) {
 	function render(inc) {
 		if (!content) {
 			initialRender();
-		}
-		else if (elementVisible()) {
-			// mainly for the public API
+		}else{
 			calcSize();
-			_renderView(inc);
+			markSizesDirty();
+			markEventsDirty();
+			renderView(inc);
 		}
 	}
 	
@@ -269,22 +268,15 @@ function Calendar(element, options, eventSources) {
 		if (options.theme) {
 			element.addClass('ui-widget');
 		}
-
 		content = $("<div class='fc-content' style='position:relative'/>")
 			.prependTo(element);
-
 		header = new Header(t, options);
 		headerElement = header.render();
 		if (headerElement) {
 			element.prepend(headerElement);
 		}
-
 		changeView(options.defaultView);
-
-		if (options.handleWindowResize) {
-			$(window).resize(windowResize);
-		}
-
+		$(window).resize(windowResize);
 		// needed for IE in a 0x0 iframe, b/c when it is resized, never triggers a windowResize
 		if (!bodyVisible()) {
 			lateRender();
@@ -304,27 +296,21 @@ function Calendar(element, options, eventSources) {
 	
 	
 	function destroy() {
-
-		if (currentView) {
-			trigger('viewDestroy', currentView, currentView, currentView.element);
-			currentView.triggerEventDestroy();
-		}
-
 		$(window).unbind('resize', windowResize);
-
 		header.destroy();
 		content.remove();
 		element.removeClass('fc fc-rtl ui-widget');
 	}
 	
 	
+	
 	function elementVisible() {
-		return element.is(':visible');
+		return _element.offsetWidth !== 0;
 	}
 	
 	
 	function bodyVisible() {
-		return $('body').is(':visible');
+		return $('body')[0].offsetWidth !== 0;
 	}
 	
 	
@@ -332,97 +318,133 @@ function Calendar(element, options, eventSources) {
 	/* View Rendering
 	-----------------------------------------------------------------------------*/
 	
-
+	// TODO: improve view switching (still weird transition in IE, and FF has whiteout problem)
+	
 	function changeView(newViewName) {
 		if (!currentView || newViewName != currentView.name) {
-			_changeView(newViewName);
-		}
-	}
+			ignoreWindowResize++; // because setMinHeight might change the height before render (and subsequently setSize) is reached
 
-
-	function _changeView(newViewName) {
-		ignoreWindowResize++;
-
-		if (currentView) {
-			trigger('viewDestroy', currentView, currentView, currentView.element);
 			unselect();
-			currentView.triggerEventDestroy(); // trigger 'eventDestroy' for each event
-			freezeContentHeight();
-			currentView.element.remove();
-			header.deactivateButton(currentView.name);
-		}
-
-		header.activateButton(newViewName);
-
-		currentView = new fcViews[newViewName](
-			$("<div class='fc-view fc-view-" + newViewName + "' style='position:relative'/>")
-				.appendTo(content),
-			t // the calendar object
-		);
-
-		renderView();
-		unfreezeContentHeight();
-
-		ignoreWindowResize--;
-	}
-
-
-	function renderView(inc) {
-		if (
-			!currentView.start || // never rendered before
-			inc || date < currentView.start || date >= currentView.end // or new date range
-		) {
-			if (elementVisible()) {
-				_renderView(inc);
+			
+			var oldView = currentView;
+			var newViewElement;
+				
+			if (oldView) {
+				(oldView.beforeHide || noop)(); // called before changing min-height. if called after, scroll state is reset (in Opera)
+				setMinHeight(content, content.height());
+				oldView.element.hide();
+			}else{
+				setMinHeight(content, 1); // needs to be 1 (not 0) for IE7, or else view dimensions miscalculated
 			}
+			content.css('overflow', 'hidden');
+			
+			currentView = viewInstances[newViewName];
+			if (currentView) {
+				currentView.element.show();
+			}else{
+				currentView = viewInstances[newViewName] = new fcViews[newViewName](
+					newViewElement = absoluteViewElement =
+						$("<div class='fc-view fc-view-" + newViewName + "' style='position:absolute'/>")
+							.appendTo(content),
+					t // the calendar object
+				);
+			}
+			
+			if (oldView) {
+				header.deactivateButton(oldView.name);
+			}
+			header.activateButton(newViewName);
+			
+			renderView(); // after height has been set, will make absoluteViewElement's position=relative, then set to null
+			
+			content.css('overflow', '');
+			if (oldView) {
+				setMinHeight(content, 1);
+			}
+			
+			if (!newViewElement) {
+				(currentView.afterShow || noop)(); // called after setting min-height/overflow, so in final scroll state (for Opera)
+			}
+			
+			ignoreWindowResize--;
 		}
 	}
+	
+	
+	
+	function renderView(inc) {
+		if (elementVisible()) {
+			ignoreWindowResize++; // because renderEvents might temporarily change the height before setSize is reached
 
-
-	function _renderView(inc) { // assumes elementVisible
-		ignoreWindowResize++;
-
-		if (currentView.start) { // already been rendered?
-			trigger('viewDestroy', currentView, currentView, currentView.element);
 			unselect();
-			clearEvents();
+			
+			if (suggestedViewHeight === undefined) {
+				calcSize();
+			}
+			
+			var forceEventRender = false;
+			if (!currentView.start || inc || date < currentView.start || date >= currentView.end) {
+				// view must render an entire new date range (and refetch/render events)
+				currentView.render(date, inc || 0); // responsible for clearing events
+				setSize(true);
+				forceEventRender = true;
+			}
+			else if (currentView.sizeDirty) {
+				// view must resize (and rerender events)
+				currentView.clearEvents();
+				setSize();
+				forceEventRender = true;
+			}
+			else if (currentView.eventsDirty) {
+				currentView.clearEvents();
+				forceEventRender = true;
+			}
+			currentView.sizeDirty = false;
+			currentView.eventsDirty = false;
+			updateEvents(forceEventRender);
+			
+			elementOuterWidth = element.outerWidth();
+			
+			header.updateTitle(currentView.title);
+			var today = new Date();
+			if (today >= currentView.start && today < currentView.end) {
+				header.disableButton('today');
+			}else{
+				header.enableButton('today');
+			}
+			
+			ignoreWindowResize--;
+			currentView.trigger('viewDisplay', _element);
 		}
-
-		freezeContentHeight();
-		currentView.render(date, inc || 0); // the view's render method ONLY renders the skeleton, nothing else
-		setSize();
-		unfreezeContentHeight();
-		(currentView.afterRender || noop)();
-
-		updateTitle();
-		updateTodayButton();
-
-		trigger('viewRender', currentView, currentView, currentView.element);
-		currentView.trigger('viewDisplay', _element); // deprecated
-
-		ignoreWindowResize--;
-
-		getAndRenderEvents();
 	}
 	
 	
-
+	
 	/* Resizing
 	-----------------------------------------------------------------------------*/
 	
 	
 	function updateSize() {
+		markSizesDirty();
 		if (elementVisible()) {
-			unselect();
-			clearEvents();
 			calcSize();
 			setSize();
-			renderEvents();
+			unselect();
+			currentView.clearEvents();
+			currentView.renderEvents(events);
+			currentView.sizeDirty = false;
 		}
 	}
 	
 	
-	function calcSize() { // assumes elementVisible
+	function markSizesDirty() {
+		$.each(viewInstances, function(i, inst) {
+			inst.sizeDirty = true;
+		});
+	}
+	
+	
+	function calcSize() {
 		if (options.contentHeight) {
 			suggestedViewHeight = options.contentHeight;
 		}
@@ -435,20 +457,15 @@ function Calendar(element, options, eventSources) {
 	}
 	
 	
-	function setSize() { // assumes elementVisible
-
-		if (suggestedViewHeight === undefined) {
-			calcSize(); // for first time
-				// NOTE: we don't want to recalculate on every renderView because
-				// it could result in oscillating heights due to scrollbars.
-		}
-
+	function setSize(dateChanged) { // todo: dateChanged?
 		ignoreWindowResize++;
-		currentView.setHeight(suggestedViewHeight);
-		currentView.setWidth(content.width());
+		currentView.setHeight(suggestedViewHeight, dateChanged);
+		if (absoluteViewElement) {
+			absoluteViewElement.css('position', 'relative');
+			absoluteViewElement = null;
+		}
+		currentView.setWidth(content.width(), dateChanged);
 		ignoreWindowResize--;
-
-		elementOuterWidth = element.outerWidth();
 	}
 	
 	
@@ -477,85 +494,52 @@ function Calendar(element, options, eventSources) {
 	
 	/* Event Fetching/Rendering
 	-----------------------------------------------------------------------------*/
-	// TODO: going forward, most of this stuff should be directly handled by the view
-
-
-	function refetchEvents() { // can be called as an API method
-		clearEvents();
-		fetchAndRenderEvents();
-	}
-
-
-	function rerenderEvents(modifiedEventID) { // can be called as an API method
-		clearEvents();
-		renderEvents(modifiedEventID);
-	}
-
-
-	function renderEvents(modifiedEventID) { // TODO: remove modifiedEventID hack
-		if (elementVisible()) {
-			currentView.setEventData(events); // for View.js, TODO: unify with renderEvents
-			currentView.renderEvents(events, modifiedEventID); // actually render the DOM elements
-			currentView.trigger('eventAfterAllRender');
+	
+	
+	// fetches events if necessary, rerenders events if necessary (or if forced)
+	function updateEvents(forceRender) {
+		if (!options.lazyFetching || isFetchNeeded(currentView.visStart, currentView.visEnd)) {
+			refetchEvents();
 		}
-	}
-
-
-	function clearEvents() {
-		currentView.triggerEventDestroy(); // trigger 'eventDestroy' for each event
-		currentView.clearEvents(); // actually remove the DOM elements
-		currentView.clearEventData(); // for View.js, TODO: unify with clearEvents
+		else if (forceRender) {
+			rerenderEvents();
+		}
 	}
 	
-
-	function getAndRenderEvents() {
-		if (!options.lazyFetching || isFetchNeeded(currentView.visStart, currentView.visEnd)) {
-			fetchAndRenderEvents();
-		}
-		else {
-			renderEvents();
-		}
+	
+	function refetchEvents() {
+		fetchEvents(currentView.visStart, currentView.visEnd); // will call reportEvents
 	}
-
-
-	function fetchAndRenderEvents() {
-		fetchEvents(currentView.visStart, currentView.visEnd);
-			// ... will call reportEvents
-			// ... which will call renderEvents
-	}
-
+	
 	
 	// called when event data arrives
 	function reportEvents(_events) {
 		events = _events;
-		renderEvents();
+		rerenderEvents();
 	}
-
-
+	
+	
 	// called when a single event's data has been changed
 	function reportEventChange(eventID) {
 		rerenderEvents(eventID);
 	}
-
-
-
-	/* Header Updating
-	-----------------------------------------------------------------------------*/
-
-
-	function updateTitle() {
-		header.updateTitle(currentView.title);
+	
+	
+	// attempts to rerenderEvents
+	function rerenderEvents(modifiedEventID) {
+		markEventsDirty();
+		if (elementVisible()) {
+			currentView.clearEvents();
+			currentView.renderEvents(events, modifiedEventID);
+			currentView.eventsDirty = false;
+		}
 	}
-
-
-	function updateTodayButton() {
-		var today = new Date();
-		if (today >= currentView.start && today < currentView.end) {
-			header.disableButton('today');
-		}
-		else {
-			header.enableButton('today');
-		}
+	
+	
+	function markEventsDirty() {
+		$.each(viewInstances, function(i, inst) {
+			inst.eventsDirty = true;
+		});
 	}
 	
 
@@ -635,29 +619,6 @@ function Calendar(element, options, eventSources) {
 	
 	function getDate() {
 		return cloneDate(date);
-	}
-
-
-
-	/* Height "Freezing"
-	-----------------------------------------------------------------------------*/
-
-
-	function freezeContentHeight() {
-		content.css({
-			width: '100%',
-			height: content.height(),
-			overflow: 'hidden'
-		});
-	}
-
-
-	function unfreezeContentHeight() {
-		content.css({
-			width: '',
-			height: '',
-			overflow: ''
-		});
 	}
 	
 	
@@ -1019,22 +980,7 @@ function EventManager(options, _sources) {
 				var success = source.success;
 				var error = source.error;
 				var complete = source.complete;
-
-				// retrieve any outbound GET/POST $.ajax data from the options
-				var customData;
-				if ($.isFunction(source.data)) {
-					// supplied as a function that returns a key/value object
-					customData = source.data();
-				}
-				else {
-					// supplied as a straight key/value object
-					customData = source.data;
-				}
-
-				// use a copy of the custom data so we can modify the parameters
-				// and not affect the passed-in object.
-				var data = $.extend({}, customData || {});
-
+				var data = $.extend({}, source.data || {});
 				var startParam = firstDefined(source.startParam, options.startParam);
 				var endParam = firstDefined(source.endParam, options.endParam);
 				if (startParam) {
@@ -1043,7 +989,6 @@ function EventManager(options, _sources) {
 				if (endParam) {
 					data[endParam] = Math.round(+rangeEnd / 1000);
 				}
-
 				pushLoading();
 				$.ajax($.extend({}, ajaxDefaults, source, {
 					data: data,
@@ -1216,14 +1161,14 @@ function EventManager(options, _sources) {
 	
 	function pushLoading() {
 		if (!loadingLevel++) {
-			trigger('loading', null, true, getView());
+			trigger('loading', null, true);
 		}
 	}
 	
 	
 	function popLoading() {
 		if (!--loadingLevel) {
-			trigger('loading', null, false, getView());
+			trigger('loading', null, false);
 		}
 	}
 	
@@ -1790,6 +1735,15 @@ function vborders(element) {
 }
 
 
+function setMinHeight(element, height) {
+	height = (typeof height == 'number' ? height + 'px' : height);
+	element.each(function(i, _element) {
+		_element.style.cssText += ';min-height:' + height + ';_height:' + height;
+		// why can't we just use .css() ? i forget
+	});
+}
+
+
 
 /* Misc Utils
 -----------------------------------------------------------------------------*/
@@ -2145,6 +2099,7 @@ function BasicView(element, calendar, viewName) {
 	BasicEventRenderer.call(t);
 	var opt = t.opt;
 	var trigger = t.trigger;
+	var clearEvents = t.clearEvents;
 	var renderOverlay = t.renderOverlay;
 	var clearOverlays = t.clearOverlays;
 	var daySelectionMousedown = t.daySelectionMousedown;
@@ -2199,11 +2154,12 @@ function BasicView(element, calendar, viewName) {
 		colCnt = _colCnt;
 		showNumbers = _showNumbers;
 		updateOptions();
-
-		if (!body) {
+		var firstTime = !body;
+		if (firstTime) {
 			buildEventContainer();
+		}else{
+			clearEvents();
 		}
-
 		buildTable();
 	}
 	
@@ -2226,7 +2182,7 @@ function BasicView(element, calendar, viewName) {
 	
 	function buildEventContainer() {
 		daySegmentContainer =
-			$("<div class='fc-event-container' style='position:absolute;z-index:8;top:0;left:0'/>")
+			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
 				.appendTo(element);
 	}
 	
@@ -2234,6 +2190,7 @@ function BasicView(element, calendar, viewName) {
 	function buildTable() {
 		var html = buildTableHTML();
 
+		lockHeight(); // the unlock happens later, in setHeight()...
 		if (table) {
 			table.remove();
 		}
@@ -2368,12 +2325,6 @@ function BasicView(element, calendar, viewName) {
 				tm + '-state-highlight'
 			);
 		}
-		else if (date < today) {
-			classNames.push('fc-past');
-		}
-		else {
-			classNames.push('fc-future');
-		}
 
 		html +=
 			"<td" +
@@ -2420,13 +2371,14 @@ function BasicView(element, calendar, viewName) {
 		bodyFirstCells.each(function(i, _cell) {
 			if (i < rowCnt) {
 				cell = $(_cell);
-				cell.find('> div').css(
-					'min-height',
+				setMinHeight(
+					cell.find('> div'),
 					(i==rowCnt-1 ? rowHeightLast : rowHeight) - vsides(cell)
 				);
 			}
 		});
 		
+		unlockHeight();
 	}
 	
 	
@@ -2621,6 +2573,20 @@ function BasicView(element, calendar, viewName) {
 	function allDayRow(i) {
 		return bodyRows.eq(i);
 	}
+
+
+
+	// makes sure height doesn't collapse while we destroy/render new cells
+	// (this causes a bad end-user scrollbar jump)
+	// TODO: generalize this for all view rendering. (also in Calendar.js)
+
+	function lockHeight() {
+		setMinHeight(element, element.height());
+	}
+
+	function unlockHeight() {
+		setMinHeight(element, 1);
+	}
 	
 }
 
@@ -2640,11 +2606,14 @@ function BasicEventRenderer() {
 
 	
 	function renderEvents(events, modifiedEventId) {
+		t.reportEvents(events);
 		t.renderDayEvents(events, modifiedEventId);
+		t.trigger('eventAfterAllRender');
 	}
 	
 	
 	function clearEvents() {
+		t.reportEventClear();
 		t.getDaySegmentContainer().empty();
 	}
 
@@ -2765,8 +2734,7 @@ setDefaults({
 		agenda: .5
 	},
 	minTime: 0,
-	maxTime: 24,
-	slotEventOverlap: true
+	maxTime: 24
 });
 
 
@@ -2782,12 +2750,12 @@ function AgendaView(element, calendar, viewName) {
 	t.renderAgenda = renderAgenda;
 	t.setWidth = setWidth;
 	t.setHeight = setHeight;
-	t.afterRender = afterRender;
+	t.beforeHide = beforeHide;
+	t.afterShow = afterShow;
 	t.defaultEventEnd = defaultEventEnd;
 	t.timePosition = timePosition;
 	t.getIsCellAllDay = getIsCellAllDay;
 	t.allDayRow = getAllDayRow;
-	t.getCoordinateGrid = function() { return coordinateGrid }; // specifically for AgendaEventRenderer
 	t.getHoverListener = function() { return hoverListener };
 	t.colLeft = colLeft;
 	t.colRight = colRight;
@@ -2819,6 +2787,7 @@ function AgendaView(element, calendar, viewName) {
 	AgendaEventRenderer.call(t);
 	var opt = t.opt;
 	var trigger = t.trigger;
+	var clearEvents = t.clearEvents;
 	var renderOverlay = t.renderOverlay;
 	var clearOverlays = t.clearOverlays;
 	var reportSelection = t.reportSelection;
@@ -2850,6 +2819,7 @@ function AgendaView(element, calendar, viewName) {
 	var slotContainer;
 	var slotSegmentContainer;
 	var slotTable;
+	var slotTableFirstInner;
 	var selectionHelper;
 	
 	var viewWidth;
@@ -2870,6 +2840,7 @@ function AgendaView(element, calendar, viewName) {
 	var colPositions;
 	var colContentPositions;
 	var slotTopCache = {};
+	var savedScrollTop;
 	
 	var tm;
 	var rtl;
@@ -2891,12 +2862,11 @@ function AgendaView(element, calendar, viewName) {
 	function renderAgenda(c) {
 		colCnt = c;
 		updateOptions();
-
-		if (!dayTable) { // first time rendering?
+		if (!dayTable) {
 			buildSkeleton(); // builds day table, slot area, events containers
-		}
-		else {
+		}else{
 			buildDayTable(); // rebuilds day table
+			clearEvents();
 		}
 	}
 	
@@ -2947,7 +2917,7 @@ function AgendaView(element, calendar, viewName) {
 		if (opt('allDaySlot')) {
 		
 			daySegmentContainer =
-				$("<div class='fc-event-container' style='position:absolute;z-index:8;top:0;left:0'/>")
+				$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
 					.appendTo(slotLayer);
 		
 			s =
@@ -2986,7 +2956,7 @@ function AgendaView(element, calendar, viewName) {
 				.appendTo(slotScroller);
 				
 		slotSegmentContainer =
-			$("<div class='fc-event-container' style='position:absolute;z-index:8;top:0;left:0'/>")
+			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
 				.appendTo(slotContainer);
 		
 		s =
@@ -3014,6 +2984,7 @@ function AgendaView(element, calendar, viewName) {
 			"</tbody>" +
 			"</table>";
 		slotTable = $(s).appendTo(slotContainer);
+		slotTableFirstInner = slotTable.find('div:first');
 		
 		slotBind(slotTable.find('td'));
 	}
@@ -3072,7 +3043,6 @@ function AgendaView(element, calendar, viewName) {
 			"<tr>";
 
 		if (showWeekNumbers) {
-			date = cellToDate(0, 0);
 			weekText = formatDate(date, weekNumberFormat);
 			if (rtl) {
 				weekText += weekNumberTitle;
@@ -3139,12 +3109,6 @@ function AgendaView(element, calendar, viewName) {
 					'fc-today'
 				);
 			}
-			else if (date < today) {
-				classNames.push('fc-past');
-			}
-			else {
-				classNames.push('fc-future');
-			}
 
 			cellHTML =
 				"<td class='" + classNames.join(' ') + "'>" +
@@ -3176,7 +3140,7 @@ function AgendaView(element, calendar, viewName) {
 	-----------------------------------------------------------------------*/
 
 	
-	function setHeight(height) {
+	function setHeight(height, dateChanged) {
 		if (height === undefined) {
 			height = viewHeight;
 		}
@@ -3197,12 +3161,14 @@ function AgendaView(element, calendar, viewName) {
 		
 		slotScroller.height(bodyHeight - allDayHeight - 1);
 		
-		// the stylesheet guarantees that the first row has no border.
-		// this allows .height() to work well cross-browser.
-		slotHeight = slotTable.find('tr:first').height() + 1; // +1 for bottom border
+		slotHeight = slotTableFirstInner.height() + 1; // +1 for border
 
 		snapRatio = opt('slotMinutes') / snapMinutes;
 		snapHeight = slotHeight / snapRatio;
+		
+		if (dateChanged) {
+			resetScroll();
+		}
 	}
 	
 	
@@ -3269,10 +3235,15 @@ function AgendaView(element, calendar, viewName) {
 		scroll();
 		setTimeout(scroll, 0); // overrides any previous scroll state made by the browser
 	}
-
-
-	function afterRender() { // after the view has been freshly rendered and sized
-		resetScroll();
+	
+	
+	function beforeHide() {
+		savedScrollTop = slotScroller.scrollTop();
+	}
+	
+	
+	function afterShow() {
+		slotScroller.scrollTop(savedScrollTop);
 	}
 	
 	
@@ -3465,11 +3436,7 @@ function AgendaView(element, calendar, viewName) {
 			slotI = Math.floor(minutes / slotMinutes),
 			slotTop = slotTopCache[slotI];
 		if (slotTop === undefined) {
-			slotTop = slotTopCache[slotI] =
-				slotTable.find('tr').eq(slotI).find('td div')[0].offsetTop;
-				// .eq() is faster than ":eq()" selector
-				// [0].offsetTop is faster than .position().top (do we really need this optimization?)
-				// a better optimization would be to cache all these divs
+			slotTop = slotTopCache[slotI] = slotTable.find('tr:eq(' + slotI + ') td div')[0].offsetTop; //.position().top; // need this optimization???
 		}
 		return Math.max(0, Math.round(
 			slotTop - 1 + slotHeight * ((minutes % slotMinutes) / slotMinutes)
@@ -3533,6 +3500,7 @@ function AgendaView(element, calendar, viewName) {
 						var helperRes = helperOption(startDate, endDate);
 						if (helperRes) {
 							rect.position = 'absolute';
+							rect.zIndex = 8;
 							selectionHelper = $(helperRes)
 								.css(rect)
 								.appendTo(slotContainer);
@@ -3664,6 +3632,8 @@ function AgendaEventRenderer() {
 	var isEventDraggable = t.isEventDraggable;
 	var isEventResizable = t.isEventResizable;
 	var eventEnd = t.eventEnd;
+	var reportEvents = t.reportEvents;
+	var reportEventClear = t.reportEventClear;
 	var eventElementHandlers = t.eventElementHandlers;
 	var setHeight = t.setHeight;
 	var getDaySegmentContainer = t.getDaySegmentContainer;
@@ -3672,10 +3642,10 @@ function AgendaEventRenderer() {
 	var getMaxMinute = t.getMaxMinute;
 	var getMinMinute = t.getMinMinute;
 	var timePosition = t.timePosition;
-	var getIsCellAllDay = t.getIsCellAllDay;
 	var colContentLeft = t.colContentLeft;
 	var colContentRight = t.colContentRight;
 	var cellToDate = t.cellToDate;
+	var segmentCompare = t.segmentCompare;
 	var getColCnt = t.getColCnt;
 	var getColWidth = t.getColWidth;
 	var getSnapHeight = t.getSnapHeight;
@@ -3704,6 +3674,7 @@ function AgendaEventRenderer() {
 	
 
 	function renderEvents(events, modifiedEventId) {
+		reportEvents(events);
 		var i, len=events.length,
 			dayEvents=[],
 			slotEvents=[];
@@ -3721,10 +3692,13 @@ function AgendaEventRenderer() {
 		}
 
 		renderSlotSegs(compileSlotSegs(slotEvents), modifiedEventId);
+
+		trigger('eventAfterAllRender');
 	}
 	
 	
 	function clearEvents() {
+		reportEventClear();
 		getDaySegmentContainer().empty();
 		getSlotSegmentContainer().empty();
 	}
@@ -3736,32 +3710,35 @@ function AgendaEventRenderer() {
 			maxMinute = getMaxMinute(),
 			d,
 			visEventEnds = $.map(events, slotEventEnd),
-			i,
-			j, seg,
-			colSegs,
+			i, col,
+			j, level,
+			k, seg,
 			segs = [];
-
 		for (i=0; i<colCnt; i++) {
 
 			d = cellToDate(0, i);
 			addMinutes(d, minMinute);
 
-			colSegs = sliceSegs(
-				events,
-				visEventEnds,
-				d,
-				addMinutes(cloneDate(d), maxMinute-minMinute)
+			col = stackAgendaSegs(
+				sliceSegs(
+					events,
+					visEventEnds,
+					d,
+					addMinutes(cloneDate(d), maxMinute-minMinute)
+				)
 			);
+			countForwardSegs(col);
 
-			colSegs = placeSlotSegs(colSegs); // returns a new order
-
-			for (j=0; j<colSegs.length; j++) {
-				seg = colSegs[j];
-				seg.col = i;
-				segs.push(seg);
+			for (j=0; j<col.length; j++) {
+				level = col[j];
+				for (k=0; k<level.length; k++) {
+					seg = level[k];
+					seg.col = i;
+					seg.level = j;
+					segs.push(seg);
+				}
 			}
 		}
-
 		return segs;
 	}
 
@@ -3796,11 +3773,12 @@ function AgendaEventRenderer() {
 					start: segStart,
 					end: segEnd,
 					isStart: isStart,
-					isEnd: isEnd
+					isEnd: isEnd,
+					msLength: segEnd - segStart
 				});
 			}
 		}
-		return segs.sort(compareSlotSegs);
+		return segs.sort(segmentCompare);
 	}
 
 
@@ -3821,22 +3799,27 @@ function AgendaEventRenderer() {
 	
 		var i, segCnt=segs.length, seg,
 			event,
-			top,
-			bottom,
-			columnLeft,
-			columnRight,
-			columnWidth,
-			width,
+			classes,
+			top, bottom,
+			colI, levelI, forward,
+			leftmost,
+			availWidth,
+			outerWidth,
 			left,
-			right,
-			html = '',
+			html='',
 			eventElements,
 			eventElement,
 			triggerRes,
 			titleElement,
 			height,
 			slotSegmentContainer = getSlotSegmentContainer(),
-			isRTL = opt('isRTL');
+			rtl, dis;
+			
+		if (rtl = opt('isRTL')) {
+			dis = -1;
+		}else{
+			dis = 1;
+		}
 			
 		// calculate position/dimensions, create html
 		for (i=0; i<segCnt; i++) {
@@ -3844,48 +3827,33 @@ function AgendaEventRenderer() {
 			event = seg.event;
 			top = timePosition(seg.start, seg.start);
 			bottom = timePosition(seg.start, seg.end);
-			columnLeft = colContentLeft(seg.col);
-			columnRight = colContentRight(seg.col);
-			columnWidth = columnRight - columnLeft;
-
-			// shave off space on right near scrollbars (2.5%)
-			// TODO: move this to CSS somehow
-			columnRight -= columnWidth * .025;
-			columnWidth = columnRight - columnLeft;
-
-			width = columnWidth * (seg.forwardCoord - seg.backwardCoord);
-
-			if (opt('slotEventOverlap')) {
-				// double the width while making sure resize handle is visible
-				// (assumed to be 20px wide)
-				width = Math.max(
-					(width - (20/2)) * 2,
-					width // narrow columns will want to make the segment smaller than
-						// the natural width. don't allow it
-				);
+			colI = seg.col;
+			levelI = seg.level;
+			forward = seg.forward || 0;
+			leftmost = colContentLeft(colI);
+			availWidth = colContentRight(colI) - leftmost;
+			availWidth = Math.min(availWidth-6, availWidth*.95); // TODO: move this to CSS
+			if (levelI) {
+				// indented and thin
+				outerWidth = availWidth / (levelI + forward + 1);
+			}else{
+				if (forward) {
+					// moderately wide, aligned left still
+					outerWidth = ((availWidth / (forward + 1)) - (12/2)) * 2; // 12 is the predicted width of resizer =
+				}else{
+					// can be entire width, aligned left
+					outerWidth = availWidth;
+				}
 			}
-
-			if (isRTL) {
-				right = columnRight - seg.backwardCoord * columnWidth;
-				left = right - width;
-			}
-			else {
-				left = columnLeft + seg.backwardCoord * columnWidth;
-				right = left + width;
-			}
-
-			// make sure horizontal coordinates are in bounds
-			left = Math.max(left, columnLeft);
-			right = Math.min(right, columnRight);
-			width = right - left;
-
+			left = leftmost +                                  // leftmost possible
+				(availWidth / (levelI + forward + 1) * levelI) // indentation
+				* dis + (rtl ? availWidth - outerWidth : 0);   // rtl
 			seg.top = top;
 			seg.left = left;
-			seg.outerWidth = width;
+			seg.outerWidth = outerWidth;
 			seg.outerHeight = bottom - top;
 			html += slotSegHtml(event, seg);
 		}
-
 		slotSegmentContainer[0].innerHTML = html; // faster than html()
 		eventElements = slotSegmentContainer.children();
 		
@@ -3980,20 +3948,14 @@ function AgendaEventRenderer() {
 		}
 		html +=
 			" class='" + classes.join(' ') + "'" +
-			" style=" +
-				"'" +
-				"position:absolute;" +
-				"top:" + seg.top + "px;" +
-				"left:" + seg.left + "px;" +
-				skinCss +
-				"'" +
+			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
 			">" +
 			"<div class='fc-event-inner'>" +
 			"<div class='fc-event-time'>" +
 			htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) +
 			"</div>" +
 			"<div class='fc-event-title'>" +
-			htmlEscape(event.title || '') +
+			htmlEscape(event.title) +
 			"</div>" +
 			"</div>" +
 			"<div class='fc-event-bg'></div>";
@@ -4040,6 +4002,7 @@ function AgendaEventRenderer() {
 		var snapMinutes = getSnapMinutes();
 		var minMinute = getMinMinute();
 		eventElement.draggable({
+			zIndex: 9,
 			opacity: opt('dragOpacity', 'month'), // use whatever the month view was using
 			revertDuration: opt('dragRevertDuration'),
 			start: function(ev, ui) {
@@ -4125,147 +4088,80 @@ function AgendaEventRenderer() {
 	// when event starts out IN TIMESLOTS
 	
 	function draggableSlotEvent(event, eventElement, timeElement) {
-		var coordinateGrid = t.getCoordinateGrid();
+		var origPosition;
+		var allDay = false;
+		var dayDelta;
+		var minuteDelta;
+		var prevMinuteDelta;
+		var hoverListener = getHoverListener();
 		var colCnt = getColCnt();
 		var colWidth = getColWidth();
 		var snapHeight = getSnapHeight();
 		var snapMinutes = getSnapMinutes();
-
-		// states
-		var origPosition; // original position of the element, not the mouse
-		var origCell;
-		var isInBounds, prevIsInBounds;
-		var isAllDay, prevIsAllDay;
-		var colDelta, prevColDelta;
-		var dayDelta; // derived from colDelta
-		var minuteDelta, prevMinuteDelta;
-
 		eventElement.draggable({
+			zIndex: 9,
 			scroll: false,
-			grid: [ colWidth, snapHeight ],
+			grid: [colWidth, snapHeight],
 			axis: colCnt==1 ? 'y' : false,
 			opacity: opt('dragOpacity'),
 			revertDuration: opt('dragRevertDuration'),
 			start: function(ev, ui) {
-
 				trigger('eventDragStart', eventElement, event, ev, ui);
 				hideEvents(event, eventElement);
-
-				coordinateGrid.build();
-
-				// initialize states
 				origPosition = eventElement.position();
-				origCell = coordinateGrid.cell(ev.pageX, ev.pageY);
-				isInBounds = prevIsInBounds = true;
-				isAllDay = prevIsAllDay = getIsCellAllDay(origCell);
-				colDelta = prevColDelta = 0;
-				dayDelta = 0;
 				minuteDelta = prevMinuteDelta = 0;
-
+				hoverListener.start(function(cell, origCell) {
+					eventElement.draggable('option', 'revert', !cell);
+					clearOverlays();
+					if (cell) {
+						var origDate = cellToDate(0, origCell.col);
+						var date = cellToDate(0, cell.col);
+						dayDelta = dayDiff(date, origDate);
+						if (opt('allDaySlot') && !cell.row) {
+							// over full days
+							if (!allDay) {
+								// convert to temporary all-day event
+								allDay = true;
+								timeElement.hide();
+								eventElement.draggable('option', 'grid', null);
+							}
+							renderDayOverlay(
+								addDays(cloneDate(event.start), dayDelta),
+								addDays(exclEndDay(event), dayDelta)
+							);
+						}else{
+							// on slots
+							resetElement();
+						}
+					}
+				}, ev, 'drag');
 			},
 			drag: function(ev, ui) {
-
-				// NOTE: this `cell` value is only useful for determining in-bounds and all-day.
-				// Bad for anything else due to the discrepancy between the mouse position and the
-				// element position while snapping. (problem revealed in PR #55)
-				//
-				// PS- the problem exists for draggableDayEvent() when dragging an all-day event to a slot event.
-				// We should overhaul the dragging system and stop relying on jQuery UI.
-				var cell = coordinateGrid.cell(ev.pageX, ev.pageY);
-
-				// update states
-				isInBounds = !!cell;
-				if (isInBounds) {
-					isAllDay = getIsCellAllDay(cell);
-
-					// calculate column delta
-					colDelta = Math.round((ui.position.left - origPosition.left) / colWidth);
-					if (colDelta != prevColDelta) {
-						// calculate the day delta based off of the original clicked column and the column delta
-						var origDate = cellToDate(0, origCell.col);
-						var col = origCell.col + colDelta;
-						col = Math.max(0, col);
-						col = Math.min(colCnt-1, col);
-						var date = cellToDate(0, col);
-						dayDelta = dayDiff(date, origDate);
+				minuteDelta = Math.round((ui.position.top - origPosition.top) / snapHeight) * snapMinutes;
+				if (minuteDelta != prevMinuteDelta) {
+					if (!allDay) {
+						updateTimeText(minuteDelta);
 					}
-
-					// calculate minute delta (only if over slots)
-					if (!isAllDay) {
-						minuteDelta = Math.round((ui.position.top - origPosition.top) / snapHeight) * snapMinutes;
-					}
-				}
-
-				// any state changes?
-				if (
-					isInBounds != prevIsInBounds ||
-					isAllDay != prevIsAllDay ||
-					colDelta != prevColDelta ||
-					minuteDelta != prevMinuteDelta
-				) {
-
-					updateUI();
-
-					// update previous states for next time
-					prevIsInBounds = isInBounds;
-					prevIsAllDay = isAllDay;
-					prevColDelta = colDelta;
 					prevMinuteDelta = minuteDelta;
 				}
-
-				// if out-of-bounds, revert when done, and vice versa.
-				eventElement.draggable('option', 'revert', !isInBounds);
-
 			},
 			stop: function(ev, ui) {
-
+				var cell = hoverListener.stop();
 				clearOverlays();
 				trigger('eventDragStop', eventElement, event, ev, ui);
-
-				if (isInBounds && (isAllDay || dayDelta || minuteDelta)) { // changed!
-					eventDrop(this, event, dayDelta, isAllDay ? 0 : minuteDelta, isAllDay, ev, ui);
-				}
-				else { // either no change or out-of-bounds (draggable has already reverted)
-
-					// reset states for next time, and for updateUI()
-					isInBounds = true;
-					isAllDay = false;
-					colDelta = 0;
-					dayDelta = 0;
-					minuteDelta = 0;
-
-					updateUI();
+				if (cell && (dayDelta || minuteDelta || allDay)) {
+					// changed!
+					eventDrop(this, event, dayDelta, allDay ? 0 : minuteDelta, allDay, ev, ui);
+				}else{
+					// either no change or out-of-bounds (draggable has already reverted)
+					resetElement();
 					eventElement.css('filter', ''); // clear IE opacity side-effects
-
-					// sometimes fast drags make event revert to wrong position, so reset.
-					// also, if we dragged the element out of the area because of snapping,
-					// but the *mouse* is still in bounds, we need to reset the position.
-					eventElement.css(origPosition);
-
+					eventElement.css(origPosition); // sometimes fast drags make event revert to wrong position
+					updateTimeText(0);
 					showEvents(event, eventElement);
 				}
 			}
 		});
-
-		function updateUI() {
-			clearOverlays();
-			if (isInBounds) {
-				if (isAllDay) {
-					timeElement.hide();
-					eventElement.draggable('option', 'grid', null); // disable grid snapping
-					renderDayOverlay(
-						addDays(cloneDate(event.start), dayDelta),
-						addDays(exclEndDay(event), dayDelta)
-					);
-				}
-				else {
-					updateTimeText(minuteDelta);
-					timeElement.css('display', ''); // show() was causing display=inline
-					eventElement.draggable('option', 'grid', [colWidth, snapHeight]); // re-enable grid snapping
-				}
-			}
-		}
-
 		function updateTimeText(minuteDelta) {
 			var newStart = addMinutes(cloneDate(event.start), minuteDelta);
 			var newEnd;
@@ -4274,7 +4170,14 @@ function AgendaEventRenderer() {
 			}
 			timeElement.text(formatDates(newStart, newEnd, opt('timeFormat')));
 		}
-
+		function resetElement() {
+			// convert back to original slot-event
+			if (allDay) {
+				timeElement.css('display', ''); // show() was causing display=inline
+				eventElement.draggable('option', 'grid', [colWidth, snapHeight]);
+				allDay = false;
+			}
+		}
 	}
 	
 	
@@ -4295,6 +4198,7 @@ function AgendaEventRenderer() {
 			start: function(ev, ui) {
 				snapDelta = prevSnapDelta = 0;
 				hideEvents(event, eventElement);
+				eventElement.css('z-index', 9);
 				trigger('eventResizeStart', this, event, ev, ui);
 			},
 			resize: function(ev, ui) {
@@ -4317,6 +4221,7 @@ function AgendaEventRenderer() {
 				if (snapDelta) {
 					eventResize(this, event, 0, snapMinutes*snapDelta, ev, ui);
 				}else{
+					eventElement.css('z-index', 8);
 					showEvents(event, eventElement);
 					// BUG: if event was really short, need to put title back in span
 				}
@@ -4331,206 +4236,61 @@ function AgendaEventRenderer() {
 
 /* Agenda Event Segment Utilities
 -----------------------------------------------------------------------------*/
+// TODO: maybe somehow consolidate this with DayEventRenderer's segment system
 
 
-// Sets the seg.backwardCoord and seg.forwardCoord on each segment and returns a new
-// list in the order they should be placed into the DOM (an implicit z-index).
-function placeSlotSegs(segs) {
-	var levels = buildSlotSegLevels(segs);
-	var level0 = levels[0];
-	var i;
-
-	computeForwardSlotSegs(levels);
-
-	if (level0) {
-
-		for (i=0; i<level0.length; i++) {
-			computeSlotSegPressures(level0[i]);
-		}
-
-		for (i=0; i<level0.length; i++) {
-			computeSlotSegCoords(level0[i], 0, 0);
-		}
-	}
-
-	return flattenSlotSegLevels(levels);
-}
-
-
-// Builds an array of segments "levels". The first level will be the leftmost tier of segments
-// if the calendar is left-to-right, or the rightmost if the calendar is right-to-left.
-function buildSlotSegLevels(segs) {
-	var levels = [];
-	var i, seg;
-	var j;
-
-	for (i=0; i<segs.length; i++) {
+function stackAgendaSegs(segs) {
+	var levels = [],
+		i, len = segs.length, seg,
+		j, collide, k;
+	for (i=0; i<len; i++) {
 		seg = segs[i];
-
-		// go through all the levels and stop on the first level where there are no collisions
-		for (j=0; j<levels.length; j++) {
-			if (!computeSlotSegCollisions(seg, levels[j]).length) {
+		j = 0; // the level index where seg should belong
+		while (true) {
+			collide = false;
+			if (levels[j]) {
+				for (k=0; k<levels[j].length; k++) {
+					if (agendaSegsCollide(levels[j][k], seg)) {
+						collide = true;
+						break;
+					}
+				}
+			}
+			if (collide) {
+				j++;
+			}else{
 				break;
 			}
 		}
-
-		(levels[j] || (levels[j] = [])).push(seg);
+		if (levels[j]) {
+			levels[j].push(seg);
+		}else{
+			levels[j] = [seg];
+		}
 	}
-
 	return levels;
 }
 
 
-// For every segment, figure out the other segments that are in subsequent
-// levels that also occupy the same vertical space. Accumulate in seg.forwardSegs
-function computeForwardSlotSegs(levels) {
-	var i, level;
-	var j, seg;
-	var k;
-
-	for (i=0; i<levels.length; i++) {
+function countForwardSegs(levels) {
+	var i, j, k, level, segForward, segBack;
+	for (i=levels.length-1; i>0; i--) {
 		level = levels[i];
-
 		for (j=0; j<level.length; j++) {
-			seg = level[j];
-
-			seg.forwardSegs = [];
-			for (k=i+1; k<levels.length; k++) {
-				computeSlotSegCollisions(seg, levels[k], seg.forwardSegs);
+			segForward = level[j];
+			for (k=0; k<levels[i-1].length; k++) {
+				segBack = levels[i-1][k];
+				if (agendaSegsCollide(segForward, segBack)) {
+					segBack.forward = Math.max(segBack.forward||0, (segForward.forward||0)+1);
+				}
 			}
 		}
 	}
 }
 
 
-// Figure out which path forward (via seg.forwardSegs) results in the longest path until
-// the furthest edge is reached. The number of segments in this path will be seg.forwardPressure
-function computeSlotSegPressures(seg) {
-	var forwardSegs = seg.forwardSegs;
-	var forwardPressure = 0;
-	var i, forwardSeg;
-
-	if (seg.forwardPressure === undefined) { // not already computed
-
-		for (i=0; i<forwardSegs.length; i++) {
-			forwardSeg = forwardSegs[i];
-
-			// figure out the child's maximum forward path
-			computeSlotSegPressures(forwardSeg);
-
-			// either use the existing maximum, or use the child's forward pressure
-			// plus one (for the forwardSeg itself)
-			forwardPressure = Math.max(
-				forwardPressure,
-				1 + forwardSeg.forwardPressure
-			);
-		}
-
-		seg.forwardPressure = forwardPressure;
-	}
-}
-
-
-// Calculate seg.forwardCoord and seg.backwardCoord for the segment, where both values range
-// from 0 to 1. If the calendar is left-to-right, the seg.backwardCoord maps to "left" and
-// seg.forwardCoord maps to "right" (via percentage). Vice-versa if the calendar is right-to-left.
-//
-// The segment might be part of a "series", which means consecutive segments with the same pressure
-// who's width is unknown until an edge has been hit. `seriesBackwardPressure` is the number of
-// segments behind this one in the current series, and `seriesBackwardCoord` is the starting
-// coordinate of the first segment in the series.
-function computeSlotSegCoords(seg, seriesBackwardPressure, seriesBackwardCoord) {
-	var forwardSegs = seg.forwardSegs;
-	var i;
-
-	if (seg.forwardCoord === undefined) { // not already computed
-
-		if (!forwardSegs.length) {
-
-			// if there are no forward segments, this segment should butt up against the edge
-			seg.forwardCoord = 1;
-		}
-		else {
-
-			// sort highest pressure first
-			forwardSegs.sort(compareForwardSlotSegs);
-
-			// this segment's forwardCoord will be calculated from the backwardCoord of the
-			// highest-pressure forward segment.
-			computeSlotSegCoords(forwardSegs[0], seriesBackwardPressure + 1, seriesBackwardCoord);
-			seg.forwardCoord = forwardSegs[0].backwardCoord;
-		}
-
-		// calculate the backwardCoord from the forwardCoord. consider the series
-		seg.backwardCoord = seg.forwardCoord -
-			(seg.forwardCoord - seriesBackwardCoord) / // available width for series
-			(seriesBackwardPressure + 1); // # of segments in the series
-
-		// use this segment's coordinates to computed the coordinates of the less-pressurized
-		// forward segments
-		for (i=0; i<forwardSegs.length; i++) {
-			computeSlotSegCoords(forwardSegs[i], 0, seg.forwardCoord);
-		}
-	}
-}
-
-
-// Outputs a flat array of segments, from lowest to highest level
-function flattenSlotSegLevels(levels) {
-	var segs = [];
-	var i, level;
-	var j;
-
-	for (i=0; i<levels.length; i++) {
-		level = levels[i];
-
-		for (j=0; j<level.length; j++) {
-			segs.push(level[j]);
-		}
-	}
-
-	return segs;
-}
-
-
-// Find all the segments in `otherSegs` that vertically collide with `seg`.
-// Append into an optionally-supplied `results` array and return.
-function computeSlotSegCollisions(seg, otherSegs, results) {
-	results = results || [];
-
-	for (var i=0; i<otherSegs.length; i++) {
-		if (isSlotSegCollision(seg, otherSegs[i])) {
-			results.push(otherSegs[i]);
-		}
-	}
-
-	return results;
-}
-
-
-// Do these segments occupy the same vertical space?
-function isSlotSegCollision(seg1, seg2) {
+function agendaSegsCollide(seg1, seg2) {
 	return seg1.end > seg2.start && seg1.start < seg2.end;
-}
-
-
-// A cmp function for determining which forward segment to rely on more when computing coordinates.
-function compareForwardSlotSegs(seg1, seg2) {
-	// put higher-pressure first
-	return seg2.forwardPressure - seg1.forwardPressure ||
-		// put segments that are closer to initial edge first (and favor ones with no coords yet)
-		(seg1.backwardCoord || 0) - (seg2.backwardCoord || 0) ||
-		// do normal sorting...
-		compareSlotSegs(seg1, seg2);
-}
-
-
-// A cmp function for determining which segment should be closer to the initial edge
-// (the left edge on a left-to-right calendar).
-function compareSlotSegs(seg1, seg2) {
-	return seg1.start - seg2.start || // earlier start time goes first
-		(seg2.end - seg2.start) - (seg1.end - seg1.start) || // tie? longer-duration goes first
-		(seg1.event.title || '').localeCompare(seg2.event.title); // tie? alphabetically by title
 }
 
 
@@ -4549,11 +4309,10 @@ function View(element, calendar, viewName) {
 	t.trigger = trigger;
 	t.isEventDraggable = isEventDraggable;
 	t.isEventResizable = isEventResizable;
-	t.setEventData = setEventData;
-	t.clearEventData = clearEventData;
+	t.reportEvents = reportEvents;
 	t.eventEnd = eventEnd;
 	t.reportEventElement = reportEventElement;
-	t.triggerEventDestroy = triggerEventDestroy;
+	t.reportEventClear = reportEventClear;
 	t.eventElementHandlers = eventElementHandlers;
 	t.showEvents = showEvents;
 	t.hideEvents = hideEvents;
@@ -4571,9 +4330,9 @@ function View(element, calendar, viewName) {
 	
 	
 	// locals
-	var eventsByID = {}; // eventID mapped to array of events (there can be multiple b/c of repeating events)
-	var eventElementsByID = {}; // eventID mapped to array of jQuery elements
-	var eventElementCouples = []; // array of objects, { event, element } // TODO: unify with segment system
+	var eventsByID = {};
+	var eventElements = [];
+	var eventElementsByID = {};
 	var options = calendar.options;
 	
 	
@@ -4597,34 +4356,21 @@ function View(element, calendar, viewName) {
 
 
 	/* Event Editable Boolean Calculations
-	------------------------------------------------------------------------------*/
 
+	------------------------------------------------------------------------------*/
 	
 	function isEventDraggable(event) {
-		var source = event.source || {};
-		return firstDefined(
-				event.startEditable,
-				source.startEditable,
-				opt('eventStartEditable'),
-				event.editable,
-				source.editable,
-				opt('editable')
-			)
-			&& !opt('disableDragging'); // deprecated
+		return isEventEditable(event) && !opt('disableDragging');
 	}
 	
 	
 	function isEventResizable(event) { // but also need to make sure the seg.isEnd == true
-		var source = event.source || {};
-		return firstDefined(
-				event.durationEditable,
-				source.durationEditable,
-				opt('eventDurationEditable'),
-				event.editable,
-				source.editable,
-				opt('editable')
-			)
-			&& !opt('disableResizing'); // deprecated
+		return isEventEditable(event) && !opt('disableResizing');
+	}
+	
+	
+	function isEventEditable(event) {
+		return firstDefined(event.editable, (event.source || {}).editable, opt('editable'));
 	}
 	
 	
@@ -4633,7 +4379,8 @@ function View(element, calendar, viewName) {
 	------------------------------------------------------------------------------*/
 	
 	
-	function setEventData(events) { // events are already normalized at this point
+	// report when view receives new events
+	function reportEvents(events) { // events are already normalized at this point
 		eventsByID = {};
 		var i, len=events.length, event;
 		for (i=0; i<len; i++) {
@@ -4644,13 +4391,6 @@ function View(element, calendar, viewName) {
 				eventsByID[event._id] = [event];
 			}
 		}
-	}
-
-
-	function clearEventData() {
-		eventsByID = {};
-		eventElementsByID = {};
-		eventElementCouples = [];
 	}
 	
 	
@@ -4667,19 +4407,18 @@ function View(element, calendar, viewName) {
 	
 	// report when view creates an element for an event
 	function reportEventElement(event, element) {
-		eventElementCouples.push({ event: event, element: element });
+		eventElements.push(element);
 		if (eventElementsByID[event._id]) {
 			eventElementsByID[event._id].push(element);
 		}else{
 			eventElementsByID[event._id] = [element];
 		}
 	}
-
-
-	function triggerEventDestroy() {
-		$.each(eventElementCouples, function(i, couple) {
-			t.trigger('eventDestroy', couple.event, couple.event, couple.element);
-		});
+	
+	
+	function reportEventClear() {
+		eventElements = [];
+		eventElementsByID = {};
 	}
 	
 	
@@ -4716,8 +4455,6 @@ function View(element, calendar, viewName) {
 	
 	
 	function eachEventElement(event, exceptElement, funcName) {
-		// NOTE: there may be multiple events per ID (repeating events)
-		// and multiple segments per event
 		var elements = eventElementsByID[event._id],
 			i, len = elements.length;
 		for (i=0; i<len; i++) {
@@ -4844,6 +4581,7 @@ function View(element, calendar, viewName) {
 	t.cellOffsetToDayOffset = cellOffsetToDayOffset;
 	t.dayOffsetToDate = dayOffsetToDate;
 	t.rangeToSegments = rangeToSegments;
+	t.segmentCompare = segmentCompare;
 
 
 	// internals
@@ -5072,6 +4810,30 @@ function View(element, calendar, viewName) {
 
 		return segments;
 	}
+
+
+	// Compare two event segments and determine which one takes priority (ex: rendered topmost/leftmost)
+	// NOTE: only works with segments that have `event` properties!
+	//
+	// Returns a negative value if `a` should be first.
+	// Returns a positive value of `b` should be first.
+	function segmentCompare(a, b) {
+		return _segmentCompare(a, b) // sort by dimension
+			|| (a.event.start - b.event.start) // if a tie, sort by event start date
+			|| (a.event.title || "").localeCompare(b.event.title) // if a tie, sort by event title
+	}
+
+	// compare dimensions
+	// NOTE: this is not modular! depends on subclass-specific segment schemas
+	function _segmentCompare(a, b) {
+		if ('msLength' in a) {
+			// segment generated by AgendaEventRenderer
+			return b.msLength - a.msLength; // put taller events first
+		}
+		// segment generated by DayEventRenderer
+		return (b.rightCol - b.leftCol) - (a.rightCol - a.leftCol) // put wider events first
+			|| b.event.allDay - a.event.allDay; // if tie, put all-day events first (booleans cast to 0/1)
+	}
 	
 
 }
@@ -5116,6 +4878,7 @@ function DayEventRenderer() {
 	var clearSelection = t.clearSelection;
 	var getHoverListener = t.getHoverListener;
 	var rangeToSegments = t.rangeToSegments;
+	var segmentCompare = t.segmentCompare;
 	var cellToDate = t.cellToDate;
 	var cellToCellOffset = t.cellToCellOffset;
 	var cellOffsetToDayOffset = t.cellOffsetToDayOffset;
@@ -5346,6 +5109,7 @@ function DayEventRenderer() {
 			" style=" +
 				"'" +
 				"position:absolute;" +
+				"z-index:8;" + // TODO: move this into a constant or put it in the stylesheet
 				"left:" + segment.left + "px;" +
 				skinCss +
 				"'" +
@@ -5360,9 +5124,7 @@ function DayEventRenderer() {
 				"</span>";
 		}
 		html +=
-			"<span class='fc-event-title'>" +
-			htmlEscape(event.title || '') +
-			"</span>" +
+			"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
 			"</div>";
 		if (segment.isEnd && isEventResizable(event)) {
 			html +=
@@ -5406,6 +5168,7 @@ function DayEventRenderer() {
 					triggerRes = $(triggerRes)
 						.css({
 							position: 'absolute',
+							zIndex: 8, // TODO: move this into a constant or put it in the stylesheet
 							left: segment.left
 						});
 
@@ -5563,7 +5326,7 @@ function DayEventRenderer() {
 
 		// Give preference to elements with certain criteria, so they have
 		// a chance to be closer to the top.
-		segments.sort(compareDaySegments);
+		segments.sort(segmentCompare);
 
 		var subrows = [];
 		for (var i=0; i<segments.length; i++) {
@@ -5649,6 +5412,7 @@ function DayEventRenderer() {
 		var hoverListener = getHoverListener();
 		var dayDelta;
 		eventElement.draggable({
+			zIndex: 9,
 			delay: 50,
 			opacity: opt('dragOpacity'),
 			revertDuration: opt('dragRevertDuration'),
@@ -5818,16 +5582,6 @@ function segmentElementEach(segments, callback) { // TODO: use in AgendaView?
 		}
 	}
 }
-
-
-// A cmp function for determining which segments should appear higher up
-function compareDaySegments(a, b) {
-	return (b.rightCol - b.leftCol) - (a.rightCol - a.leftCol) || // put wider events first
-		b.event.allDay - a.event.allDay || // if tie, put all-day events first (booleans cast to 0/1)
-		a.event.start - b.event.start || // if a tie, sort by event start date
-		(a.event.title || '').localeCompare(b.event.title) // if a tie, sort by event title
-}
-
 
 ;;
 

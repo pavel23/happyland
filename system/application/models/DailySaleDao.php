@@ -36,14 +36,14 @@ class DailySaleDao extends CI_Model {
                         ->where('subsidiaries_id', $subsidiaries_id)->get()->row();
     }
 
-    public function getDailySaleCalendar($star, $end, $subsidiaries_id=null) {
+    public function getDailySaleCalendar($month, $year, $subsidiaries_id=null) {
 
-        $sql = 'SELECT id, grand_total_calculated, status, date_sale 
+        $sql = 'SELECT id, grand_total_z_format, status, date_sale 
                 FROM hpl_daily_sales 
-                WHERE date_sale >= FROM_UNIXTIME(?, "%Y-%m-%d") AND date_sale <= FROM_UNIXTIME(?, "%Y-%m-%d")
+                WHERE MONTH(date_sale) = ? AND YEAR(date_sale) = ?
                 AND subsidiaries_id = ?';
         $subsidiaries_id    = ($subsidiaries_id ? $subsidiaries_id : $this->loggedin['subsidiaries']);
-        $query = $this->db->query($sql, array($star, $end, $subsidiaries_id));
+        $query = $this->db->query($sql, array($month, $year, $subsidiaries_id));
 
         return ($query->num_rows() > 0 ? $query->result() : array());
     }
@@ -54,8 +54,6 @@ class DailySaleDao extends CI_Model {
                 ->from('hpl_type_of_sales tys')
                 ->join('hpl_daily_sales_detail dsd', 'tys.id=dsd.type_of_sales_id', 'left');
         $this->db->where('dsd.daily_sales_id', $daily_sale_id);
-        //$this->db->or_where('ISNULL(dsd.daily_sales_id )');
-
         $query = $this->db->get();
         return ($query->num_rows() > 0 ? $query->result() : null);
     }

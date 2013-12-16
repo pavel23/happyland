@@ -23,6 +23,13 @@ class Dashboard extends ValidateAccess {
             $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
             $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
             
+            /*
+             * Esto se saca y se coloca en reportes
+             */
+            $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
+            $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.js');
+            $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.es.js');
+            
             $a_daily_sales_accumulate   = array();
             $a_daily_sales_by_day       = array();
             $month_selected             = '11';
