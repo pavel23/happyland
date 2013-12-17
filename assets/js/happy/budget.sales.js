@@ -12,10 +12,10 @@ $(function() {
         //startCols: 11,
         rowHeaders: false,
         contextMenu: false,
-        fillHandle: true,
+        //fillHandle: true,
         /*currentRowClassName: 'currentRow',
         currentColClassName: 'currentCol',*/
-        autoWrapRow: true,
+        //autoWrapRow: true,
         colHeaders: $.parseJSON(headers).budget_headers,
         columns: [
             {data: 'date_text', readOnly: true},

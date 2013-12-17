@@ -29,11 +29,11 @@ var DailySales = function() {
         _user_map_ids = p_user_map_ids;
     }
 
-    function setSailySaleId(p_dayly_sale_id) {
+    function setDailySaleId(p_dayly_sale_id) {
         _daily_sale_id = p_dayly_sale_id;
     }
 
-    function getSailySaleId() {
+    function getDailySaleId() {
         return _daily_sale_id;
     }
 
@@ -74,11 +74,12 @@ var DailySales = function() {
             return;
         }
 
-        var JSONsaveResponse = {}, row_index = (change[0][0] >= 0 ? change[0][0] : null), col_index = (change[0][1] ? change[0][1] : null),
+       var JSONsaveResponse = {}, row_index = (change[0][0] >= 0 ? change[0][0] : null), col_index = (change[0][1] ? change[0][1] : null),
                 old_value = (change[0][2] ? change[0][2] : null), new_value = (change[0][3] ? change[0][3] : null),
                 $trow = $(_instance.handsontable('getCell', row_index, 0)).parent(),
                 daily_sale_detail_id = parseInt($trow.data('daily_sale_detail_id')) || 0, operator_id = parseInt($trow.data('operator_id')),
-                data_params_detail = _instance.handsontable('getData')[row_index], daily_sale_id = parseInt($(document).data('daily_sale_id')) || 0;
+                data_params_detail = _instance.handsontable('getData')[row_index], daily_sale_id = daily_sale_id = parseInt($(document).data('daily_sale_id')) || 0,
+                subsidiaries_id = parseInt($(document).data('subsidiaries_id')) || 0, seleted_date = parseInt($(document).data('seleted_date')) || 0;
 
         if (data_params_detail.type_of_sales_id) {
             $(document).data('type_of_sales_id', data_params_detail.type_of_sales_id);
@@ -96,7 +97,7 @@ var DailySales = function() {
                     }
                 }
             }
-            data_params = {daily_sale_id: daily_sale_id, daily_sale_detail_id: daily_sale_detail_id, operator_id: $trow.data('operator_id'), data: data_params_detail};
+            data_params = {daily_sale_id: daily_sale_id, subsidiaries_id: subsidiaries_id, seleted_date: seleted_date, daily_sale_detail_id: daily_sale_detail_id, operator_id: $trow.data('operator_id'), data: data_params_detail};
             data_params.data.total_calculated = parseFloat(_instance.handsontable('getCell', row_index, 9).innerHTML);
             data_params.data.difference_money = parseFloat(_instance.handsontable('getCell', row_index, 11).innerHTML);
             data_params.data.type_of_sales_id = $(document).data('type_of_sales_id');
@@ -129,10 +130,11 @@ var DailySales = function() {
                 if (JSONsaveResponse.daily_sale_detail_id > 0 && daily_sale_detail_id === 0) {
                     $trow.data('daily_sale_detail_id', JSONsaveResponse.daily_sale_detail_id);
                 }
-                if (JSONsaveResponse.daily_sale_id > 0 && daily_sale_id === 0) {
+                if (JSONsaveResponse.daily_sale_id > 0 && daily_sale_id == 0) {
+                    console.log(JSONsaveResponse.daily_sale_id);
                     $(document).data('daily_sale_id', JSONsaveResponse.daily_sale_id);
+                    $('#daily_sale_id').attr('value', JSONsaveResponse.daily_sale_id);
                 }
-
                 if (JSONsaveResponse.url_close_daily_sale && !$('#save_daily_sales').attr('href')) {
                     $('#save_daily_sales').attr('href', JSONsaveResponse.url_close_daily_sale);
                 }
@@ -143,8 +145,8 @@ var DailySales = function() {
         setUserMapIds: setUserMapIds,
         setInstance: setInstance,
         getInstance: getInstance,
-        getSailySaleId: getSailySaleId,
-        setSailySaleId: setSailySaleId,
+        getDailySaleId: getDailySaleId,
+        setDailySaleId: setDailySaleId,
         saveDailySales: saveDailySales
     };
 };
@@ -231,7 +233,9 @@ $(function() {
             $container_daily_sales_totals = $('#daily_sales_totals'),
             url_save_data = $('#url-save-daily-sales').val(),
             url_data_autocomplete = $('#url-data-operators').val(),
-            daily_sale_id = $('#dayli_sale_id').val() || 0,
+            daily_sale_id = $('#daily_sale_id').val() || 0,
+            subsidiaries_id = $('#subsidiaries_id').val() || 0,
+            seleted_date = $('#seleted_date').val() || 0,
             $wrapper = $('#wrapper_daily_sale');
 
     var columns = [
@@ -274,6 +278,12 @@ $(function() {
 
     if (daily_sale_id > 0) {
         $(document).data('daily_sale_id', daily_sale_id);
+    }
+    if (subsidiaries_id > 0) {
+        $(document).data('subsidiaries_id', subsidiaries_id);
+    }
+    if (seleted_date > 0) {
+        $(document).data('seleted_date', seleted_date);
     }
 
     var data_type_of_sale_one = $.map($wrapper.data('dailysale'), function(data) {

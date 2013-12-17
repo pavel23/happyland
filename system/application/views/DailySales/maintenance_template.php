@@ -1,6 +1,7 @@
 
 <input type="hidden" name="url-data-operators" id="url-data-operators" value="<?php echo site_url('DailySales/getJSONOperators'); ?>" />
 <input type="hidden" name="url-data-operators" id="url-save-daily-sales" value="<?php echo site_url('DailySales/processForm'); ?>" />
+
 <div class="row">
     <div class="col-lg-12">
         <div class="box dark">
@@ -20,7 +21,9 @@
             </header>
 
             <div id="wrapper_daily_sale" class="accordion-body collapse in body" data-is_readonly="<?php echo $is_readonly ?>" data-dailysale='<?php echo json_encode($dailySale); ?>' >
-                <input type="hidden" name="dayli_sale_id" id="dayli_sale_id" value="<?php echo (isset($dailySaleId) ? $dailySaleId : '' ); ?>">
+                <input type="hidden" name="daily_sale_id" id="daily_sale_id" value="<?php echo (isset($dailySaleId) ? $dailySaleId : '' ); ?>">
+                <input type="hidden" name="subsidiaries_id" id="subsidiaries_id" value="<?php echo $subsidiaries_id; ?>">
+                <input type="hidden" name="seleted_date" id="seleted_date" value="<?php echo $selected_date; ?>">
                 <div id="error_message"></div>
                 <div id="daily_sales"></div>
                 <div id="daily_sales_others"></div>

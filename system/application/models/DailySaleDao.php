@@ -14,7 +14,6 @@
 class DailySaleDao extends CI_Model {
 
     private $loggedin = array();
-
     public function __construct() {
         $this->loggedin = $this->session->userdata('loggedin');
     }
@@ -29,7 +28,7 @@ class DailySaleDao extends CI_Model {
 
     public function getDailySaleByDateSale($date_sale = null, $subsidiaries_id=null) {
         $subsidiaries_id    = ($subsidiaries_id ? $subsidiaries_id : $this->loggedin['subsidiaries']);
-        $timestamp = strtotime(($date_sale ? $date_sale : Date('Y-m-d')));
+        $timestamp = strtotime(($date_sale ? $date_sale : date('Y-m-d')));
         return $this->db->select('id, date_sale')
                         ->from('hpl_daily_sales')
                         ->where('UNIX_TIMESTAMP(date_sale)', $timestamp)
@@ -49,19 +48,21 @@ class DailySaleDao extends CI_Model {
     }
 
     public function getDailySaleDetailBySaleId($daily_sale_id) {
-
-        $this->db->select('dsd.id,IF(dsd.operator_id <> 0,(SELECT  full_name from hpl_user where id = dsd.operator_id ),tys.name ) as name, tys.is_other_sales, tys.id as type_of_sales_id,dsd.operator_id,dsd.cash_number,dsd.opening_cash,dsd.closing_cash,dsd.master_card_amount,dsd.visa_amount, dsd.web_payment,dsd.retirement_amount_pen,dsd.retirement_amount_dol,dsd.total_calculated,dsd.total_x_format,dsd.difference_money,dsd.difference_values,dsd.num_transacctions,dsd.hour_by_cash')
-                ->from('hpl_type_of_sales tys')
-                ->join('hpl_daily_sales_detail dsd', 'tys.id=dsd.type_of_sales_id', 'left');
+        $this->db->select('dsd.id,IF(dsd.operator_id <> 0,(SELECT  full_name from hpl_user where id = dsd.operator_id ),tys.name ) as name, tys.is_other_sales, tys.id as type_of_sales_id,dsd.operator_id,dsd.cash_number,dsd.opening_cash,dsd.closing_cash,dsd.master_card_amount,dsd.visa_amount, dsd.web_payment,dsd.retirement_amount_pen,dsd.retirement_amount_dol,dsd.total_calculated,dsd.total_x_format,dsd.difference_money,dsd.difference_values,dsd.num_transacctions,dsd.hour_by_cash');
+        $this->db->from('hpl_type_of_sales tys');
+        $this->db->join('hpl_daily_sales_detail dsd', 'tys.id=dsd.type_of_sales_id', 'left');
         $this->db->where('dsd.daily_sales_id', $daily_sale_id);
         $query = $this->db->get();
         return ($query->num_rows() > 0 ? $query->result() : null);
     }
 
     public function getDailyOtherSale() {
-    return $this->db->select('id as type_of_sales_id, name, is_other_sales, is_other_sales as other_sale')->from('hpl_type_of_sales')
-                        ->where('status', Status::STATUS_ACTIVO)
-                        ->where('is_deleted', 0)->get()->result();
+        $this->db->select('id as type_of_sales_id, name, is_other_sales, is_other_sales as other_sale');
+        $this->db->from('hpl_type_of_sales');
+        $this->db->where('status', Status::STATUS_ACTIVO);
+        $this->db->where('is_deleted', 0);
+        $this->db->where('is_other_sales', 1);
+        return $this->db->get()->result();
     }
 
     public function saveDailySale($data, $daily_sale_id = null) {

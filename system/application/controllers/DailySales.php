@@ -26,10 +26,8 @@ class DailySales extends ValidateAccess {
     public function index() {
         $this->layout->assets(base_url() . 'assets/js/lib/jquery-ui.custom.min.js');
         $this->layout->assets(base_url() . 'assets/js/lib/fullcalendar.min.js');
-        //$this->layout->assets(base_url() . 'assets/js/lib/bic_calendar.js');
         $this->layout->assets(base_url() . 'assets/js/daily_sale/list_daily_sales.js');
         $this->layout->assets(base_url() . 'assets/css/lib/fullcalendar.css');
-        //$this->layout->assets(base_url() . 'assets/css/lib/bic_calendar.css');
         $data['a_subsidiaries'] = $this->SubsidiaryDao->getDropdownSubsidiaries();
         $this->layout->view('DailySales/list_template', $data);
     }
@@ -69,7 +67,6 @@ class DailySales extends ValidateAccess {
              ->set_content_type('application/json')
              ->set_output(json_encode($a_daily_sales_list));
     }
-    
 
     public function getDailySaleCalendar() {
         $calendar_params    = $this->input->post();
@@ -86,25 +83,28 @@ class DailySales extends ValidateAccess {
         foreach ($dbl_daily_sale as $dbr_daily_sale) {
             $a_daily_sale[Utils::getFormattedDate($dbr_daily_sale->date_sale, '%Y-%m-%d')] = $dbr_daily_sale;
         }
+        $params_url['sd_id'] = $subsidiaries_id;
         for($each_day=1; $each_day <= date('t', mktime(0, 0, 0, $current_month)); $each_day++) {
             $each_date  = $selected_year . '-' . str_pad($current_month, 2, 0, STR_PAD_LEFT) . '-' . str_pad($each_day, 2, 0, STR_PAD_LEFT);
             if(array_key_exists($each_date, $a_daily_sale)) {
                 $dbr_daily_sale = $a_daily_sale[$each_date];
+                $params_url['d']     = strtotime($each_date);
                 $a_calendar_event[$index]['start']      = $dbr_daily_sale->date_sale;
                 $a_calendar_event[$index]['title']      = 'Venta del Día: ';
                 $a_calendar_event[$index]['z_amount']   = 'S/ ' . number_format($dbr_daily_sale->grand_total_z_format,2);
                 $a_calendar_event[$index]['status']     = 'Estado: ' . Status::getStatusLabel($dbr_daily_sale->status);
-                $a_calendar_event[$index]['description']  = 'texto prueba <br />html<strong>css</strong>';
-                $a_calendar_event[$index]['url']        = site_url('DailySales/maintenanceForm/' . $dbr_daily_sale->id) . ($subsidiaries_id ? '?sd_id=' . $subsidiaries_id : '');
+                $a_calendar_event[$index]['description']  = 'Venta actualizada al '.date('H:i:s');
+                $a_calendar_event[$index]['url']        = site_url('DailySales/maintenanceForm/' . $dbr_daily_sale->id) . '?' . http_build_query($params_url);
                 $a_calendar_event[$index]['className']  = 'label ' . ($dbr_daily_sale->status == Status::STATUS_ABIERTO ? 'label-success' : 'label-warning');
             } else {
                 if(strtotime($each_date) <= strtotime($current_date)){
+                    $params_url['d']     = strtotime($each_date);
                     $a_calendar_event[$index]['start']      = $each_date;
-                    $a_calendar_event[$index]['title']      = 'assasa';
-                    $a_calendar_event[$index]['z_amount']   = '3333';
+                    $a_calendar_event[$index]['title']      = 'Venta del Día: ';
+                    $a_calendar_event[$index]['z_amount']   = ' - No Registrado - ';
                     $a_calendar_event[$index]['status']     = '';
-                    $a_calendar_event[$index]['description'] = 'asdasdasdasd';
-                    $a_calendar_event[$index]['url']        = site_url('DailySales/maintenanceForm');// . ($subsidiaries_id ? '?sd_id=' . $subsidiaries_id : '');
+                    $a_calendar_event[$index]['description'] = '';
+                    $a_calendar_event[$index]['url']        = site_url('DailySales/maintenanceForm') . '?' . http_build_query($params_url);
                     $a_calendar_event[$index]['className']  = 'label ' . 'label-success';
                 }
             }
@@ -117,27 +117,22 @@ class DailySales extends ValidateAccess {
 
     public function maintenanceForm($daily_sale_id = null) {
         $this->layout->assets(base_url() . 'assets/css/dist/jquery.handsontable.full.css');
-        $this->layout->assets('//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js');
+        $this->layout->assets(base_url() . 'assets/js/lib/numeral.min.js');
         $this->layout->assets(base_url() . 'assets/js/lib/jquery.ajaxQueue.min.js');
         $this->layout->assets(base_url() . 'assets/js/dist/jquery.handsontable.full.js');
         $this->layout->assets(base_url() . 'assets/js/happy/daily.sales.js');
-        
+
         $is_new = true;
         $dbr_daily_sale = null;
         $dbl_daily_sales_detail = null;
-        $daily_sale_id = ($daily_sale_id ? (int) $daily_sale_id : 0);
         $subsidiaries_id = ($this->input->get('sd_id') ? $this->input->get('sd_id') : null);
+        $selected_date   = ($this->input->get('d') ? $this->input->get('d') : null);
 
-        if ($daily_sale_id > 0) {
+        if (intval($daily_sale_id) > 0) {
             $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id, $subsidiaries_id);
             $is_new = ($dbr_daily_sale ? false : true);
         }
-        if (!$is_new) {
-            $dbl_daily_sales_detail     = $this->DailySaleDao->getDailySaleDetailBySaleId($dbr_daily_sale->id);
-            $dbl_daily_sales_detail_two = $this->DailySaleDao->getDailyOtherSale($dbr_daily_sale->id);
-            $dbl_daily_sales_detail_two = ($dbl_daily_sales_detail_two ? $dbl_daily_sales_detail_two : $dbl_daily_sales_detail = $this->DailySaleDao->getDailyOtherSale());
-            $dbl_daily_sales_detail     = ($dbl_daily_sales_detail ? array_merge($dbl_daily_sales_detail, $dbl_daily_sales_detail_two) : $dbl_daily_sales_detail_two);
-        } else {
+        if($is_new) {
             $dbr_daily_sale_current = $this->DailySaleDao->getDailySaleByDateSale('',$subsidiaries_id);
             if ($dbr_daily_sale_current) {
                 $this->session->set_flashdata('message_danger', 'Ya existe una venta registrada en el día');
@@ -145,7 +140,13 @@ class DailySales extends ValidateAccess {
             }
             unset($dbr_daily_sale_current);
             $dbl_daily_sales_detail = $this->DailySaleDao->getDailyOtherSale();
+        } else {
+            $dbl_daily_sales_detail = $this->DailySaleDao->getDailySaleDetailBySaleId($dbr_daily_sale->id);
+            $dbl_daily_sales_detail = $dbl_daily_sales_detail ? $dbl_daily_sales_detail : array();
+            $dbl_daily_sales_detail_two = $this->DailySaleDao->getDailyOtherSale();
+            $dbl_daily_sales_detail = array_merge($dbl_daily_sales_detail, $dbl_daily_sales_detail_two);
         }
+
         $data_daily_sale = array();
         $data_daily_sale_ids = array();
         $index = 0;
@@ -176,27 +177,6 @@ class DailySales extends ValidateAccess {
                 }
                 $index ++;
             }
-        } else {
-            $data_daily_sale[$index] = array(
-                    'type_of_sales_id' => '',
-                    'name' => '',
-                    'is_other_sales' => '',
-                    'operator_id' => '',
-                    'cash_number' => '',
-                    'opening_cash' => '',
-                    'closing_cash' => '',
-                    'master_card_amount' => '',
-                    'visa_amount' => '',
-                    'web_payment' => '',
-                    'retirement_amount_pen' => '',
-                    'retirement_amount_dol' => '',
-                    'total_calculated' => '',
-                    'total_x_format' => '',
-                    'difference_money' => '',
-                    'difference_values' => '',
-                    'num_transacctions' =>  '',
-                    'hour_by_cash' => ''
-                );
         }
         if(count($data_daily_sale_ids) > 0){
             $data_daily_sale_ids = array_unique($data_daily_sale_ids);
@@ -236,6 +216,7 @@ class DailySales extends ValidateAccess {
 
         $data['dailySale'] = $data_daily_sale;
         $data['subsidiaries_id'] = $subsidiaries_id;
+        $data['selected_date'] = $selected_date;
         $this->layout->view('DailySales/maintenance_template', $data);
     }
 
@@ -306,18 +287,18 @@ class DailySales extends ValidateAccess {
             $daily_sale_credentials = $this->input->post();
             $data_daily_sale = array();
             $response = array();
-
             $daily_sale_id = ($daily_sale_credentials['daily_sale_id'] > 0 ? $daily_sale_credentials['daily_sale_id'] : null);
+            $subsidiaries_id = ($daily_sale_credentials['subsidiaries_id'] > 0 ? $daily_sale_credentials['subsidiaries_id'] : null);
+            $seleted_date = ($daily_sale_credentials['seleted_date'] > 0 ? $daily_sale_credentials['seleted_date'] : null);
             $daily_sale_detail_id = ($daily_sale_credentials['daily_sale_detail_id'] > 0 ? $daily_sale_credentials['daily_sale_detail_id'] : null);
             $operator_id = isset($daily_sale_credentials['operator_id']) ? $daily_sale_credentials['operator_id'] : 0;
             $status = (isset($daily_sale_credentials['is_close']) && $daily_sale_credentials['is_close'] == 1) ? Status::STATUS_CERRADO : Status::STATUS_ABIERTO;
-
-            $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id);
-
+            
+            $dbr_daily_sale = $this->DailySaleDao->getDailySaleById($daily_sale_id, $subsidiaries_id);
             $data_daily_sale['status'] = $status;
             if (count($dbr_daily_sale) == 0) {
-                $data_daily_sale['subsidiaries_id'] = $this->loggedin['subsidiaries']; // aqui va ir la subsidaria depednde del perfil del usuario
-                $data_daily_sale['date_sale'] = date('Y/m/d');
+                $data_daily_sale['subsidiaries_id'] = ($subsidiaries_id ? $subsidiaries_id : $this->loggedin['subsidiaries']); // aqui va ir la subsidaria depednde del perfil del usuario
+                $data_daily_sale['date_sale'] = ($seleted_date>0 ? date('Y/m/d', $seleted_date) : date('Y/m/d'));
                 $response['daily_sale_id'] = $this->DailySaleDao->saveDailySale($data_daily_sale);
             } else {
                 if (array_key_exists('data_headers', $daily_sale_credentials)) {
@@ -352,8 +333,11 @@ class DailySales extends ValidateAccess {
                  ->set_output(json_encode($response));
 
         } catch (Exception $e) {
-            echo $e;
-            die('******************');
+            $response['status'] = 1;
+            $response['message'] = $e->getMessage();
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode($response));
         }
     }
 
@@ -393,7 +377,7 @@ class DailySales extends ValidateAccess {
             echo $e;
         }
     }
-    
+
     public function exportExcel() {
         // Load libreria
         $this->load->library('PHPExcel');
