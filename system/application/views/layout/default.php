@@ -10,7 +10,7 @@
         <?php else: ?>
             <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/main.css"/>
             <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/theme.css"/>
-            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font/font-awesome.css"/>
+            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font/font-awesome.min.css"/>
         <?php endif; ?>
         <?php $this->layout->css(); ?>
     </head>

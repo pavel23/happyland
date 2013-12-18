@@ -101,6 +101,8 @@ $route['venta-diaria/otras-ventas-diarias.html'] = 'DailySales/getJSONDailySaleO
 $route['venta-diaria/venta-diaria-por_fecha.html'] = 'DailySales/getDailySaleCalendar';
 $route['venta-diaria/cargar-datos-tabla.html'] = 'DailySales/getDataTableList';
 
+$route['reportes/seleccionar-reporte.html'] = 'Reports/index';
+
 $route['404_override'] = '';
 
 
