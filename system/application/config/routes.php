@@ -102,6 +102,8 @@ $route['venta-diaria/venta-diaria-por_fecha.html'] = 'DailySales/getDailySaleCal
 $route['venta-diaria/cargar-datos-tabla.html'] = 'DailySales/getDataTableList';
 
 $route['reportes/seleccionar-reporte.html'] = 'Reports/index';
+$route['reportes/ventas-por-dia.html'] = 'Reports/reportSalesByDay';
+$route['reportes/ventas-acumuladas-rango-fecha.html'] = 'Reports/reportSalesAccumulatedByRange';
 
 $route['404_override'] = '';
 

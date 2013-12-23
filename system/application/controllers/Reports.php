@@ -17,6 +17,7 @@ class Reports extends ValidateAccess {
     
     public function index() {
         $this->layout->assets(base_url() . 'assets/css/lib/daterangepicker-bs3.css');
+        $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
         $this->layout->assets(base_url() . 'assets/js/lib/moment.js');
         $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.js');
         $this->layout->assets(base_url() . 'assets/js/lib/daterangepicker.js');
@@ -45,7 +46,12 @@ class Reports extends ValidateAccess {
 
         $this->layout->view('Report/IndexReport', $data);
     }
-    public function getReportByRange($start_date, $finish_date) {
-        
+
+    public function reportSalesByDay($selected_date) {
+        $this->layout->view('Report/SalesByDay', $data);
+    }
+
+    public function reportSalesAccumulatedByRange($start_date, $finish_date) {
+        $this->layout->view('Report/SalesAccumulateByRange', $data);
     }
 }

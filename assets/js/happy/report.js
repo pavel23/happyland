@@ -1,5 +1,13 @@
 $(function() {
-    $('#reportrange').daterangepicker(
+    $('#report_date').datepicker(
+
+    ).on('changeDate', function(ev){
+        $(this).datepicker('hide');
+        console.log('petición ajax para dias ' + ev.date.valueOf());
+    });
+    
+  
+    $('#report_range_date').daterangepicker(
         {
             locale: {
                 applyLabel: daterangepicker_es.applyLabel,
@@ -24,7 +32,7 @@ $(function() {
             endDate: moment()
         },
         function(start, end) {
-            $('#reportrange span').html(start.format('D') + ' ' + daterangepicker_es.months[start.format('MM')-1] + ', ' + start.format('YYYY') + ' - ' + end.format('D') + ' ' + daterangepicker_es.months[end.format('MM')-1] + ', ' + end.format('YYYY'));
+            $('#report_range_date').find('span').html(start.format('D') + ' ' + daterangepicker_es.months[start.format('MM')-1] + ', ' + start.format('YYYY') + ' - ' + end.format('D') + ' ' + daterangepicker_es.months[end.format('MM')-1] + ', ' + end.format('YYYY'));
             console.log('Petición AJAX con los datos start=> ' + start + ' end => ' + end);
         }
     );

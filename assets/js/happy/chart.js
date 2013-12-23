@@ -149,7 +149,7 @@ $(document).ready(function() {
                             rotation: 'auto'
                         },
                         title: {
-                            text: 'km/h'
+                            text: 'Vta. Real/Ppto'
                         },
                         plotBands: [{
                                 from: 0,
@@ -169,7 +169,7 @@ $(document).ready(function() {
                             name: 'Speed',
                             data: [80],
                             tooltip: {
-                                valueSuffix: ' km/h'
+                                //valueSuffix: ' km/h'
                             }
                         }]
                 }
