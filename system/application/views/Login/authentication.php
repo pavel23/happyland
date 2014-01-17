@@ -5,14 +5,13 @@ if ($this->session->flashdata('message_recovering')) {
 }
 
 ?>
-
 <div class="text-center">
-    <img src="<?php echo base_url(); ?>/assets/images/logo-bg-white.jpg" alt="Intranet de Sociedad Happyland Perú" width="400">
+    <img src="<?php echo base_url(); ?>/assets/img/logo-bg-white.jpg" alt="Intranet de Sociedad Happyland Perú" width="400">
 </div>
 <br />
 <div class="tab-content">
     <div id="login" class="tab-pane <?php echo ($is_login ? 'active' : ''); ?>">
-        <?php echo form_open(base_url() . 'login/authentication', array('class' => 'form-signin')); ?>
+        <?php echo form_open(base_url() . 'login/authentication', array('class' => 'form-signin', 'role' => 'form')); ?>
         <p class="text-muted text-center">
             Ingrese Usuario y Contraseña
         </p>

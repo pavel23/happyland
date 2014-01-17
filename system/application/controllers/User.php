@@ -25,11 +25,12 @@ class User extends ValidateAccess {
     public function index() {
         try {
             $this->validateAccessByModule();
-            $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
-            $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
-            $this->layout->assets(base_url() . 'assets/js/happy/load.table.list.js');
-            $this->layout->assets(base_url() . 'assets/js/happy/user.list.js');
-            $this->layout->assets(base_url() . 'assets/css/data-table.css');
+            $this->layout->assets(base_url() . 'assets/lib/js/jquery.dataTables.js');
+            $this->layout->assets(base_url() . 'assets/happy/js/pipeline_table.js');
+            $this->layout->assets(base_url() . 'assets/happy/js/load.table.list.js');
+            $this->layout->assets(base_url() . 'assets/happy/js/user/user.list.js');
+            $this->layout->assets(base_url() . 'assets/happy/css/data-table.css');
+            
             $this->layout->view('User/userList');
         } catch (Exception $e) {
             echo $e;
@@ -58,11 +59,10 @@ class User extends ValidateAccess {
 
     public function maintenanceUser($userid = null) {
         $this->validateAccessByModule();
-        //$this->layout->assets(base_url() . 'assets/css/lib/validationEngine.jquery.css');
-        $this->layout->assets(base_url() . 'assets/css/lib/datepicker.css');
-        $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.js');
-        $this->layout->assets(base_url() . 'assets/js/lib/bootstrap-datepicker.es.js');
-        $this->layout->assets(base_url() . 'assets/js/user/maintenanceUser.js');
+        $this->layout->assets(base_url() . 'assets/lib/css/datepicker.css');
+        $this->layout->assets(base_url() . 'assets/lib/js/bootstrap-datepicker.js');
+        $this->layout->assets(base_url() . 'assets/lib/js/bootstrap-datepicker.es.js');
+        $this->layout->assets(base_url() . 'assets/happy/js/user/maintenanceUser.js');
 
         $data['dbr_user'] = array();
         $data['is_new'] = true;
@@ -71,7 +71,7 @@ class User extends ValidateAccess {
             $data['is_new'] = false;
         }
         $data['dbr_subsidiaries']   = $this->SubsidiaryDao->getDropdownSubsidiaries();
-        $data['dbr_profiles'] = $this->ProfileDao->getDropdownProfiles();
+        $data['dbr_profiles']       = $this->ProfileDao->getDropdownProfiles();
         $data['a_status'] = Status::getProfileStatus();
         
         if ($this->input->post()) {

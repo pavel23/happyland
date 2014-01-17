@@ -22,17 +22,18 @@ class ReportDao extends CI_Model {
         return $query->result();
     }
     
-    public function getDailySalesVsBudget($a_subsidiaries_id=array(), $n_year=2013) {
+    public function getDailySalesVsBudget($a_subsidiaries_id=array(), $n_year=null) {
+        $n_year = 2013;//($n_year ? $n_year : date('Y'));
         $a_subsidiaries_id  = (is_array($a_subsidiaries_id) && count($a_subsidiaries_id)>0 ? $a_subsidiaries_id : null);
-        if(count($a_subsidiaries_id)>0) {
-            $this->db->where_in('sbb.subsidiaries_id', $a_subsidiaries_id);
-        }
+
         $query  = 'SELECT MONTH(sbb.date) AS month_budget, ';
         $query .= 'SUM(sbb.budget_amount) AS budget_amount, ';
-        $query .= '(SELECT SUM(IFNULL(dsl.grand_total_z_format, dsl.grand_total_calculated)) FROM hpl_daily_sales dsl WHERE dsl.subsidiaries_id=sbb.subsidiaries_id AND YEAR(dsl.date_sale)=YEAR(sbb.date) AND MONTH(dsl.date_sale)=MONTH(sbb.date)) AS daily_sale_avg ';
+        $query .= 'SUM(sbb.budget_amount_ext) AS budget_amount_ext, ';
+        $query .= '(SELECT SUM(dsl.grand_total_z_format) FROM hpl_daily_sales dsl WHERE dsl.subsidiaries_id=sbb.subsidiaries_id AND YEAR(dsl.date_sale)=YEAR(sbb.date) AND MONTH(dsl.date_sale)=MONTH(sbb.date)) AS daily_sale_avg ';
         $query .= 'FROM hpl_subsidiaries_budget sbb ';
+        $query .= 'WHERE YEAR(sbb.date)= ' . $n_year . ' ';
         if(count($a_subsidiaries_id)>0) {
-            $query .= 'WHERE sbb.subsidiaries_id IN(' . implode(',', $a_subsidiaries_id) . ') ';
+            $query .= 'AND sbb.subsidiaries_id IN(' . implode(',', $a_subsidiaries_id) . ') ';
         }
         $query .= 'GROUP BY sbb.subsidiaries_id, YEAR(sbb.date), MONTH(sbb.date)';
         return $this->db->query($query)->result();
@@ -67,6 +68,57 @@ class ReportDao extends CI_Model {
         $this->db->group_by('dls.subsidiaries_id ASC');
         $this->db->group_by('YEAR(dls.date_sale) ASC');
         $this->db->group_by('MONTH(dls.date_sale) ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function getDailySalesPptoByZonal($n_year=null, $subsidiaries_id=null) {
+        $n_year = ($n_year ? $n_year : date('Y'));
+        $this->db->select('sbb.id, sbb.date, sbs2.name AS zona_name, sbs.name AS subsidiary_name, sbs.parent_id, SUM(sbb.budget_amount) AS budget_amount_sum, SUM(sbb.budget_amount_assigned) AS budget_amount_assigned_sum, SUM(sbb.budget_amount_ext) AS budget_amount_ext_sum, SUM(dls.grand_total_z_format) AS grand_total_z_format_sum');
+        $this->db->from('hpl_subsidiaries_budget sbb');
+        $this->db->join('hpl_subsidiaries sbs', 'sbb.subsidiaries_id=sbs.id AND sbs.is_princ_office=0 AND sbs.status="'.Status::STATUS_ACTIVO.'" AND sbs.is_deleted=0', 'inner');
+        $this->db->join('hpl_subsidiaries sbs2', 'sbs2.id=sbs.parent_id', 'inner');
+        $this->db->join('hpl_daily_sales dls', 'dls.date_sale=sbb.date AND dls.subsidiaries_id=sbb.subsidiaries_id', 'inner');
+        $this->db->where('sbs.is_princ_office', 0);
+        $this->db->where('sbs.parent_id > 0');
+        $this->db->group_by('sbs.parent_id ASC');
+        $this->db->group_by('YEAR(sbb.date) ASC');
+        $this->db->having('YEAR(sbb.date)=' . $n_year);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function getDailySalesPercentByZonal($n_year=null, $subsidiaries_id=null) {
+        $n_year = ($n_year ? $n_year : date('Y'));
+        $this->db->select('sbs.id, sbs.parent_id, sbs2.name, sbs.name AS subsidiaries_name , dls.date_sale, SUM(dls.grand_total_z_format) AS grand_total_z_format_sum');
+        $this->db->from('hpl_daily_sales dls');
+        $this->db->join('hpl_subsidiaries sbs', 'sbs.id=dls.subsidiaries_id AND sbs.is_princ_office=0 AND sbs.status="'.Status::STATUS_ACTIVO.'" AND sbs.is_deleted=0', 'inner');
+        $this->db->join('hpl_subsidiaries sbs2', 'sbs2.id=sbs.parent_id', 'inner');
+        $this->db->where('sbs.is_princ_office', 0);
+        $this->db->where('sbs.parent_id > 0');
+        $this->db->group_by('YEAR(dls.date_sale) ASC');
+        $this->db->group_by('sbs.parent_id ASC');
+        $this->db->group_by('sbs.id ASC');
+        $this->db->having('YEAR(dls.date_sale)=' . $n_year);
+        $this->db->order_by('sbs2.id', 'ASC');
+        $this->db->order_by('SUM(dls.grand_total_z_format)', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getDailySalesByZonal($n_year=null, $subsidiaries_id=null) {
+        $n_year = ($n_year ? $n_year : date('Y'));
+        $this->db->select('sbs.id, sbs.parent_id, sbs.name AS subsidiaries_name , dls.date_sale, SUM(dls.grand_total_z_format) AS grand_total_z_format_sum, SUM(sbb.budget_amount) AS budget_amount_sum, SUM(sbb.budget_amount_assigned) AS budget_amount_assigned_sum, SUM(sbb.budget_amount_ext) AS budget_amount_ext_sum');
+        $this->db->from('hpl_daily_sales dls');
+        $this->db->join('hpl_subsidiaries sbs', 'sbs.id=dls.subsidiaries_id AND sbs.is_princ_office=0 AND sbs.status="'.Status::STATUS_ACTIVO.'" AND sbs.is_deleted=0', 'inner');
+        $this->db->join('hpl_subsidiaries_budget sbb', 'sbb.subsidiaries_id=sbs.id AND sbs.is_princ_office=0 AND sbs.status="'.Status::STATUS_ACTIVO.'" AND sbs.is_deleted=0', 'left');
+        $this->db->where('sbs.is_princ_office', 0);
+        $this->db->where('sbs.parent_id > 0');
+        $this->db->group_by('YEAR(dls.date_sale) ASC');
+        $this->db->group_by('sbs.id ASC');
+        $this->db->having('YEAR(dls.date_sale)=' . $n_year);
+        $this->db->order_by('sbs.parent_id', 'ASC');
+        $this->db->order_by('SUM(dls.grand_total_z_format)', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }

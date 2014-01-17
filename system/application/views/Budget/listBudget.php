@@ -4,9 +4,6 @@
             <header>
                 <div class="icons"><i class="icon-th"></i></div>
                 <h5>Listado de Presupuesto</h5>
-                <div class="toolbar">
-                    <a href="<?php echo site_url('DailySales/maintenanceBudget'); ?>" class="btn btn-primary btn-sm"><i class="icon-plus icon-white"></i></a>
-                </div>
             </header>
             <div class="body">
                 <?php if ($this->session->flashdata('message')) : ?>

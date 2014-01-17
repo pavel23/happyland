@@ -19,7 +19,7 @@ class Login extends CI_Controller {
     }
 
     public function index($is_login = true) {
-        $this->layout->assets(base_url() . 'assets/js/user/login.js');
+        $this->layout->assets(base_url() . 'assets/happy/js/user/login.js');
         $data['token'] = $this->token();
         $data['is_login'] = $is_login;
         $this->layout->view('Login/authentication', $data);

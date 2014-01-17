@@ -24,19 +24,19 @@ class DailySales extends ValidateAccess {
     }
 
     public function index() {
-        $this->layout->assets(base_url() . 'assets/js/lib/jquery-ui.custom.min.js');
-        $this->layout->assets(base_url() . 'assets/js/lib/fullcalendar.min.js');
-        $this->layout->assets(base_url() . 'assets/js/daily_sale/list_daily_sales.js');
-        $this->layout->assets(base_url() . 'assets/css/lib/fullcalendar.css');
+        $this->layout->assets(base_url() . 'assets/lib/js/jquery-ui.custom.min.js');
+        $this->layout->assets(base_url() . 'assets/lib/js/fullcalendar.min.js');
+        $this->layout->assets(base_url() . 'assets/happy/js/daily_sale/list_daily_sales.js');
+        $this->layout->assets(base_url() . 'assets/lib/css/fullcalendar.css');
         $data['a_subsidiaries'] = $this->SubsidiaryDao->getDropdownSubsidiaries();
         $this->layout->view('DailySales/list_template', $data);
     }
 
     public function managementIndex() {
-        $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
+        $this->layout->assets(base_url() . 'assets/lib/js/jquery.dataTables.js');
         $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
         $this->layout->assets(base_url() . 'assets/js/happy/load.table.list.js');
-        $this->layout->assets(base_url() . 'assets/css/data-table.css');
+        $this->layout->assets(base_url() . 'assets/lib/css/data-table.css');
         $this->layout->view('DailySales/management-list-template');
     }
 
@@ -116,11 +116,11 @@ class DailySales extends ValidateAccess {
     }
 
     public function maintenanceForm($daily_sale_id = null) {
-        $this->layout->assets(base_url() . 'assets/css/dist/jquery.handsontable.full.css');
-        $this->layout->assets(base_url() . 'assets/js/lib/numeral.min.js');
-        $this->layout->assets(base_url() . 'assets/js/lib/jquery.ajaxQueue.min.js');
-        $this->layout->assets(base_url() . 'assets/js/dist/jquery.handsontable.full.js');
-        $this->layout->assets(base_url() . 'assets/js/happy/daily.sales.js');
+        $this->layout->assets(base_url() . 'assets/lib/css/jquery.handsontable.full.css');
+        $this->layout->assets(base_url() . 'assets/lib/js/numeral.min.js');
+        $this->layout->assets(base_url() . 'assets/lib/js/jquery.ajaxQueue.min.js');
+        $this->layout->assets(base_url() . 'assets/lib/js/jquery.handsontable.full.js');
+        $this->layout->assets(base_url() . 'assets/happy/js/daily_sale/daily.sales.js');
 
         $is_new = true;
         $dbr_daily_sale = null;
@@ -167,7 +167,7 @@ class DailySales extends ValidateAccess {
                     'retirement_amount_dol' => ($is_new ? '' : (isset($dbr_daily_sale_detail->retirement_amount_dol) ? $dbr_daily_sale_detail->retirement_amount_dol : '') ),
                     'total_calculated' => ($is_new ? '' : (isset($dbr_daily_sale_detail->total_calculated) ? $dbr_daily_sale_detail->total_calculated : '') ),
                     'total_x_format' => ($is_new ? '' : (isset($dbr_daily_sale_detail->total_x_format) ? $dbr_daily_sale_detail->total_x_format : '') ),
-                    'difference_money' => ($is_new ? '' : (isset($dbr_daily_sale_detail->difference_money) ? $dbr_daily_sale_detail->difference_money : '') ),
+                    'difference_money' => ($is_new ? '' : (isset($dbr_daily_sale_detail->difference_money) ? floatval($dbr_daily_sale_detail->difference_money) : '') ),
                     'difference_values' => ($is_new ? '' : (isset($dbr_daily_sale_detail->difference_values) ? $dbr_daily_sale_detail->difference_values : '') ),
                     'num_transacctions' =>  ($is_new ? '' : (isset($dbr_daily_sale_detail->num_transacctions) ? intval($dbr_daily_sale_detail->num_transacctions) : '') ),
                     'hour_by_cash' => ($is_new ? '' : (isset($dbr_daily_sale_detail->hour_by_cash) ? intval($dbr_daily_sale_detail->hour_by_cash) : '') ),);

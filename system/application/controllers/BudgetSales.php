@@ -57,7 +57,8 @@ class BudgetSales extends ValidateAccess {
             $this->layout->assets(base_url() . 'assets/css/dist/jquery.handsontable.full.css');
 
             $a_data_budget['budget_headers'][] = 'Fecha';
-            $a_data_budget['budget_headers'][] = 'Ppto ' . date('Y');
+            $a_data_budget['budget_headers'][] = 'Ppto ' . date('Y') . ' Int.';
+            $a_data_budget['budget_headers'][] = 'Ppto ' . date('Y') . ' Chile';
             $a_data_budget['budget_headers'][] = 'Venta Real ' . date('Y');
             $a_data_budget['budget_headers'][] = 'Venta Asig ' . (date('Y') - 1);
             $a_data_budget['budget_headers'][] = '% cr/Ppto';
@@ -86,6 +87,7 @@ class BudgetSales extends ValidateAccess {
         $a_daily_budget             = array();
         $a_real_sale_amount         = array();
         $a_budget_amount            = array();
+        $a_budget_amount_ext        = array();
         $a_budget_amount_assigned   = array();
         $a_total_z_amount           = array();
         $a_last_toal_z_amount       = array();
@@ -100,8 +102,9 @@ class BudgetSales extends ValidateAccess {
             $budget_date = Utils::getFormattedDate($budget->date,'%d-%m-%Y');
             $a_daily_budget_id[$budget_date]        = $budget->id;
             $a_budget_amount[$budget_date]          = $budget->budget_amount;
+            $a_budget_amount_ext[$budget_date]      = $budget->budget_amount_ext;
             $a_budget_amount_assigned[$budget_date] = $budget->budget_amount_assigned;
-            $a_total_z_amount[$budget_date]          = $budget->grand_total_z_format;
+            $a_total_z_amount[$budget_date]         = $budget->grand_total_z_format;
             
             $ppto_accumulated += $budget->budget_amount;
             $budget_amount_accumulated += $budget->budget_amount_assigned;
@@ -118,6 +121,7 @@ class BudgetSales extends ValidateAccess {
             $current_date               = str_pad($day,2,0,STR_PAD_LEFT) . '-' . str_pad($month,2,0,STR_PAD_LEFT) .'-' . date('Y');
             $current_date_text          = Utils::getFormattedDate($current_date, '%l') . ', '. Utils::getFormattedDate($current_date, '%d' . ' de ' . Utils::getFormattedDate($current_date, '%F')) . ' de ' . date('Y');
             $current_ppto               = array_key_exists($current_date, $a_budget_amount) ? $a_budget_amount[$current_date] : 0;
+            $current_ppto_ext           = array_key_exists($current_date, $a_budget_amount_ext) ? $a_budget_amount_ext[$current_date] : 0;
             $total_z_amount             = array_key_exists($current_date, $a_total_z_amount) ? $a_total_z_amount[$current_date] : 0;
             $last_real_assig            = array_key_exists($current_date, $a_budget_amount_assigned) ? $a_budget_amount_assigned[$current_date] : 0;
             $total_z_accumulated        = array_key_exists($current_date, $a_total_z_accumulated) ? $a_total_z_accumulated[$current_date] : 0;
@@ -133,6 +137,7 @@ class BudgetSales extends ValidateAccess {
             $a_data_budget['budget_data'][$index]['date' ] = $current_date;
             $a_data_budget['budget_data'][$index]['date_text' ] = $current_date_text;
             $a_data_budget['budget_data'][$index]['current_ppto'] = $current_ppto;
+            $a_data_budget['budget_data'][$index]['current_ppto_ext'] = $current_ppto_ext;
             $a_data_budget['budget_data'][$index]['last_real_sale_assig'] = $last_real_assig;
             $a_data_budget['budget_data'][$index]['current_real_sale'] = $total_z_amount;
             $a_data_budget['budget_data'][$index]['current_percent_cr_ppto'] = number_format($current_percent_cr_ppto, 2) . '%';
@@ -153,6 +158,7 @@ class BudgetSales extends ValidateAccess {
         $a_data_budget       = $this->input->post('data_for_process');
         $a_new_budgets_date  = array();
         $a_current_ppto      = array();
+        $a_current_ppto_ext  = array();
         $a_current_real_sale = array();
         $a_data_budget_id    = array();
 
@@ -163,6 +169,7 @@ class BudgetSales extends ValidateAccess {
                 $a_new_budgets_date[] = $budget_date;
             }
             $a_current_ppto[$budget_date]           = $data_budget['current_ppto'];
+            $a_current_ppto_ext[$budget_date]       = $data_budget['current_ppto_ext'];
             $a_last_real_sale_assig[$budget_date]   = $data_budget['last_real_sale_assig'];            
         }
         if(count($a_data_budget_id)>0) {
@@ -174,8 +181,9 @@ class BudgetSales extends ValidateAccess {
             foreach($dbl_budget_ids as $dbr_budget_by_date) {
                 $budget_date                = Utils::getFormattedDate($dbr_budget_by_date->date, '%Y-%m-%d');
                 $data_update_batch[$index]['id']  = $dbr_budget_by_date->id;
-                $data_update_batch[$index]['budget_amount'] = $a_current_ppto[$budget_date];
-                $data_update_batch[$index]['budget_amount_assigned'] = $a_last_real_sale_assig[$budget_date];
+                $data_update_batch[$index]['budget_amount']             = $a_current_ppto[$budget_date];
+                $data_update_batch[$index]['budget_amount_ext']         = $a_current_ppto_ext[$budget_date];
+                $data_update_batch[$index]['budget_amount_assigned']    = $a_last_real_sale_assig[$budget_date];
                 $index++;
             }
             $this->BudgetDao->update_budget_batch($data_update_batch);
@@ -188,6 +196,7 @@ class BudgetSales extends ValidateAccess {
                 $data_insert_batch[$index]['date']                      = $new_budgets_date;
                 $data_insert_batch[$index]['subsidiaries_id']           = $subsidiary_id;
                 $data_insert_batch[$index]['budget_amount']             = $a_current_ppto[$new_budgets_date];
+                $data_insert_batch[$index]['budget_amount_ext']         = $a_current_ppto_ext[$new_budgets_date];
                 $data_insert_batch[$index]['budget_amount_assigned']    = $a_last_real_sale_assig[$new_budgets_date];
                 $index++;
             }

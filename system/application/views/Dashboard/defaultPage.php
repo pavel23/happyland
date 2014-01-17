@@ -1,43 +1,23 @@
-<div class="row">
-    <div class="col-lg-12">
-        <?php if ($this->session->flashdata('message')) : ?>
-            <div class="alert alert-success">
-                <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->session->flashdata('message') ?>
-            </div>
-        <?php endif; ?> 
-    </div>
-    <div class="col-lg-12">
-        <div class="box success">
-            <header>
-                <h5>Estas viendo información de:</h5>
-                <?php echo form_dropdown('list_subsidiaries_id', $a_subsidiaries, '', 'id="list_subsidiaries_id" class="chosen-select form-control autotab"'); ?>
-            </header>
+<input type="hidden" id="data-chart-url" value="<?php echo site_url('Dashboard/DayliSalesBarChart'); ?>">
+<?php $this->load->view('Includes/Modules/list_subsidiaries', array('a_subsidiaries' => $a_subsidiaries)); ?> 
+<div class="col-sm-8">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Venta Diaria vs Valor Presupuestado (Acum. Mensual)</h3>
+        </div>
+        <div class="bs-docs-canvas">
+            <div id="dayliSaleBudget"></div><br />
         </div>
     </div>
+</div>
 
-    <div class="col-lg-8">
-        <div class="box inverse">
-            <header>
-                <div class="icons"><i class="icon-th"></i></div>
-                <h5>Venta Diaria Real vs Valor Presupuestado (Acumulado)</h5>
-            </header>
-            <div class="body">
-                <div id="dayliSaleBudget"></div>
-            </div>
+<div class="col-sm-4">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Cobertura Presupuestal (Acum. Anual)</h3>
+        </div>
+        <div class="bs-docs-canvas">
+            <div id="gauge_chart"></div><br />
         </div>
     </div>
-
-    <div class="col-lg-4">
-        <div class="box inverse">
-
-            <header>
-                <div class="icons"><i class="icon-th"></i></div>
-                <h5>Datos x Mes</h5>
-            </header>
-            <div class="body">
-                <div id="gauge_chart"></div>
-            </div>
-        </div>
-    </div>
-    <input type="hidden" id="data-chart-url" value="<?php echo site_url('Dashboard/DayliSalesBarChart'); ?>">
 </div>

@@ -54,7 +54,7 @@ $route['recuperar_contrasenia.html'] = 'Login/recovering';
 /*
  * Rutas de acceso al modulo de perfiles
  */
-//$route['usuarios/page/(:num)/listar.html']               = 'User/index';
+//$route['usuarios/page/(:num)/listar.html']    = 'User/index';
 $route['usuarios/listar.html'] = 'User/index';
 $route['usuarios/agregar.html'] = 'User/maintenanceUser';
 $route['usuarios/(:num)/modificar.html'] = 'User/maintenanceUser/$1';
@@ -62,8 +62,13 @@ $route['usuarios/(:num)/eliminar.html'] = 'User/deleteUser/$1';
 $route['usuarios/cargar-datos-tabla.html'] = 'User/getDataTableList';
 $route['usuarios/cambiar_contrasenia.html'] = 'User/changePassword';
 
-$route['index.html'] = 'Dashboard/index';
+$route['index.html']                               = 'Dashboard/index';
 $route['ventas-diarias/datos-grafico-barras.html'] = 'Dashboard/DayliSalesBarChart';
+
+$route['directorio-principal.html'] = 'Dashboard/DirectoryDashboardIndex';
+$route['zonales-principal.html']    = 'Dashboard/ZonalDashboardIndex';
+$route['data-gauge-zonal.html']    = 'Dashboard/getDataGaugeByZonal';
+
 
 /*
  * Rutas de acceso al modulo de perfiles

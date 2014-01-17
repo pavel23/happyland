@@ -1,3 +1,4 @@
+<?php $this->load->view('Includes/Modules/module_title', array('module_title' => 'Módulo de Ventas Diarias: Registro')); ?>
 
 <input type="hidden" name="url-data-operators" id="url-data-operators" value="<?php echo site_url('DailySales/getJSONOperators'); ?>" />
 <input type="hidden" name="url-data-operators" id="url-save-daily-sales" value="<?php echo site_url('DailySales/processForm'); ?>" />
@@ -7,7 +8,6 @@
         <div class="box dark">
             <header>
                 <div class="icons"><i class="icon-th"></i></div>
-                <h5>Ventas Diarias</h5>
                 <div class="toolbar">
                     <div class="body collapse in">
                         <?php if ($status == Status::STATUS_CERRADO): ?>

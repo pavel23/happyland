@@ -22,10 +22,10 @@ class Profile extends ValidateAccess {
     public function index() {
         try {
             $this->validateAccessByModule();
-            $this->layout->assets(base_url() . 'assets/js/lib/jquery.dataTables.js');
-            $this->layout->assets(base_url() . 'assets/js/happy/pipeline_table.js');
-            $this->layout->assets(base_url() . 'assets/js/happy/load.table.list.js');
-            $this->layout->assets(base_url() . 'assets/css/data-table.css');
+            $this->layout->assets(base_url() . 'assets/lib/js/jquery.dataTables.js');
+            $this->layout->assets(base_url() . 'assets/happy/js/pipeline_table.js');
+            $this->layout->assets(base_url() . 'assets/happy/js/load.table.list.js');
+            $this->layout->assets(base_url() . 'assets/happy/css/data-table.css');
             $this->layout->view('Profile/listProfile');
         } catch (Exception $e) {
             echo $e;
@@ -72,10 +72,10 @@ class Profile extends ValidateAccess {
         if ($this->input->post()) {
             $this->saveProfile();
         }
-        $this->layout->assets(base_url() . 'assets/css/lib/chosen.css');
-        $this->layout->assets(base_url() . 'assets/js/lib/chosen.jquery.js');
-        $this->layout->assets(base_url() . 'assets/js/happy/profile.edit.js');
-        $this->layout->assets(base_url() . 'assets/js/lib/bootbox.min.js');
+        $this->layout->assets(base_url() . 'assets/lib/css/chosen.css');
+        $this->layout->assets(base_url() . 'assets/lib/js/chosen.jquery.js');
+        $this->layout->assets(base_url() . 'assets/happy/js/profile/profile.edit.js');
+        $this->layout->assets(base_url() . 'assets/lib/js/bootbox.min.js');
         $this->layout->view('Profile/maintenanceProfile', $data);
     }
     

@@ -3,40 +3,32 @@
     <head>
         <meta charset="UTF-8">
         <title><?php echo $this->layout->title ?></title>
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/lib/bootstrap.min.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/theme.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/happy/css/custom-style.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/lib/css/font-awesome.min.css">
         <?php if ($this->layout->isLogin): ?>
-            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/login.css"/>
-            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/lib/magic.css"/>
+            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/lib/css/signin.css"/>
         <?php else: ?>
-            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/main.css"/>
-            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/theme.css"/>
-            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font/font-awesome.min.css"/>
+            <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/css/bootstrap-theme.min.css"/>
         <?php endif; ?>
         <?php $this->layout->css(); ?>
     </head>
     <body>
-        <?php if ($this->layout->isLogin): ?>
-            <div class="container">
+        <div class="container theme-showcase">
+            <?php if ($this->layout->isLogin) { ?>
                 <?php echo $content; ?>
-            </div>
-        <?php else: ?>
-            <div id="wrap">
-                <div id="top">
-                    <?php $this->load->view("Includes/title"); ?>
-                    <?php $this->load->view("Includes/menu_nav"); ?>
+            <?php } else { ?>
+                <?php $this->load->view("Includes/menu_nav"); ?>
+                <div class="row">
+                    <?php echo $content; ?>
                 </div>
-                <div id="center">
-                    <div class="outer">
-                        <div class="inner">
-                            <?php echo $content; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php $this->load->view("Includes/footer"); ?> 
-        <?php endif; ?>
-        <script src="<?php echo base_url(); ?>assets/js/lib/jquery.js"></script>
-        <script src="<?php echo base_url(); ?>assets/js/lib/bootstrap.js"></script>        
-        <?php $this->layout->js(); ?>        
+                <?php $this->load->view("Includes/footer"); ?>
+            <?php } ?>
+        </div>
+        <script src="<?php echo base_url(); ?>assets/lib/js/jquery.js"></script>
+        <script src="<?php echo base_url(); ?>assets/dist/js/bootstrap.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/lib/js/jquery.isloading.min.js"></script>
+        <?php $this->layout->js(); ?>
     </body>
 </html>

@@ -20,7 +20,7 @@ class BudgetDao extends CI_Model {
     }
     
     public function getDailyBudget($subsidiary_id=null, $month=null) {
-        $this->db->select('sbb.id, sbb.date, sbb.budget_amount, sbb.budget_amount_assigned, dls.grand_total_z_format');
+        $this->db->select('sbb.id, sbb.date, sbb.budget_amount, sbb.budget_amount_ext, sbb.budget_amount_assigned, dls.grand_total_z_format');
         $this->db->from('hpl_subsidiaries_budget sbb');
         $this->db->join('hpl_daily_sales dls', 'sbb.date=dls.date_sale AND dls.subsidiaries_id='.$subsidiary_id, 'left');
         $this->db->where('sbb.subsidiaries_id', $subsidiary_id); 
